@@ -27,7 +27,7 @@ PkgConfigBR:
   - Qt5Quick
 
 # Build dependencies without a pkgconfig setup can be listed here
-# PkgBR:
+PkgBR: [qt5-qtlocation-devel, qt5-qtpositioning-devel, qt5-qtdeclarative-import-positioning]
 #   - qt5-qtlocation-devel
 
 # Runtime dependencies which are not automatically detected
@@ -35,6 +35,7 @@ Requires:
   - qt5-plugin-geoservices-nokia
   - qt5-plugin-geoservices-osm
   - qt5-qtdeclarative-import-location
+  - qt5-qtdeclarative-import-positioning
   - sailfishsilica-qt5 >= 0.10.9
 
 # All installed files

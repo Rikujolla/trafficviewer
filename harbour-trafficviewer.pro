@@ -39,5 +39,11 @@ DISTFILES += \
     qml/pages/Settings.qml \
     qml/pages/LamList.qml \
     rpm/harbour-trafficviewer.changes \
-    qml/pages/MapPage.qml
+    qml/pages/MapPage.qml \
+    qml/pages/DrawData.qml \
+    qml/components/LinePlot.qml \
+    qml/pages/tables.js \
+    qml/data/lamstations.xml \
+    qml/data/lamData.xml \
+    qml/pages/LocList.qml
 

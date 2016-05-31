@@ -28,11 +28,11 @@ import Sailfish.Silica 1.0
 import QtQuick.XmlListModel 2.0
 
 Page {
-    onStatusChanged: console.log(lamSpecs.get(0).localtime)
+    //onStatusChanged: console.log(lamSpecs.get(0).localtime)
     id: page
     SilicaListView {
         id: listView
-        model: lamSpecs
+        model: lamStations
         anchors.fill: parent
 
         PullDownMenu {
@@ -40,10 +40,10 @@ Page {
                 text: qsTr("Draw Data")
                 onClicked: pageStack.push(Qt.resolvedUrl("DrawData.qml"))
             }
-            MenuItem {
-                text: qsTr("Loc List")
-                onClicked: pageStack.push(Qt.resolvedUrl("LocList.qml"))
-            }
+            /*MenuItem {
+                text: qsTr("Map Page")
+                onClicked: pageStack.push(Qt.resolvedUrl("MapPage.qml"))
+            }*/
         }
 
         header: PageHeader {
@@ -59,14 +59,14 @@ Page {
             Label {
                 //var text0 = lamSpecs.get(0).localtime + "\n" + "LAM"
                 x: Theme.paddingLarge
-                text: "LAM" + lamid + ", " + trafficvolume1 + ", " + averagespeed1 + ", " + trafficvolume2 + ", " + averagespeed2
+                text: "LAM" + LAM_NUMERO
                 //text: qsTr("Item") + " " + index
                 anchors.verticalCenter: parent.verticalCenter
                 color: delegate.highlighted ? Theme.highlightColor : Theme.primaryColor
             }
             onClicked: {
                 console.log("Clicked " + index)
-                console.log(lamSpecs.get(0).lamid, lamSpecs.get(index).lamLocaltime)
+                //console.log(lamSpecs.get(0).lamid, lamSpecs.get(index).lamLocaltime)
             }
         }
 

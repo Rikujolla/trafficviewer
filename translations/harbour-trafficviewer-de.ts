@@ -9,7 +9,37 @@
     </message>
 </context>
 <context>
+    <name>DrawData</name>
+    <message>
+        <source>Plot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>List Page</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>LamList</name>
+    <message>
+        <source>Current LAM data</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Draw Data</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Loc List</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>LocList</name>
+    <message>
+        <source>Draw Data</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message>
         <source>Current LAM data</source>
         <translation type="unfinished"></translation>

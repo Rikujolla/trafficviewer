@@ -25,16 +25,84 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import QtQuick.XmlListModel 2.0
+import QtQuick.LocalStorage 2.0
+import "pages/tables.js" as Mytables
 import "pages"
 
 ApplicationWindow
 {
-    initialPage: Component { Settings { } }
+    initialPage: Component { MapPage { } }
     cover: Qt.resolvedUrl("cover/CoverPage.qml")
     allowedOrientations: Orientation.All
     _defaultPageOrientations: Orientation.All
 
     property bool testData : false // Used to test
+    property bool useLocation : true // When starting, GPS is used
+
+    XmlListModel {
+        id: lamStations
+        source: !testData ? "data/lamstations.xml" : "https://github.com/Rikujolla/trafficviewer/tree/master/qml/data/lamstations.xml"
+        query: "/xml/lam_station"
+        //query: "/lamdynamicdata/lamdata"
+        //namespaceDeclarations: "declare namespace soap ='http://schemas.xmlsoap.org/soap/envelope/';
+        //                        declare default element namespace 'http://tie.digitraffic.fi/sujuvuus/schemas';"
+        XmlRole {name:"LAM_NUMERO"; query:"LAM_NUMERO/number()"}
+        XmlRole {name:"TSA_NIMI"; query:"TSA_NIMI/string()"}
+        XmlRole {name:"latitude"; query:"latitude/number()"}
+        XmlRole {name:"longitude"; query:"longitude/number()"}
+        XmlRole {name:"offlat1"; query:"offlat1/number()"}
+        XmlRole {name:"offlong1"; query:"offlong1/number()"}
+        XmlRole {name:"offlat2"; query:"offlat2/number()"}
+        XmlRole {name:"offlong2"; query:"offlong2/number()"}
+        //XmlRole {name:"lamid"; query:"lamid/number()"}
+        //XmlRole {name:"TSA_NIMI"; query:"measurementtime/localtime/string()"}
+        //XmlRole {name:"trafficvolume2"; query:"trafficvolume2/number()"}
+    }
+
+    XmlListModel {
+        id: lamSpecs
+        source: testData ? "lamData.xml" : "http://tie.digitraffic.fi/sujuvuus/ws/lamData"
+        query: "/soap:Envelope/soap:Body/LamDataResponse/lamdynamicdata/lamdata"
+        //query: "/lamdynamicdata/lamdata"
+        namespaceDeclarations: "declare namespace soap ='http://schemas.xmlsoap.org/soap/envelope/';
+                                declare default element namespace 'http://tie.digitraffic.fi/sujuvuus/schemas';"
+        XmlRole {name:"localtime"; query:"timestamp/localtime/string()"}
+        XmlRole {name:"lamid"; query:"lamid/number()"}
+        XmlRole {name:"lamLocaltime"; query:"measurementtime/localtime/string()"}
+        XmlRole {name:"trafficvolume1"; query:"trafficvolume1/number()"}
+        XmlRole {name:"trafficvolume2"; query:"trafficvolume2/number()"}
+        XmlRole {name:"averagespeed1"; query:"averagespeed1/number()"}
+        XmlRole {name:"averagespeed2"; query:"averagespeed2/number()"}
+    }
+
+    ListModel {
+        id: lamPoints
+        ListElement {
+            iidee:401
+            //neim:"L_vt3_Lempäälä_Sääksjärvi"
+            latti:61.40971462
+            longi:23.77000212
+            veloc:122
+        }
+        ListElement {
+            iidee:435
+            //neim:"L_vt9_Tre_Karkuvuori"
+            latti:61.46227089
+            longi:23.80936323
+            veloc:85
+        }
+        ListElement {
+            iidee:901
+            //neim:"L_vt4_Tikkakoski"
+            latti:62.3695273
+            longi:25.70485293
+            veloc:110
+        }
+    }
+
+
+    //onComponentCompleted: console.log("LAM", lamStations.get(0).LAM_NUMERO)
 }
 
 
