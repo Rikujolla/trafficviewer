@@ -39,6 +39,20 @@ ApplicationWindow
 
     property bool testData : false // Used to test
     property bool useLocation : true // When starting, GPS is used
+    property bool dataLoad : true // Selects if data is reloaded or updated to screen
+    property bool locationsLoaded : false
+    property string timeLamUpdated : "" //Stores the last update value not to update too often
+    property bool speedView : true // Default speedView, when false cars/hour view
+    property bool chView : false  // used to update plot vieW
+    property int lammiSelected  // selected LAM from the map
+    property int lammiPair // selected LAM pair from the map
+    //property var data : [80, 90, 100]
+    //property var column : [0, 1, 2]
+    property int coverLam
+    property int speedOrCars  // Either Speed or Cars in cover
+    property real currentLat // To record currentLat: of the mapcenter
+    property real currentLong // To record currentLong: of the map center
+
 
     XmlListModel {
         id: lamStations
@@ -55,9 +69,6 @@ ApplicationWindow
         XmlRole {name:"offlong1"; query:"offlong1/number()"}
         XmlRole {name:"offlat2"; query:"offlat2/number()"}
         XmlRole {name:"offlong2"; query:"offlong2/number()"}
-        //XmlRole {name:"lamid"; query:"lamid/number()"}
-        //XmlRole {name:"TSA_NIMI"; query:"measurementtime/localtime/string()"}
-        //XmlRole {name:"trafficvolume2"; query:"trafficvolume2/number()"}
     }
 
     XmlListModel {
@@ -67,8 +78,8 @@ ApplicationWindow
         //query: "/lamdynamicdata/lamdata"
         namespaceDeclarations: "declare namespace soap ='http://schemas.xmlsoap.org/soap/envelope/';
                                 declare default element namespace 'http://tie.digitraffic.fi/sujuvuus/schemas';"
-        XmlRole {name:"localtime"; query:"timestamp/localtime/string()"}
-        XmlRole {name:"lamid"; query:"lamid/number()"}
+        //XmlRole {name:"localtime"; query:"timestamp/localtime/string()"} //not working
+        XmlRole {name:"lamid"; query:"lamid/number()"; isKey:true}
         XmlRole {name:"lamLocaltime"; query:"measurementtime/localtime/string()"}
         XmlRole {name:"trafficvolume1"; query:"trafficvolume1/number()"}
         XmlRole {name:"trafficvolume2"; query:"trafficvolume2/number()"}
@@ -79,21 +90,8 @@ ApplicationWindow
     ListModel {
         id: lamPoints
         ListElement {
-            iidee:401
-            //neim:"L_vt3_Lempäälä_Sääksjärvi"
-            latti:61.40971462
-            longi:23.77000212
-            veloc:122
-        }
-        ListElement {
-            iidee:435
-            //neim:"L_vt9_Tre_Karkuvuori"
-            latti:61.46227089
-            longi:23.80936323
-            veloc:85
-        }
-        ListElement {
             iidee:901
+            pair: 0
             //neim:"L_vt4_Tikkakoski"
             latti:62.3695273
             longi:25.70485293
@@ -101,6 +99,90 @@ ApplicationWindow
         }
     }
 
+    ListModel {
+        id: lamBarePoints
+        ListElement {
+            iidee:901
+            pair: 0
+            //neim:"L_vt4_Tikkakoski"
+            latti:62.3695273
+            longi:25.70485293
+            veloc:110
+        }
+    }
+
+
+    ListModel {
+        id:dataList
+        ListElement {
+            timestamp: "Tue Jun 07 2016 06:00:00 GMT+0300"
+            speed:60.0
+        }
+        ListElement {
+            timestamp: "Tue Jun 07 2016 07:00:00 GMT+0300"
+            speed:66.0
+        }
+    }
+
+    ListModel {
+        id:dataFuture
+        ListElement {
+            timestamp: "Wed Jun 15 2016 07:00:00 GMT+0300"
+            speed:66.0
+        }
+        ListElement {
+            timestamp: "Wed Jun 15 2016 09:00:00 GMT+0300"
+            speed:40.0
+        }
+    }
+
+    ListModel {
+        id:dataYesterday
+        ListElement {
+            timestamp: "Tue Jun 07 2016 10:00:00 GMT+0300"
+            speed:60.0
+        }
+        ListElement {
+            timestamp: "Tue Jun 07 2016 15:00:00 GMT+0300"
+            speed:49.0
+        }
+    }
+
+    ListModel { //
+        id:dataHistory
+        ListElement {
+            timestamp: "Tue Jun 07 2016 00:00:00 GMT+0300"
+            speed:55.0
+        }
+        ListElement {
+            timestamp: "Tue Jun 07 2016 05:00:00 GMT+0300"
+            speed:40.0
+        }
+        ListElement {
+            timestamp: "Tue Jun 07 2016 12:00:00 GMT+0300"
+            speed:70.0
+        }
+    }
+
+    ListModel {
+        id:dataTitles
+        ListElement {
+            name: "Today"
+            kolor: "red"
+        }
+        ListElement {
+            name: "Prognosis"
+            kolor: "green"
+        }
+        ListElement {
+            name: "Yesterday"
+            kolor: "yellow"
+        }
+        ListElement {
+            name: "History"
+            kolor: "grey"
+        }
+    }
 
     //onComponentCompleted: console.log("LAM", lamStations.get(0).LAM_NUMERO)
 }

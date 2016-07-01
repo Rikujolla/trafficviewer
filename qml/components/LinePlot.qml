@@ -24,6 +24,8 @@
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import QtQuick.LocalStorage 2.0
+import "../pages/tables.js" as Mytables
 
 Rectangle
 {
@@ -32,18 +34,20 @@ Rectangle
     height: parent.height
     color: "transparent"
 
-    property var dataListModel: null
-    property var parInfoModel: null
-    property string column: "value"
+    //property var dataListModel: null
+    //property var dataListModel: [80, 85]
+    //property var parInfoModel: null
+    //property string column: "value"
+    property bool plotDraggingActive //to remove errormessage, not knowing why to use this boolean
 
     property real min : 0.0
-    property real max : 1.0
+    property real max : 140.0
 
     property int fontSize: 14
     property bool fontBold: true
 
-    property date xstart : new Date()
-    property date xend : new Date()
+    property date xstart : new Date("2016-06-15T05:48:00")
+    property date xend : new Date("2016-06-15T06:37:00")
 
     function distanceX(p1, p2)
     {
@@ -54,17 +58,17 @@ Rectangle
         return Math.max(p1.y, p2.y) - Math.min(p1.y, p2.y)
     }
 
-    function getMinMax(data)
+    /*function getMinMax(data)
     {
         var last = data.length - 1;
         var first = 0;
 
-        var s = new Date(data[0]["timestamp"])
+        var s = new Date(data[0].timestamp) /// changed
 
         if (s.getTime() < xstart.getTime())
             xstart = s
 
-        s = new Date(data[data.length-1]["timestamp"])
+        s = new Date(data[data.length-1].timestamp)
 
         if (s.getTime() > xend.getTime())
             xend = s
@@ -82,7 +86,7 @@ Rectangle
             if (l[column] < min)
                 min = l[column];
         }
-    }
+    }*/
 
     function updateVerticalScale()
     {
@@ -100,8 +104,8 @@ Rectangle
         valueMax.text = max.toFixed(2)
         valueMin.text = min.toFixed(2)
 
-        for (var midIndex=0; midIndex<4; midIndex++)
-            valueMiddle.itemAt(midIndex).text = (min+(((max-min) / 5.)*(midIndex+1))).toFixed(2)
+        for (var midIndex=0; midIndex<6; midIndex++)
+            valueMiddle.itemAt(midIndex).text = (min+(((max-min) / 7.)*(midIndex+1))).toFixed(2)
 
     }
 
@@ -194,7 +198,7 @@ Rectangle
     Repeater
     {
         id: valueMiddle
-        model:4
+        model:6
 
         Text
         {
@@ -206,7 +210,7 @@ Rectangle
             anchors.left: parent.left
             anchors.leftMargin: 0
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: (index+1) * ((parent.height/5) - fontSize )
+            anchors.bottomMargin: (index+1) * ((parent.height/7) - fontSize/2 )
             text: "unk"
             z: 10
         }
@@ -219,7 +223,8 @@ Rectangle
         z: 11
         height: fontSize*1.2*10
         id: legend
-        model: parInfoModel
+        model: dataTitles
+        //model:1
 
         delegate: ListItem
         {
@@ -235,10 +240,12 @@ Rectangle
                     id: legendColor
                     width: 30
                     height: 3
-                    color: plotcolor
+                    //color: plotcolor
+                    color: kolor
                 }
                 Text
                 {
+                    //text: name
                     text: name
                     color: Theme.primaryColor
                     font.pointSize: fontSize
@@ -262,9 +269,23 @@ Rectangle
         Timer
         {
             id: legendVisibility
-            interval: 2000
-            running: true
+            interval: 5000
+            running: Qt.application.active && true
             onTriggered:  legend.opacity = 0.0
+                //PropertyAnimation { duration: 500; target: legend; property: "opacity"; to: 0 }
+        }
+
+        Timer
+        {
+            id: changeWiev
+            interval: 60
+            running: Qt.application.active && chView
+            onTriggered:  {
+                canvas.requestPaint()
+                console.log("latest ", dataList.get(dataList.count-1).speed)
+                chView = false
+                console.log(" change view")
+            }
                 //PropertyAnimation { duration: 500; target: legend; property: "opacity"; to: 0 }
         }
 
@@ -274,7 +295,7 @@ Rectangle
     {
         id: canvas
         width: parent.width
-        anchors.top: valueMax.bottom
+        anchors.top: xEnd.bottom
         anchors.bottom: valueMin.top
         renderTarget: Canvas.FramebufferObject
         antialiasing: true
@@ -298,7 +319,7 @@ Rectangle
             ctx.beginPath();
 
             var cols = 6.0;
-            var rows = 5.0;
+            var rows = 7.0;
 
             for (var i = 0; i < rows; i++)
             {
@@ -315,7 +336,7 @@ Rectangle
             ctx.restore();
         }
 
-        function drawPlot(ctx, data, color, column)
+        function drawHistory(ctx, color)
         {
             ctx.save();
             ctx.globalAlpha = 1.0;
@@ -323,11 +344,92 @@ Rectangle
             ctx.lineWidth = 3;
             ctx.beginPath();
 
-            for (var i = 0; i < data.length; i++)
+            for (var i = 0; i < dataHistory.count; i++)
             {
-                var s = new Date(data[i]["timestamp"])
+                var s = new Date(dataHistory.get(i).timestamp)
                 var x = (s.getTime() - xstart)/(xend-xstart);
-                var y = (data[i][column]-min)/(max-min);
+                var y = (dataHistory.get(i).speed-min)/(max-min);
+
+                if (i == 0)
+                {
+                    ctx.moveTo(x * canvas.width, (1-y) * canvas.height);
+                }
+                else
+                {
+                    ctx.lineTo(x * canvas.width, (1-y) * canvas.height);
+                }
+            }
+            ctx.stroke();
+            ctx.restore();
+        }
+
+        function drawYesterday(ctx, color)
+        {
+            ctx.save();
+            ctx.globalAlpha = 1.0;
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+
+            for (var i = 0; i < dataYesterday.count; i++)
+            {
+                var s = new Date(dataYesterday.get(i).timestamp)
+                var x = (s.getTime() - xstart)/(xend-xstart);
+                var y = (dataYesterday.get(i).speed-min)/(max-min);
+
+                if (i == 0)
+                {
+                    ctx.moveTo(x * canvas.width, (1-y) * canvas.height);
+                }
+                else
+                {
+                    ctx.lineTo(x * canvas.width, (1-y) * canvas.height);
+                }
+            }
+            ctx.stroke();
+            ctx.restore();
+        }
+
+        function drawPlot(ctx, color)
+        {
+            ctx.save();
+            ctx.globalAlpha = 1.0;
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+
+            for (var i = 0; i < dataList.count; i++)
+            {
+                var s = new Date(dataList.get(i).timestamp)
+                var x = (s.getTime() - xstart)/(xend-xstart);
+                var y = (dataList.get(i).speed-min)/(max-min);
+
+                if (i == 0)
+                {
+                    ctx.moveTo(x * canvas.width, (1-y) * canvas.height);
+                }
+                else
+                {
+                    ctx.lineTo(x * canvas.width, (1-y) * canvas.height);
+                }
+            }
+            ctx.stroke();
+            ctx.restore();
+        }
+
+        function drawFuture(ctx, color)
+        {
+            ctx.save();
+            ctx.globalAlpha = 1.0;
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+
+            for (var i = 0; i < dataFuture.count; i++)
+            {
+                var s = new Date(dataFuture.get(i).timestamp)
+                var x = (s.getTime() - xstart)/(xend-xstart);
+                var y = (dataFuture.get(i).speed-min)/(max-min);
 
                 if (i == 0)
                 {
@@ -346,6 +448,8 @@ Rectangle
 
         onPaint:
         {
+            Mytables.drawSpeed()
+
             var ctx = canvas.getContext("2d");
 
             ctx.globalCompositeOperation = "source-over";
@@ -353,29 +457,43 @@ Rectangle
 
             drawBackground(ctx);
 
-            if (!dataListModel)
+            /*if (!dataListModel)
             {
                 console.log("not ready")
                 return;
-            }
+            }*/
 
             // assign some timestamp which is in range as start/end default for further expanding
-            xstart = new Date(dataListModel[0][0]["timestamp"])
-            xend = new Date(dataListModel[0][0]["timestamp"])
+            //xstart = new Date(dataListModel[0][0]["timestamp"])
+            //now.set(Calendar.HOUR_OF_DAY, 0);
+            var time = new Date().getTime()
+            var offset = new Date().getTimezoneOffset()
+            console.log("offset", offset)
+            //xstart = new Date("Wed Jun 16 2016 00:00:00 GMT+0300") //RLAH
+            xstart = new Date(time + offset*60*1000 - time%(24*60*60*1000)) //RLAH
+            //xend = new Date(dataListModel[0][0]["timestamp"])
+            //xend = new Date("Thu Jun 17 2016 00:00:00 GMT+0300") //RLAH
+            xend = new Date(time + 24*60*60*1000 + offset*60*1000- time%(24*60*60*1000)) //RLAH
 
-            min = 99999999.9
-            max = -99999999.9
+            //min = 120.0
+            //max = 0.0
 
-            for (var n=0; n<dataListModel.length; n++)
-                getMinMax(dataListModel[n])
+            //for (var n=0; n<dataListModel.length; n++)//LENGTH TO COUNT
+                //getMinMax(dataListModel[n])
 
             updateVerticalScale()
             updateHorizontalScale()
 
-            for (n=0; n<dataListModel.length; n++)
+            drawHistory(ctx, "grey")
+            drawYesterday(ctx, "yellow")
+            drawPlot(ctx, "red");
+            drawFuture(ctx, "green");
+
+            /*for (var n=0; n<dataList.length; n++)
             {
-                drawPlot(ctx, dataListModel[n], parInfoModel.get(n).plotcolor, column);
-            }
+                //drawPlot(ctx, dataListModel[n], parInfoModel.get(n).plotcolor, column);
+                drawPlot(ctx, dataListModel[n], "red");
+            }*/
         }
 
         PinchArea

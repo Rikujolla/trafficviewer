@@ -30,13 +30,29 @@
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import "../pages"
 
 CoverBackground {
     Label {
         id: label
-        anchors.centerIn: parent
-        text: qsTr("My Cover")
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.top: parent.top
+        text: qsTr("LAM ") + coverLam
+        anchors.topMargin: Theme.paddingLarge
+        x: Theme.paddingLarge
     }
+    Label {
+        id: label2
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.top: label.bottom
+        text: speedView ? speedOrCars + "km/h" : speedOrCars + "cars/h"
+        anchors.topMargin: Theme.paddingLarge
+        wrapMode: Text.WordWrap
+    }
+
+    /*Timer {
+        //update
+    }*/
 
     CoverActionList {
         id: coverAction

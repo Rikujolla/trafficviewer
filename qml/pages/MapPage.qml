@@ -36,7 +36,7 @@ import "tables.js" as Mytables
 
 Page {
     id: page
-    //onStatusChanged: console.log("LAM", lamStations.get(0).LAM_NUMERO)
+    onStatusChanged: console.log("status", page.status)
     /*SilicaFlickable {
         anchors.fill: parent
 
@@ -75,7 +75,7 @@ Page {
         Map {
             id: map
             anchors.fill: parent
-            zoomLevel: (maximumZoomLevel - minimumZoomLevel)/2
+            zoomLevel: (maximumZoomLevel - minimumZoomLevel)/2 + 2
             plugin : Plugin {
                 id: plugin
                 allowExperimental: true
@@ -92,14 +92,14 @@ Page {
             gesture.enabled: true
 
             /*onPinchFinished: {
-                useLocation = false;
+                //useLocation = false;
                 console.log("Pinch started")
             }*/
 
 
             MapItemView {
                 id:lamList
-                model:lamPoints
+                model:lamBarePoints
                 delegate: lamComponent
             }
 
@@ -139,7 +139,13 @@ Page {
                     center: QtPositioning.coordinate(latti,longi)
                     MouseArea {
                         anchors.fill: parent
-                        onClicked: pageStack.push(Qt.resolvedUrl("LamList.qml"))
+                        onClicked: {
+                            lammiSelected = lamPoints.get(index).iidee
+                            lammiPair = lamPoints.get(index).pair
+                            pageStack.push(Qt.resolvedUrl("DrawData.qml"))
+                            //dataLoad = true
+                            console.log("Lamindex", lammiSelected, lammiPair)
+                        }
                     }
                 }
             }
@@ -179,23 +185,27 @@ Page {
                 updateInterval:1000
                 onPositionChanged: {
                     map.center = possut.position.coordinate
+                    currentLat = map.center.latitude
+                    currentLong = map.center.longitude
                     vars.counter++
-                    vars.counter > 10 ? useLocation=false :useLocation = true
+                    vars.counter > 6 ? useLocation=false :useLocation = true
                     console.log("Wait location", vars.counter)
                     //Mytables.loadLocation()
                     //lamDirOne.center = QtPositioning.coordinate(61.48127685,23.8442065)
                     //velTex.coordinate = QtPositioning.coordinate(61.48127685,23.8442065)
                 }
             }
-            Timer {
+            Timer { // Loads lam locations when starting the app
                 id:waitXml
-                running: true
+                running: !locationsLoaded && Qt.application.active
                 repeat:true
                 interval: 200
                 onTriggered: {
                     if (lamStations.status == 1) {
                         waitXml.stop();
-                        Mytables.loadLocation()}
+                        Mytables.loadLocation()
+                        locationsLoaded = true
+                    }
                     else {console.log ("lamStations.not Ready", lamStations.status)}
                 }
             }
@@ -204,11 +214,31 @@ Page {
                 id:loadXml
                 running: true
                 repeat:true
-                interval: 60000
+                interval: 30000
+                //triggeredOnStart: true
                 onTriggered: {
-                    lamSpecs.reload()
-                    waitXmlLoad.start()
-                    console.log("Reloading traffic data")
+                    console.log(map.center, map.center.latitude)
+                    currentLat = map.center.latitude
+                    currentLong = map.center.longitude
+                    if (dataLoad || !Qt.application.active) {
+                        console.log("iflooppi", page.status)
+                        lamSpecs.reload()
+                        waitXmlLoad.start()
+                        //dataLoad = false
+                        console.log("Reloading traffic data")
+                    }
+                    else if (page.status == 2) {
+                    //else {
+                        console.log("elseiflooppi", page.status)
+                        Mytables.readData()
+                        dataLoad = true
+                        console.log("Redrawing traffic data")
+                    }
+                    else {
+                        dataLoad = true
+                        console.log("elselooppi", page.status)
+                    }
+
                 }
             }
 
@@ -216,11 +246,16 @@ Page {
                 id:waitXmlLoad
                 running: false
                 repeat:true
-                interval: 200
+                interval: 300
                 onTriggered: {
                     if (lamSpecs.status == 1) {
                         waitXmlLoad.stop();
-                        Mytables.addData()}
+                        Mytables.addData()
+                        //timeLamUpdated = lamSpecs.get(0).localtime
+                        //console.log("timeLamupdated", timeLamUpdated)
+                        dataLoad = false
+                        console.log("Data loaded", dataLoad, lamSpecs.status)
+                    }
                     else {console.log ("lamSpecs.not Ready", lamSpecs.status)}
                 }
             }

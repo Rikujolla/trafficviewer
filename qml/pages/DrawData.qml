@@ -22,14 +22,15 @@ THE SOFTWARE.*/
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-
+import QtQuick.LocalStorage 2.0
 import "../components"
+import "tables.js" as Mytables
 
 Page
 {
     id: drawDataPage
-    property var dataList : []
-    property var parInfo : null
+    //property var dataList : []
+    //property var parInfo : null
 
     //backNavigation: !plotDraggingActive
 
@@ -41,8 +42,33 @@ Page
         // PullDownMenu and PushUpMenu must be declared in SilicaFlickable, SilicaListView or SilicaGridView
         PullDownMenu {
             MenuItem {
-                text: qsTr("List Page")
-                onClicked: console.log("Speed to car amounts")
+                text: qsTr("Subloc")
+                onClicked: {
+                    Mytables.subsetLocation()
+                }
+            }
+            MenuItem {
+                text: qsTr("Maintain dbases")
+                onClicked: {
+                    Mytables.maintainDb()
+                }
+            }
+
+            MenuItem {
+                text: qsTr("Select LAM to cover")
+                onClicked: {
+                    coverLam = lammiSelected
+                    //plot.canvas.requestPaint()
+                }
+            }
+            MenuItem {
+                text: speedView ? qsTr("To cars per hour view") : qsTr("To speed view")
+                onClicked: {
+                    console.log("Speed to car amounts")
+                    speedView = !speedView
+                    chView = true
+                    //plot.canvas.requestPaint()
+                }
             }
             /*MenuItem {
                 text: qsTr("Map Page")
@@ -52,13 +78,13 @@ Page
     PageHeader
     {
         id: ph
-        title: qsTr("Plot")
+        title: speedView ? qsTr("Speed, LAM") + " " + lammiSelected : qsTr("Cars per hour, LAM") + " " + lammiSelected
     }
 
     LinePlot
     {
-        dataListModel: dataList
-        parInfoModel: parInfo
+        //dataListModel: dataList
+        //parInfoModel: parInfo
         id: plot
         width: parent.width - Theme.paddingLarge
         height: parent.height

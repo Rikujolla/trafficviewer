@@ -4,18 +4,38 @@
 <context>
     <name>CoverPage</name>
     <message>
-        <source>My Cover</source>
-        <translation>Mein Cover</translation>
+        <source>LAM </source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>DrawData</name>
     <message>
-        <source>Plot</source>
+        <source>Select LAM to cover</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>List Page</source>
+        <source>To cars per hour view</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>To speed view</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Speed, LAM</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cars per hour, LAM</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maintain dbases</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Subloc</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
