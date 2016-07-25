@@ -35,7 +35,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Subloc</source>
+        <source>Make history</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

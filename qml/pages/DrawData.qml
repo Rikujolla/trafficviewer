@@ -42,9 +42,9 @@ Page
         // PullDownMenu and PushUpMenu must be declared in SilicaFlickable, SilicaListView or SilicaGridView
         PullDownMenu {
             MenuItem {
-                text: qsTr("Subloc")
+                text: qsTr("Make history")
                 onClicked: {
-                    Mytables.subsetLocation()
+                    Mytables.makeHistory()
                 }
             }
             MenuItem {

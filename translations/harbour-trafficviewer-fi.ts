@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1">
+<TS version="2.1" language="fi">
 <context>
     <name>CoverPage</name>
     <message>
@@ -20,15 +20,15 @@
     </message>
     <message>
         <source>To speed view</source>
-        <translation type="unfinished"></translation>
+        <translation>Nopeusnäkymään</translation>
     </message>
     <message>
         <source>Speed, LAM</source>
-        <translation type="unfinished"></translation>
+        <translation>Nopeus, LAM</translation>
     </message>
     <message>
         <source>Cars per hour, LAM</source>
-        <translation type="unfinished"></translation>
+        <translation>Autoja tunnissa, LAM</translation>
     </message>
     <message>
         <source>Maintain dbases</source>

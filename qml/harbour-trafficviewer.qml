@@ -46,8 +46,7 @@ ApplicationWindow
     property bool chView : false  // used to update plot vieW
     property int lammiSelected  // selected LAM from the map
     property int lammiPair // selected LAM pair from the map
-    //property var data : [80, 90, 100]
-    //property var column : [0, 1, 2]
+    property int tempTime
     property int coverLam
     property int speedOrCars  // Either Speed or Cars in cover
     property real currentLat // To record currentLat: of the mapcenter
@@ -95,7 +94,7 @@ ApplicationWindow
             //neim:"L_vt4_Tikkakoski"
             latti:62.3695273
             longi:25.70485293
-            veloc:110
+            veloc:999
         }
     }
 
@@ -107,7 +106,7 @@ ApplicationWindow
             //neim:"L_vt4_Tikkakoski"
             latti:62.3695273
             longi:25.70485293
-            veloc:110
+            veloc:998
         }
     }
 
@@ -154,14 +153,6 @@ ApplicationWindow
             timestamp: "Tue Jun 07 2016 00:00:00 GMT+0300"
             speed:55.0
         }
-        ListElement {
-            timestamp: "Tue Jun 07 2016 05:00:00 GMT+0300"
-            speed:40.0
-        }
-        ListElement {
-            timestamp: "Tue Jun 07 2016 12:00:00 GMT+0300"
-            speed:70.0
-        }
     }
 
     ListModel {
@@ -170,17 +161,46 @@ ApplicationWindow
             name: "Today"
             kolor: "red"
         }
-        ListElement {
+        /*ListElement {
             name: "Prognosis"
             kolor: "green"
-        }
+        }*/
         ListElement {
             name: "Yesterday"
             kolor: "yellow"
         }
         ListElement {
             name: "History"
-            kolor: "grey"
+            kolor: "blue"
+        }
+    }
+
+    Timer {
+        id:loadXmlIdle
+        running: !Qt.application.active
+        repeat:true
+        interval: 120000
+        //triggeredOnStart: true
+        onTriggered: {
+                lamSpecs.reload()
+                waitXmlLoadIdle.start()
+                console.log("Reloading traffic data idle")
+        }
+    }
+
+    Timer {
+        id:waitXmlLoadIdle
+        running: false
+        repeat:true
+        interval: 1000
+        onTriggered: {
+            if (lamSpecs.status == 1) {
+                waitXmlLoadIdle.stop();
+                Mytables.addData()
+                dataLoad = false
+                console.log("Data added on idle", dataLoad, lamSpecs.status)
+            }
+            else {console.log ("lamSpecsIdle.not Ready", lamSpecs.status)}
         }
     }
 

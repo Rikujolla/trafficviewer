@@ -347,9 +347,10 @@ Rectangle
             for (var i = 0; i < dataHistory.count; i++)
             {
                 var s = new Date(dataHistory.get(i).timestamp)
+                //console.log(s)
                 var x = (s.getTime() - xstart)/(xend-xstart);
                 var y = (dataHistory.get(i).speed-min)/(max-min);
-
+                if (speedView) {} else{y=y*12};
                 if (i == 0)
                 {
                     ctx.moveTo(x * canvas.width, (1-y) * canvas.height);
@@ -376,7 +377,7 @@ Rectangle
                 var s = new Date(dataYesterday.get(i).timestamp)
                 var x = (s.getTime() - xstart)/(xend-xstart);
                 var y = (dataYesterday.get(i).speed-min)/(max-min);
-
+                if (speedView) {} else{y=y*12};
                 if (i == 0)
                 {
                     ctx.moveTo(x * canvas.width, (1-y) * canvas.height);
@@ -403,7 +404,7 @@ Rectangle
                 var s = new Date(dataList.get(i).timestamp)
                 var x = (s.getTime() - xstart)/(xend-xstart);
                 var y = (dataList.get(i).speed-min)/(max-min);
-
+                if (speedView) {} else{y=y*12};
                 if (i == 0)
                 {
                     ctx.moveTo(x * canvas.width, (1-y) * canvas.height);
@@ -475,8 +476,8 @@ Rectangle
             //xend = new Date("Thu Jun 17 2016 00:00:00 GMT+0300") //RLAH
             xend = new Date(time + 24*60*60*1000 + offset*60*1000- time%(24*60*60*1000)) //RLAH
 
-            //min = 120.0
-            //max = 0.0
+            //min = 0.0
+            speedView ? max = 140.0 : max = 1400.0;
 
             //for (var n=0; n<dataListModel.length; n++)//LENGTH TO COUNT
                 //getMinMax(dataListModel[n])

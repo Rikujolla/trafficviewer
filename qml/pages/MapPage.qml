@@ -88,7 +88,8 @@ Page {
                     PluginParameter { name: "proxy"; value: "system" }
                 ]
             }
-            center: currentPosition.coordinate
+            //center: currentPosition.coordinate
+            center: QtPositioning.coordinate(62.74529734,25.77326947)
             gesture.enabled: true
 
             /*onPinchFinished: {
@@ -188,7 +189,7 @@ Page {
                     currentLat = map.center.latitude
                     currentLong = map.center.longitude
                     vars.counter++
-                    vars.counter > 6 ? useLocation=false :useLocation = true
+                    vars.counter > 9 ? useLocation=false :useLocation = true
                     console.log("Wait location", vars.counter)
                     //Mytables.loadLocation()
                     //lamDirOne.center = QtPositioning.coordinate(61.48127685,23.8442065)
@@ -212,9 +213,9 @@ Page {
 
             Timer {
                 id:loadXml
-                running: true
+                running: Qt.application.active
                 repeat:true
-                interval: 30000
+                interval: 5000
                 //triggeredOnStart: true
                 onTriggered: {
                     console.log(map.center, map.center.latitude)
@@ -246,7 +247,7 @@ Page {
                 id:waitXmlLoad
                 running: false
                 repeat:true
-                interval: 300
+                interval: 600
                 onTriggered: {
                     if (lamSpecs.status == 1) {
                         waitXmlLoad.stop();
