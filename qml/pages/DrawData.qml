@@ -42,13 +42,13 @@ Page
         // PullDownMenu and PushUpMenu must be declared in SilicaFlickable, SilicaListView or SilicaGridView
         PullDownMenu {
             MenuItem {
-                text: qsTr("Make history")
+                text: qsTr("Make history data")
                 onClicked: {
                     Mytables.makeHistory()
                 }
             }
             MenuItem {
-                text: qsTr("Maintain dbases")
+                text: qsTr("Purge database")
                 onClicked: {
                     Mytables.maintainDb()
                 }
@@ -58,6 +58,7 @@ Page
                 text: qsTr("Select LAM to cover")
                 onClicked: {
                     coverLam = lammiSelected
+                    coverPair = lammiPair
                     //plot.canvas.requestPaint()
                 }
             }
@@ -75,6 +76,18 @@ Page
                 onClicked: pageStack.push(Qt.resolvedUrl("MapPage.qml"))
             }*/
         }
+
+        PushUpMenu {
+            MenuItem {
+                text: qsTr("Help")
+                onClicked: pageStack.push(Qt.resolvedUrl("Help.qml"))
+            }
+            MenuItem {
+                text: qsTr("About")
+                onClicked: pageStack.push(Qt.resolvedUrl("About.qml"))
+            }
+        }
+
     PageHeader
     {
         id: ph

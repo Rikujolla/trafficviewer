@@ -45,7 +45,16 @@ CoverBackground {
         id: label2
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: label.bottom
-        text: speedView ? speedOrCars + "km/h" : speedOrCars + "cars/h"
+        //text: speedView ? speedOrCars + "km/h" : speedOrCars + "cars/h"
+        text: speedLAM + "km/h"
+        anchors.topMargin: Theme.paddingLarge
+        wrapMode: Text.WordWrap
+    }
+    Label {
+        id: label3
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.top: label2.bottom
+        text: carsLAM*12 + "cars/h"
         anchors.topMargin: Theme.paddingLarge
         wrapMode: Text.WordWrap
     }

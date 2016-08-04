@@ -47,5 +47,7 @@ DISTFILES += \
     qml/pages/tables.js \
     qml/data/lamstations.xml \
     qml/data/lamData.xml \
-    qml/pages/LocList.qml
+    qml/pages/LocList.qml \
+    qml/pages/Help.qml \
+    qml/pages/About.qml
 

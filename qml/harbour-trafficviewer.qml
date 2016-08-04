@@ -47,8 +47,11 @@ ApplicationWindow
     property int lammiSelected  // selected LAM from the map
     property int lammiPair // selected LAM pair from the map
     property int tempTime
-    property int coverLam
+    property int coverLam  // Selected LAM to cover
+    property int coverPair // Selected LAM direction to cover
     property int speedOrCars  // Either Speed or Cars in cover
+    property int speedLAM // Speed to cover
+    property int carsLAM // Cars to cover
     property real currentLat // To record currentLat: of the mapcenter
     property real currentLong // To record currentLong: of the map center
 
@@ -116,10 +119,12 @@ ApplicationWindow
         ListElement {
             timestamp: "Tue Jun 07 2016 06:00:00 GMT+0300"
             speed:60.0
+            age:1000
         }
         ListElement {
             timestamp: "Tue Jun 07 2016 07:00:00 GMT+0300"
             speed:66.0
+            age:1000
         }
     }
 
@@ -171,7 +176,7 @@ ApplicationWindow
         }
         ListElement {
             name: "History"
-            kolor: "blue"
+            kolor: "grey"
         }
     }
 

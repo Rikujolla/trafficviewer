@@ -58,35 +58,47 @@ Rectangle
         return Math.max(p1.y, p2.y) - Math.min(p1.y, p2.y)
     }
 
-    /*function getMinMax(data)
+    function getMinMax()
     {
-        var last = data.length - 1;
+        var last = dataHistory.count - 1;
         var first = 0;
-
-        var s = new Date(data[0].timestamp) /// changed
-
-        if (s.getTime() < xstart.getTime())
-            xstart = s
-
-        s = new Date(data[data.length-1].timestamp)
-
-        if (s.getTime() > xend.getTime())
-            xend = s
-
-        first = 0;
-        last = data.length - 1;
+        var koo = 1.0
+        if (!speedView) {koo = 12.0}
 
         for (var i = first; i <= last; i++)
         {
-            var l = data[i]
+            var l = dataHistory.get(i).speed * koo
 
-            if (l[column] > max)
-                max = l[column];
-
-            if (l[column] < min)
-                min = l[column];
+            if (l > max){
+                max = l-l%700+700;
+            }
         }
-    }*/
+
+        first = 0;
+        last = last = dataList.count - 1;
+
+        for (i = first; i <= last; i++)
+        {
+            l = dataList.get(i).speed * koo
+
+            if (l > max){
+                max = l-l%700+700;
+            }
+        }
+
+        first = 0;
+        last = last = dataYesterday.count - 1;
+
+        for (i = first; i <= last; i++)
+        {
+            l = dataYesterday.get(i).speed * koo
+
+            if (l > max){
+                max = l-l%700+700;
+            }
+        }
+
+    }
 
     function updateVerticalScale()
     {
@@ -282,9 +294,9 @@ Rectangle
             running: Qt.application.active && chView
             onTriggered:  {
                 canvas.requestPaint()
-                console.log("latest ", dataList.get(dataList.count-1).speed)
+                //console.log("latest ", dataList.get(dataList.count-1).speed)
                 chView = false
-                console.log(" change view")
+                //console.log(" change view")
             }
                 //PropertyAnimation { duration: 500; target: legend; property: "opacity"; to: 0 }
         }
@@ -470,17 +482,12 @@ Rectangle
             var time = new Date().getTime()
             var offset = new Date().getTimezoneOffset()
             console.log("offset", offset)
-            //xstart = new Date("Wed Jun 16 2016 00:00:00 GMT+0300") //RLAH
             xstart = new Date(time + offset*60*1000 - time%(24*60*60*1000)) //RLAH
-            //xend = new Date(dataListModel[0][0]["timestamp"])
-            //xend = new Date("Thu Jun 17 2016 00:00:00 GMT+0300") //RLAH
             xend = new Date(time + 24*60*60*1000 + offset*60*1000- time%(24*60*60*1000)) //RLAH
 
-            //min = 0.0
             speedView ? max = 140.0 : max = 1400.0;
 
-            //for (var n=0; n<dataListModel.length; n++)//LENGTH TO COUNT
-                //getMinMax(dataListModel[n])
+            getMinMax()
 
             updateVerticalScale()
             updateHorizontalScale()

@@ -75,18 +75,21 @@ Page {
         Map {
             id: map
             anchors.fill: parent
-            zoomLevel: (maximumZoomLevel - minimumZoomLevel)/2 + 2
-            plugin : Plugin {
+            zoomLevel: (maximumZoomLevel - minimumZoomLevel)/2 + 4.5
+            /*plugin : Plugin {
                 id: plugin
                 allowExperimental: true
-                preferred: ["nokia", "osm"]
+                preferred: ["here", "osm"]
                 required.mapping: Plugin.AnyMappingFeatures
                 required.geocoding: Plugin.AnyGeocodingFeatures
                 parameters: [
-                    PluginParameter { name: "app_id"; value: "d3T1aLrywH9xSvigxqd3" },
-                    PluginParameter { name: "token"; value: "03u1EAv_sslP5fFLTLb4KA" },
-                    PluginParameter { name: "proxy"; value: "system" }
+                    PluginParameter { name: "here.app_id"; value: "xxxxxxxx" },
+                    PluginParameter { name: "here.token"; value: "yyyyyyyyy" },
+                    PluginParameter { name: "here.proxy"; value: "system" }
                 ]
+            }*/
+            plugin : Plugin {
+                name: "osm"
             }
             //center: currentPosition.coordinate
             center: QtPositioning.coordinate(62.74529734,25.77326947)
@@ -131,7 +134,7 @@ Page {
 
                 MapCircle {
                     id: lamDirTwo
-                    color: "orange"
+                    color: age < 600 ? (age < 300 ? "yellow":"orange") : "red"
                     border.color: Qt.darker(color);
                     border.width: 3
                     radius:200.0
@@ -164,10 +167,10 @@ Page {
                     id:velTex
                     sourceItem: Text{
                         text: veloc
-                        color:"blue"
+                        color:"black"
                         font.bold: true
                     }
-                    zoomLevel: 12.5
+                    zoomLevel: 13.5
                     z:80
                     coordinate: QtPositioning.coordinate(latti,longi)
                     anchorPoint: Qt.point(velTex.sourceItem.width * 0.5,velTex.sourceItem.height * 0.5)
@@ -215,7 +218,7 @@ Page {
                 id:loadXml
                 running: Qt.application.active
                 repeat:true
-                interval: 5000
+                interval: 3000
                 //triggeredOnStart: true
                 onTriggered: {
                     console.log(map.center, map.center.latitude)

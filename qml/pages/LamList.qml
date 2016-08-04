@@ -35,7 +35,7 @@ Page {
         model: lamSpecs
         anchors.fill: parent
 
-        PullDownMenu {
+        /*PullDownMenu {
             MenuItem {
                 text: qsTr("Draw Data")
                 onClicked: pageStack.push(Qt.resolvedUrl("DrawData.qml"))
@@ -44,12 +44,11 @@ Page {
                 text: qsTr("Loc List")
                 onClicked: pageStack.push(Qt.resolvedUrl("LocList.qml"))
             }
-        }
+        }*/
 
         header: PageHeader {
             id:headeri
-            //title: qsTr("Current LAM data") + " " + lamSpecs.get(0).localtime
-            title: qsTr("Current LAM data")
+            title: ("Current LAM data")
         }
 
 
@@ -60,7 +59,6 @@ Page {
                 //var text0 = lamSpecs.get(0).localtime + "\n" + "LAM"
                 x: Theme.paddingLarge
                 text: "LAM" + lamid + ", " + trafficvolume1 + ", " + averagespeed1 + ", " + trafficvolume2 + ", " + averagespeed2
-                //text: qsTr("Item") + " " + index
                 anchors.verticalCenter: parent.verticalCenter
                 color: delegate.highlighted ? Theme.highlightColor : Theme.primaryColor
             }
