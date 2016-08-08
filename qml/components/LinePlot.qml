@@ -309,7 +309,8 @@ Rectangle
         width: parent.width
         anchors.top: xEnd.bottom
         anchors.bottom: valueMin.top
-        renderTarget: Canvas.FramebufferObject
+        //renderTarget: Canvas.FramebufferObject
+        renderTarget: Canvas.Image
         antialiasing: true
 
         property int first: 0

@@ -40,6 +40,7 @@ ApplicationWindow
     property bool testData : false // Used to test
     property bool useLocation : true // When starting, GPS is used
     property bool dataLoad : true // Selects if data is reloaded or updated to screen
+    property bool dataReaded : false // Tells if the data has been readed to map recently
     property bool locationsLoaded : false
     property string timeLamUpdated : "" //Stores the last update value not to update too often
     property bool speedView : true // Default speedView, when false cars/hour view
@@ -54,6 +55,7 @@ ApplicationWindow
     property int carsLAM // Cars to cover
     property real currentLat // To record currentLat: of the mapcenter
     property real currentLong // To record currentLong: of the map center
+    property real differenceExists  // calculates creen difference to currentlatlong
 
 
     XmlListModel {
@@ -180,16 +182,41 @@ ApplicationWindow
         }
     }
 
+    Timer { // Loads lam locations when starting the app
+        id:waitXml
+        //running: !locationsLoaded && Qt.application.active
+        running: true
+        repeat:true
+        interval: 200
+        onTriggered: {
+            if (lamStations.status == 1 && !locationsLoaded) {
+                //waitXml.stop();
+                Mytables.loadLocation()
+                locationsLoaded = true
+                console.log("LAM-stations data updated")
+            }
+            else if (locationsLoaded) {
+                loadXmlIdle.start()
+                waitXml.stop();
+                console.log("Starting LAM measurement data capture")
+            }
+
+            else {console.log ("Updating LAM-stations data", lamStations.status)}
+        }
+    }
+
+
     Timer {
         id:loadXmlIdle
-        running: !Qt.application.active
+        //running: !Qt.application.active
+        running: false
         repeat:true
-        interval: 120000
-        //triggeredOnStart: true
+        interval: !Qt.application.active ? 120000 : 30000
+        triggeredOnStart: true
         onTriggered: {
                 lamSpecs.reload()
                 waitXmlLoadIdle.start()
-                console.log("Reloading traffic data idle")
+                console.log("Starting traffic XML-data load")
         }
     }
 
@@ -203,9 +230,9 @@ ApplicationWindow
                 waitXmlLoadIdle.stop();
                 Mytables.addData()
                 dataLoad = false
-                console.log("Data added on idle", dataLoad, lamSpecs.status)
+                console.log("Traffic XML-data added to SQL table", dataLoad, lamSpecs.status)
             }
-            else {console.log ("lamSpecsIdle.not Ready", lamSpecs.status)}
+            else {console.log ("Loading traffic XML-data", lamSpecs.status)}
         }
     }
 

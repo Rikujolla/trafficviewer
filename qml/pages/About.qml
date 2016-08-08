@@ -112,7 +112,9 @@ Page {
                 }
                 text: qsTr("Copyright (c) 2015, Riku Lahtinen") + "\n"
                       + qsTr("Licensed under BSD. License, source code and more information:") + "\n"
-                      + ("https://github.com/Rikujolla/trafficviewer")
+                      + ("https://github.com/Rikujolla/trafficviewer")  + "\n"
+                      + qsTr("The app shows open data from Finnish Transport Agency published under licence Creative Commons 4.0") + "\n"
+                      + qsTr("Maps are from OpenStreetMap") + " www.openstreetmap.org, " + qsTr("copyright OpenStreetMap contributors")
             }
 
 //loppusulkeet

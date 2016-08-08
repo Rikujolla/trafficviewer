@@ -20,7 +20,6 @@ License:    LICENSE
 URL:        http://example.org/
 Source0:    %{name}-%{version}.tar.bz2
 Source100:  harbour-trafficviewer.yaml
-Requires:   qt5-plugin-geoservices-nokia
 Requires:   qt5-plugin-geoservices-osm
 Requires:   qt5-qtdeclarative-import-location
 Requires:   qt5-qtdeclarative-import-positioning

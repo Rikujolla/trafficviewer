@@ -43,6 +43,18 @@
         <source>The idea of the software is to give you actual traffic info in Finland and to help you to design your travelling based on actual and historical data.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>The app shows open data from Finnish Transport Agency published under licence Creative Commons 4.0</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maps are from OpenStreetMap</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>copyright OpenStreetMap contributors</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>CoverPage</name>
@@ -50,9 +62,29 @@
         <source>LAM </source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>km/h</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>cars/h</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DrawData</name>
+    <message>
+        <source>Help</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>About</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Make history data</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message>
         <source>Select LAM to cover</source>
         <translation type="unfinished"></translation>
@@ -71,22 +103,6 @@
     </message>
     <message>
         <source>Cars per hour, LAM</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Help</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>About</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Make history data</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Purge database</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -128,30 +144,7 @@
 <context>
     <name>LocList</name>
     <message>
-        <source>Draw Data</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Current LAM data</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>Settings</name>
-    <message>
-        <source>List Page</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Settings</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Hello Sailors</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Map Page</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

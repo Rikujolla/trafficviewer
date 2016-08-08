@@ -90,6 +90,7 @@ Page {
             }*/
             plugin : Plugin {
                 name: "osm"
+                PluginParameter { name: "osm.mapping.copyright"; value: "© <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors" }
             }
             //center: currentPosition.coordinate
             center: QtPositioning.coordinate(62.74529734,25.77326947)
@@ -199,7 +200,7 @@ Page {
                     //velTex.coordinate = QtPositioning.coordinate(61.48127685,23.8442065)
                 }
             }
-            Timer { // Loads lam locations when starting the app
+            /*Timer { // Loads lam locations when starting the app
                 id:waitXml
                 running: !locationsLoaded && Qt.application.active
                 repeat:true
@@ -212,36 +213,45 @@ Page {
                     }
                     else {console.log ("lamStations.not Ready", lamStations.status)}
                 }
-            }
+            }*/
 
             Timer {
                 id:loadXml
-                running: Qt.application.active
+                running: Qt.application.active && page.status == 2
                 repeat:true
-                interval: 3000
+                interval: 1000
                 //triggeredOnStart: true
                 onTriggered: {
                     console.log(map.center, map.center.latitude)
+                    differenceExists = Math.abs(map.center.latitude-currentLat) + Math.abs(map.center.longitude-currentLong)
                     currentLat = map.center.latitude
                     currentLong = map.center.longitude
-                    if (dataLoad || !Qt.application.active) {
+                    /*if (dataLoad || !Qt.application.active) {
                         console.log("iflooppi", page.status)
                         lamSpecs.reload()
                         waitXmlLoad.start()
                         //dataLoad = false
-                        console.log("Reloading traffic data")
-                    }
-                    else if (page.status == 2) {
+                        console.log("Reloading traffic data, non any more")
+                    }*/
+                    //else
+                        if (page.status == 2 && !dataReaded) {
                     //else {
-                        console.log("elseiflooppi", page.status)
+                        //console.log("elseiflooppi", page.status)
                         Mytables.readData()
-                        dataLoad = true
-                        console.log("Redrawing traffic data")
+                        //dataLoad = true
+                            dataReaded = true;
+                        console.log("Updating LAM data to the screen")
+                        //loadXml.interval = 30000
                     }
-                    else {
-                        dataLoad = true
-                        console.log("elselooppi", page.status)
+                    else if (differenceExists > 0.001) {
+                        //dataLoad = true
+                        console.log("Searching LAM-stations on screen", page.status)
+                            Mytables.subsetLocation()
+                            dataReaded = false;
                     }
+                        else {
+                            dataReaded = false;
+                        }
 
                 }
             }

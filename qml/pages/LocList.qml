@@ -36,10 +36,10 @@ Page {
         anchors.fill: parent
 
         PullDownMenu {
-            MenuItem {
+            /*MenuItem {
                 text: qsTr("Draw Data")
                 onClicked: pageStack.push(Qt.resolvedUrl("DrawData.qml"))
-            }
+            }*/
             /*MenuItem {
                 text: qsTr("Map Page")
                 onClicked: pageStack.push(Qt.resolvedUrl("MapPage.qml"))

@@ -32,7 +32,7 @@ PkgBR: [qt5-qtlocation-devel, qt5-qtpositioning-devel, qt5-qtdeclarative-import-
 
 # Runtime dependencies which are not automatically detected
 Requires:
-  - qt5-plugin-geoservices-nokia
+#  - qt5-plugin-geoservices-nokia
   - qt5-plugin-geoservices-osm
   - qt5-qtdeclarative-import-location
   - qt5-qtdeclarative-import-positioning

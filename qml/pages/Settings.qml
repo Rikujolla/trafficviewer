@@ -36,14 +36,14 @@ Page {
 
         // PullDownMenu and PushUpMenu must be declared in SilicaFlickable, SilicaListView or SilicaGridView
         PullDownMenu {
-            MenuItem {
+            /*MenuItem {
                 text: qsTr("List Page")
                 onClicked: pageStack.push(Qt.resolvedUrl("LamList.qml"))
             }
             MenuItem {
                 text: qsTr("Map Page")
                 onClicked: pageStack.push(Qt.resolvedUrl("MapPage.qml"))
-            }
+            }*/
         }
 
         // Tell SilicaFlickable the height of its content.
@@ -56,15 +56,15 @@ Page {
 
             width: page.width
             spacing: Theme.paddingLarge
-            PageHeader {
+            /*PageHeader {
                 title: qsTr("Settings")
-            }
-            Label {
+            }*/
+           /* Label {
                 x: Theme.paddingLarge
                 text: qsTr("Hello Sailors")
                 color: Theme.secondaryHighlightColor
                 font.pixelSize: Theme.fontSizeExtraLarge
-            }
+            }*/
 
 
         }
