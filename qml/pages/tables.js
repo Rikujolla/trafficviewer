@@ -102,17 +102,8 @@ function drawSpeed() {
                     var rs = tx.executeSql('SELECT * FROM Valuetable WHERE valamid =? AND date(lamlocaltime,?) > date(?,?,?)', [lammiSelected, 'localtime','now', 'localtime','-1 day'])
                     var ry = tx.executeSql('SELECT *, datetime(lamlocaltime,?,?) AS lamtime FROM Valuetable WHERE valamid =? AND date(lamlocaltime,?) > date(?,?,?) AND date(lamlocaltime,?) < date(?,?)', ["+1 day","localtime", lammiSelected, 'localtime', 'now', 'localtime','-2 day','localtime', 'now', 'localtime'])
                     var rw = tx.executeSql('SELECT strftime(?,?,?)AS wdaynow', ['%w', 'now', 'localtime'])
-                    //console.log('Tänään', rw.rows.item(0).wdaynow)
-                    // toimii var rt = tx.executeSql('SELECT *, datetime(htime+?,?,?) AS hhtime FROM History WHERE valamid=? AND wday=?', [(time - time%(24*60*60*1000))/1000, 'unixepoch', 'localtime', lammiSelected, rw.rows.item(0).wdaynow])
-                    //var rt = tx.executeSql('SELECT *, datetime(htime+?,?,?) AS hhtime FROM Historystable WHERE valamid=? AND wday=?', [(time - time%(24*60*60*1000))/1000, 'unixepoch', 'localtime', lammiSelected, rw.rows.item(0).wdaynow])
-                    // ei toimiv rt = tx.executeSql('SELECT *, datetime(htime+?,?) AS hhtime FROM Historystable WHERE valamid=? AND wday=?', [time, 'unixepoch', lammiSelected, rw.rows.item(0).wdaynow])
-                    //var rt = tx.executeSql('SELECT *, datetime(htime+?,?,?) AS hhtime FROM Historystable WHERE valamid=? AND wday=?', [(time - time%(24*60*60*1000))/1000, 'unixepoch', 'localtime', lammiSelected, rw.rows.item(0).wdaynow])
-                    //var rt = tx.executeSql('SELECT *, datetime(htime+?,?,?) AS hhtime FROM Historystable WHERE valamid=? AND wday=?', [(time)/1000, 'unixepoch', 'localtime', lammiSelected, rw.rows.item(0).wdaynow])
-                    //var rt = tx.executeSql('SELECT *, datetime(htime+?,?,?) AS hhtime FROM Historystable WHERE valamid=? AND wday=?', [(time - time%(24*60*60*1000))/1000, 'unixepoch', 'localtime', lammiSelected, rw.rows.item(0).wdaynow])
-                    //var rt = tx.executeSql('SELECT *, datetime(htime+?,?) AS hhtime FROM Historystable WHERE valamid=? AND wday=?', [time/1000, 'unixepoch', lammiSelected, rw.rows.item(0).wdaynow])
-                    //var rt = tx.executeSql('SELECT *, datetime(?, ?) AS hhtime FROM Historystable WHERE valamid=? AND wday=?', [zeero, '+htime seconds', lammiSelected, rw.rows.item(0).wdaynow])
+                    //console.log('Today', rw.rows.item(0).wdaynow)
                     var rt = tx.executeSql('SELECT *, datetime(htime+?,?,?) AS hhtime FROM Historystable WHERE valamid=? AND wday=?', [(time + offset*60*1000 - time%(24*60*60*1000))/1000, 'unixepoch', 'localtime', lammiSelected, rw.rows.item(0).wdaynow])
-                    //console.log("time2", rt.rows.item(0).htime)
 
                     dataList.clear();
                     for(var i = 0; i < rs.rows.length; i++) {
@@ -122,7 +113,6 @@ function drawSpeed() {
                             }
                             else {
                                 dataList.append({"timestamp":rs.rows.item(i).lamlocaltime, "speed":rs.rows.item(i).averagespeed2})
-                                //console.log(rs.rows.item(i).lamlocaltime)
                             }
                         }
                         else {
@@ -160,7 +150,6 @@ function drawSpeed() {
                         if (speedView){
                             if (lammiPair == 0) {
                                 dataHistory.append({"timestamp":rt.rows.item(i).hhtime, "speed":rt.rows.item(i).msp1/rt.rows.item(i).nhist})
-                                //console.log(rt.rows.item(i).hhtime, rt.rows.item(i).msp1/rt.rows.item(i).nhist, rt.rows.item(i).mtr1/rt.rows.item(i).nhist)
                             }
                             else {
                                 dataHistory.append({"timestamp":rt.rows.item(i).hhtime, "speed":rt.rows.item(i).msp2/rt.rows.item(i).nhist})
@@ -175,7 +164,6 @@ function drawSpeed() {
                             }
                         }
                     }
-                    //console.log("Modified time",ry.rows.item(0).lamtime)
                 }
                 )
 }
@@ -246,8 +234,6 @@ function makeHistory() {
                     tx.executeSql('CREATE TABLE History AS SELECT valamid, strftime(?,lamlocaltime,?) AS wday, ((strftime(?,lamlocaltime,?)+?)%?)-((strftime(?,lamlocaltime,?)+?)%?)%? AS htime, total(trafficvolume1) AS mtr1, total(trafficvolume2) AS mtr2, total(averagespeed1) AS msp1, total(averagespeed2) AS msp2, count(rowid) AS nhist FROM Valuetable WHERE (strftime(?,?) - strftime(?,lamlocaltime))> ? GROUP BY valamid, htime, wday', ['%w', 'localtime','%s', 'localtime', 120, 86400, '%s', 'localtime', 120, 86400, 600,'%s', 'now', '%s', 9000])
 */
                     tx.executeSql('CREATE TABLE History AS SELECT valamid, strftime(?,lamlocaltime,?) AS wday, ((strftime(?,lamlocaltime,?)+?)%?)-((strftime(?,lamlocaltime,?)+?)%?)%? AS htime, total(trafficvolume1) AS mtr1, total(trafficvolume2) AS mtr2, total(averagespeed1) AS msp1, total(averagespeed2) AS msp2, count(rowid) AS nhist FROM Valuetable WHERE (strftime(?,?) - strftime(?,lamlocaltime))> ? GROUP BY valamid, htime, wday', ['%w', 'localtime','%s', 'localtime', 120, 86400, '%s', 'localtime', 120, 86400, 600,'%s', 'now', '%s', 702000])
-
-                    // vanha toimii?? tx.executeSql('CREATE TABLE History AS SELECT valamid, strftime(?,lamlocaltime,?) AS wday, ((strftime(?,lamlocaltime)%?)-(strftime(?,lamlocaltime)%?)%?) AS htime, total(trafficvolume1) AS mtr1, total(trafficvolume2) AS mtr2, total(averagespeed1) AS msp1, total(averagespeed2) AS msp2, count(rowid) AS nhist FROM Valuetable WHERE (strftime(?,?) - strftime(?,lamlocaltime))> ? GROUP BY valamid, htime, wday', ['%w', 'localtime','%s', 86400, '%s', 86400, 600, '%s', 'now', '%s', 702000])
                     tx.executeSql('INSERT INTO Historystable SELECT * FROM History')
                     tx.executeSql('CREATE TABLE Historytemp AS SELECT valamid, wday, htime, total(mtr1) AS mtr1, total(mtr2) AS mtr2, total(msp1) AS msp1, total(msp2) AS msp2, sum(nhist) AS nhist FROM Historystable GROUP BY valamid, htime, wday')
                     tx.executeSql('DELETE FROM Historystable')

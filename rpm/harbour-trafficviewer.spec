@@ -13,7 +13,7 @@ Name:       harbour-trafficviewer
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:    Traffic viewer
-Version:    0.0.4
+Version:    0.0.5
 Release:    1
 Group:      Qt/Qt
 License:    LICENSE
@@ -23,6 +23,7 @@ Source100:  harbour-trafficviewer.yaml
 Requires:   qt5-plugin-geoservices-osm
 Requires:   qt5-qtdeclarative-import-location
 Requires:   qt5-qtdeclarative-import-positioning
+Requires:   qt5-qtdeclarative-import-xmllistmodel
 Requires:   sailfishsilica-qt5 >= 0.10.9
 BuildRequires:  pkgconfig(sailfishapp) >= 1.0.2
 BuildRequires:  pkgconfig(Qt5Core)

@@ -1,6 +1,6 @@
 Name: harbour-trafficviewer
 Summary: Traffic viewer
-Version: 0.0.4
+Version: 0.0.5
 Release: 1
 # The contents of the Group field should be one of the groups listed here:
 # http://gitorious.org/meego-developer-tools/spectacle/blobs/master/data/GROUPS
@@ -36,6 +36,7 @@ Requires:
   - qt5-plugin-geoservices-osm
   - qt5-qtdeclarative-import-location
   - qt5-qtdeclarative-import-positioning
+  - qt5-qtdeclarative-import-xmllistmodel
   - sailfishsilica-qt5 >= 0.10.9
 
 # All installed files

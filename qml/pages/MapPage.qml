@@ -178,12 +178,6 @@ Page {
                 }
             }
 
-
-            /*HereIndicator {
-                id: hereIndicator
-                coordinate: positionAccuracyIndicator.center
-            }*/
-
             PositionSource {
                 id:possut
                 active:useLocation && Qt.application.active
@@ -200,20 +194,6 @@ Page {
                     //velTex.coordinate = QtPositioning.coordinate(61.48127685,23.8442065)
                 }
             }
-            /*Timer { // Loads lam locations when starting the app
-                id:waitXml
-                running: !locationsLoaded && Qt.application.active
-                repeat:true
-                interval: 200
-                onTriggered: {
-                    if (lamStations.status == 1) {
-                        waitXml.stop();
-                        Mytables.loadLocation()
-                        locationsLoaded = true
-                    }
-                    else {console.log ("lamStations.not Ready", lamStations.status)}
-                }
-            }*/
 
             Timer {
                 id:loadXml
@@ -226,32 +206,19 @@ Page {
                     differenceExists = Math.abs(map.center.latitude-currentLat) + Math.abs(map.center.longitude-currentLong)
                     currentLat = map.center.latitude
                     currentLong = map.center.longitude
-                    /*if (dataLoad || !Qt.application.active) {
-                        console.log("iflooppi", page.status)
-                        lamSpecs.reload()
-                        waitXmlLoad.start()
-                        //dataLoad = false
-                        console.log("Reloading traffic data, non any more")
-                    }*/
-                    //else
-                        if (page.status == 2 && !dataReaded) {
-                    //else {
-                        //console.log("elseiflooppi", page.status)
+                    if (page.status == 2 && !dataReaded) {
                         Mytables.readData()
-                        //dataLoad = true
-                            dataReaded = true;
+                        dataReaded = true;
                         console.log("Updating LAM data to the screen")
-                        //loadXml.interval = 30000
                     }
                     else if (differenceExists > 0.001) {
-                        //dataLoad = true
                         console.log("Searching LAM-stations on screen", page.status)
-                            Mytables.subsetLocation()
-                            dataReaded = false;
+                        Mytables.subsetLocation()
+                        dataReaded = false;
                     }
-                        else {
-                            dataReaded = false;
-                        }
+                    else {
+                        dataReaded = false;
+                    }
 
                 }
             }
@@ -265,8 +232,6 @@ Page {
                     if (lamSpecs.status == 1) {
                         waitXmlLoad.stop();
                         Mytables.addData()
-                        //timeLamUpdated = lamSpecs.get(0).localtime
-                        //console.log("timeLamupdated", timeLamUpdated)
                         dataLoad = false
                         console.log("Data loaded", dataLoad, lamSpecs.status)
                     }
