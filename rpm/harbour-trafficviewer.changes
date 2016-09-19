@@ -7,6 +7,9 @@
 
 # * date Author's Name <author's email> version-release
 # - Summary of changes
+* Mon Sep 19 2016 Riku Lahtinen <rikul.lajolla@kiu.as> 0.0.6-1
+- Added cars per hour under speedsigns
+
 * Mon Aug 08 2016 Riku Lahtinen <rikul.lajolla@kiu.as> 0.0.4-1
 - First release to OpenRepos
 

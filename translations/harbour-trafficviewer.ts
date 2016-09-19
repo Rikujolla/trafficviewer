@@ -148,4 +148,11 @@
         <translation type="unfinished"></translation>
     </message>
 </context>
+<context>
+    <name>MapPage</name>
+    <message>
+        <source>OpenStreetMap contributors</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
 </TS>

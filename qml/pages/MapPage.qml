@@ -116,11 +116,44 @@ Page {
                     color: "red"
                     border.color: Qt.darker(color);
                     border.width: 3
-                    radius:300.0
+                    radius:200.0
                     opacity: 1.0
                     z:40
                     //center: QtPositioning.coordinate(62.74529734,25.77326947)
                     center: QtPositioning.coordinate(latti,longi)
+                }
+            }
+
+            MapItemView {
+                id:lamList2
+                model:lamPoints
+                delegate: lamComponentRec
+            }
+
+            Component {
+                id: lamComponentRec
+
+                MapRectangle {
+                    id: lamDirTwo
+                    color: "blue"
+                    border.color: Qt.darker(color);
+                    border.width: 3
+                    opacity: 1.0
+                    z:40
+                    //center: QtPositioning.coordinate(62.74529734,25.77326947)
+                    topLeft: QtPositioning.coordinate(latti-0.002,longi-0.003)
+                    bottomRight: QtPositioning.coordinate(latti-0.0036,longi+0.003)
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            lammiSelected = lamPoints.get(index).iidee
+                            lammiPair = lamPoints.get(index).pair
+                            speedView = false
+                            pageStack.push(Qt.resolvedUrl("DrawData.qml"))
+                            //dataLoad = true
+                            console.log("Lamindex", lammiSelected, lammiPair)
+                        }
+                    }
                 }
             }
 
@@ -138,7 +171,7 @@ Page {
                     color: age < 600 ? (age < 300 ? "yellow":"orange") : "red"
                     border.color: Qt.darker(color);
                     border.width: 3
-                    radius:200.0
+                    radius:150.0
                     opacity: 1.0
                     z:60
                     center: QtPositioning.coordinate(latti,longi)
@@ -147,8 +180,8 @@ Page {
                         onClicked: {
                             lammiSelected = lamPoints.get(index).iidee
                             lammiPair = lamPoints.get(index).pair
+                            speedView = true
                             pageStack.push(Qt.resolvedUrl("DrawData.qml"))
-                            //dataLoad = true
                             console.log("Lamindex", lammiSelected, lammiPair)
                         }
                     }
@@ -171,17 +204,39 @@ Page {
                         color:"black"
                         font.bold: true
                     }
-                    zoomLevel: 13.5
+                    zoomLevel: 13.8
                     z:80
                     coordinate: QtPositioning.coordinate(latti,longi)
                     anchorPoint: Qt.point(velTex.sourceItem.width * 0.5,velTex.sourceItem.height * 0.5)
                 }
             }
 
+            MapItemView {
+                id:carsList
+                model:lamPoints
+                delegate: carsComponent
+            }
+
+            Component {
+                id: carsComponent
+
+                MapQuickItem {
+                    id:velTex
+                    sourceItem: Text{
+                        text: cars*12
+                        color:"white"
+                        font.bold: true
+                    }
+                    zoomLevel: 14.0
+                    z:80
+                    coordinate: QtPositioning.coordinate(latti-0.0028,longi)
+                    anchorPoint: Qt.point(velTex.sourceItem.width * 0.5,velTex.sourceItem.height * 0.5)
+                }
+            }
             PositionSource {
                 id:possut
                 active:useLocation && Qt.application.active
-                updateInterval:1000
+                updateInterval:100
                 onPositionChanged: {
                     map.center = possut.position.coordinate
                     currentLat = map.center.latitude
@@ -200,7 +255,6 @@ Page {
                 running: Qt.application.active && page.status == 2
                 repeat:true
                 interval: 1000
-                //triggeredOnStart: true
                 onTriggered: {
                     console.log(map.center, map.center.latitude)
                     differenceExists = Math.abs(map.center.latitude-currentLat) + Math.abs(map.center.longitude-currentLong)
@@ -240,9 +294,30 @@ Page {
             }
 
         }
+
     }
     //onComponentCompleted: {counter = 0; useLocation = true}
-    //    }
+        Text{
+            font.pixelSize: Theme.fontSizeSmall
+            text: "© " + qsTr("OpenStreetMap contributors")
+            anchors.bottom : page.bottom
+        }
+
+    IconButton {
+        anchors.bottom: page.bottom
+        anchors.right: page.right
+        icon.source: "image://theme/icon-l-gps?" + (pressed
+                                                    ? Theme.highlightColor
+                                                    : Theme.primaryColor)
+        onClicked: {
+            useLocation = true
+            vars.counter = 0
+            //map.center = possut.position.coordinate
+            //currentLat = map.center.latitude
+            //currentLong = map.center.longitude
+        }
+
+    }
 }
 
 

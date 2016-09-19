@@ -486,7 +486,7 @@ Rectangle
             xstart = new Date(time + offset*60*1000 - time%(24*60*60*1000)) //RLAH
             xend = new Date(time + 24*60*60*1000 + offset*60*1000- time%(24*60*60*1000)) //RLAH
 
-            speedView ? max = 140.0 : max = 1400.0;
+            speedView ? max = 140.0 : max = 350.0;
 
             getMinMax()
 

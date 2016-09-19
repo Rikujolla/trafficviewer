@@ -64,8 +64,8 @@ function readData() {
                     lamPoints.clear();
                     for(var i = 0; i < rs.rows.length; i++) {
                         //console.log(rs.rows.item(i).age)
-                        lamPoints.append({"iidee": rs.rows.item(i).lamid, "pair": 0, "latti":rs.rows.item(i).latti + rs.rows.item(i).offlat1, "longi":rs.rows.item(i).longi + rs.rows.item(i).offlong1, "veloc":rs.rows.item(i).averagespeed1, "age":rs.rows.item(i).age})
-                        lamPoints.append({"iidee": rs.rows.item(i).lamid, "pair": 1, "latti":rs.rows.item(i).latti + rs.rows.item(i).offlat2, "longi":rs.rows.item(i).longi + rs.rows.item(i).offlong2, "veloc":rs.rows.item(i).averagespeed2, "age":rs.rows.item(i).age})
+                        lamPoints.append({"iidee": rs.rows.item(i).lamid, "pair": 0, "latti":rs.rows.item(i).latti + rs.rows.item(i).offlat1, "longi":rs.rows.item(i).longi + rs.rows.item(i).offlong1, "veloc":rs.rows.item(i).averagespeed1, "age":rs.rows.item(i).age, "cars":rs.rows.item(i).trafficvolume1})
+                        lamPoints.append({"iidee": rs.rows.item(i).lamid, "pair": 1, "latti":rs.rows.item(i).latti + rs.rows.item(i).offlat2, "longi":rs.rows.item(i).longi + rs.rows.item(i).offlong2, "veloc":rs.rows.item(i).averagespeed2, "age":rs.rows.item(i).age, "cars":rs.rows.item(i).trafficvolume2})
                         if (rs.rows.item(i).lamid == coverLam) {
                             if (coverPair == 0){
                                 speedLAM = rs.rows.item(i).averagespeed1

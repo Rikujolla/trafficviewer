@@ -148,4 +148,11 @@
         <translation>Tämänhetkinen LAM-data</translation>
     </message>
 </context>
+<context>
+    <name>MapPage</name>
+    <message>
+        <source>OpenStreetMap contributors</source>
+        <translation>OpenStreetMap tekijät</translation>
+    </message>
+</context>
 </TS>
