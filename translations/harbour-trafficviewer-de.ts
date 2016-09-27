@@ -151,7 +151,26 @@
 <context>
     <name>MapPage</name>
     <message>
-        <source>OpenStreetMap contributors</source>
+        <source>contributors</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Map data</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Settings</name>
+    <message>
+        <source>Settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GPS settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Adjust GPS update rate with slider</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

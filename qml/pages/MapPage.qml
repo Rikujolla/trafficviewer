@@ -236,7 +236,7 @@ Page {
             PositionSource {
                 id:possut
                 active:useLocation && Qt.application.active
-                updateInterval:100
+                updateInterval:gpsUpdateRate
                 onPositionChanged: {
                     map.center = possut.position.coordinate
                     currentLat = map.center.latitude
@@ -299,14 +299,16 @@ Page {
     //onComponentCompleted: {counter = 0; useLocation = true}
         Text{
             font.pixelSize: Theme.fontSizeSmall
-            text: "© " + qsTr("OpenStreetMap contributors")
+            text: qsTr("Map data") + " © " + "<a href=\'http://www.openstreetmap.org/copyright\'>OpenStreetMap</a> " + qsTr("contributors")
             anchors.bottom : page.bottom
+            onLinkActivated: Qt.openUrlExternally(link)
         }
 
     IconButton {
+        id:gpsIcon
         anchors.bottom: page.bottom
         anchors.right: page.right
-        icon.source: "image://theme/icon-l-gps?" + (pressed
+        icon.source: "image://theme/icon-m-gps?" + (pressed
                                                     ? Theme.highlightColor
                                                     : Theme.primaryColor)
         onClicked: {
@@ -316,7 +318,35 @@ Page {
             //currentLat = map.center.latitude
             //currentLong = map.center.longitude
         }
+    }
 
+    IconButton {
+        id: settingsIcon
+        anchors.bottom: gpsIcon.top
+        //anchors.bottomMargin: 20
+        anchors.right: page.right
+        icon.source: "image://theme/icon-m-developer-mode?" + (pressed
+                                                    ? Theme.highlightColor
+                                                    : Theme.primaryColor)
+        onClicked: {
+            pageStack.push(Qt.resolvedUrl("Settings.qml"))
+        }
+    }
+
+    IconButton {
+        id: favoriteIcon
+        anchors.bottom: settingsIcon.top
+        //anchors.bottomMargin: 20
+        anchors.right: page.right
+        icon.source: "image://theme/icon-m-favorite?" + (pressed
+                                                    ? Theme.highlightColor
+                                                    : Theme.primaryColor)
+        onClicked: {
+            lammiSelected = 902
+            lammiPair = 1
+            speedView = false
+            pageStack.push(Qt.resolvedUrl("DrawData.qml"))
+        }
     }
 }
 

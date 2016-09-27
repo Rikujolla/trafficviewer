@@ -56,10 +56,38 @@ Page {
 
             width: page.width
             spacing: Theme.paddingLarge
-            /*PageHeader {
+            PageHeader {
                 title: qsTr("Settings")
-            }*/
-           /* Label {
+            }
+
+
+            SectionHeader { text: qsTr("GPS settings") }
+
+            Text {
+                font.pixelSize: Theme.fontSizeSmall
+                color: Theme.primaryColor
+                wrapMode: Text.WordWrap
+                width: parent.width
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    margins: Theme.paddingLarge
+                }
+                text: {qsTr("Adjust GPS update rate with slider")
+                }
+            }
+
+            Slider {
+                width: parent.width
+                minimumValue: 1
+                maximumValue: 10
+                value: 2
+                valueText: value + " " + "s"
+                onValueChanged: gpsUpdateRate = value * 1000
+
+            }
+
+            /* Label {
                 x: Theme.paddingLarge
                 text: qsTr("Hello Sailors")
                 color: Theme.secondaryHighlightColor

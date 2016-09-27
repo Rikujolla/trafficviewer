@@ -56,7 +56,7 @@ ApplicationWindow
     property real currentLat // To record currentLat: of the mapcenter
     property real currentLong // To record currentLong: of the map center
     property real differenceExists  // calculates creen difference to currentlatlong
-
+    property int gpsUpdateRate : 1000
 
     XmlListModel {
         id: lamStations
