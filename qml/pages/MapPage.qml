@@ -148,10 +148,12 @@ Page {
                         onClicked: {
                             lammiSelected = lamPoints.get(index).iidee
                             lammiPair = lamPoints.get(index).pair
+                            lammiLatti = lamPoints.get(index).latti
+                            lammiLongi = lamPoints.get(index).longi
                             speedView = false
                             pageStack.push(Qt.resolvedUrl("DrawData.qml"))
                             //dataLoad = true
-                            console.log("Lamindex", lammiSelected, lammiPair)
+                            console.log("Lamindex", lammiSelected, lammiPair, lammiLatti, lammiLongi)
                         }
                     }
                 }
@@ -180,9 +182,11 @@ Page {
                         onClicked: {
                             lammiSelected = lamPoints.get(index).iidee
                             lammiPair = lamPoints.get(index).pair
+                            lammiLatti = lamPoints.get(index).latti
+                            lammiLongi = lamPoints.get(index).longi
                             speedView = true
                             pageStack.push(Qt.resolvedUrl("DrawData.qml"))
-                            console.log("Lamindex", lammiSelected, lammiPair)
+                            console.log("Lamindex", lammiSelected, lammiPair, lammiLatti, lammiLongi)
                         }
                     }
                 }
@@ -233,20 +237,17 @@ Page {
                     anchorPoint: Qt.point(velTex.sourceItem.width * 0.5,velTex.sourceItem.height * 0.5)
                 }
             }
+
             PositionSource {
                 id:possut
                 active:useLocation && Qt.application.active
                 updateInterval:gpsUpdateRate
                 onPositionChanged: {
-                    map.center = possut.position.coordinate
+                    //console.log(possut.position.coordinate.latitude, possut.position.coordinate.longitude)
+                    gpsLat = possut.position.coordinate.latitude
+                    gpsLong = possut.position.coordinate.longitude
                     currentLat = map.center.latitude
                     currentLong = map.center.longitude
-                    vars.counter++
-                    vars.counter > 9 ? useLocation=false :useLocation = true
-                    console.log("Wait location", vars.counter)
-                    //Mytables.loadLocation()
-                    //lamDirOne.center = QtPositioning.coordinate(61.48127685,23.8442065)
-                    //velTex.coordinate = QtPositioning.coordinate(61.48127685,23.8442065)
                 }
             }
 
@@ -296,8 +297,9 @@ Page {
         }
 
     }
-    //onComponentCompleted: {counter = 0; useLocation = true}
-        Text{
+
+
+    Text{
             font.pixelSize: Theme.fontSizeSmall
             text: qsTr("Map data") + " © " + "<a href=\'http://www.openstreetmap.org/copyright\'>OpenStreetMap</a> " + qsTr("contributors")
             anchors.bottom : page.bottom
@@ -308,15 +310,15 @@ Page {
         id:gpsIcon
         anchors.bottom: page.bottom
         anchors.right: page.right
-        icon.source: "image://theme/icon-m-gps?" + (pressed
+        icon.source: "image://theme/icon-m-gps?" + (useLocation ? (pressed
                                                     ? Theme.highlightColor
-                                                    : Theme.primaryColor)
+                                                    : Theme.primaryColor): "red")
         onClicked: {
-            useLocation = true
-            vars.counter = 0
-            //map.center = possut.position.coordinate
-            //currentLat = map.center.latitude
-            //currentLong = map.center.longitude
+            if (useLocation) {
+            map.center.latitude = gpsLat
+            map.center.longitude = gpsLong
+            }
+            else {}
         }
     }
 
@@ -342,11 +344,35 @@ Page {
                                                     ? Theme.highlightColor
                                                     : Theme.primaryColor)
         onClicked: {
-            lammiSelected = 902
-            lammiPair = 1
+            lammiSelected = favourSelected
+            lammiPair = favourPair
+            lammiLatti = favourLatti
+            lammiLongi = favourLongi
+            map.center = QtPositioning.coordinate(favourLatti+0.01,favourLongi+0.01)
+            map.center = QtPositioning.coordinate(favourLatti, favourLongi)
             speedView = false
             pageStack.push(Qt.resolvedUrl("DrawData.qml"))
         }
+    }
+
+    IconButton {
+        id: searchIcon
+        anchors.bottom: favoriteIcon.top
+        //anchors.bottomMargin: 20
+        anchors.right: page.right
+        icon.source: "image://theme/icon-m-search?" + (pressed
+                                                    ? Theme.highlightColor
+                                                    : Theme.primaryColor)
+        onClicked: {
+            pageStack.push(Qt.resolvedUrl("Search.qml"))
+        }
+    }
+
+    Component.onCompleted: {
+        map.center = QtPositioning.coordinate(61.461967+0.01,23.769631+0.01)
+        map.center = QtPositioning.coordinate(61.461967, 23.769631)
+        currentLat = map.center.latitude
+        currentLong = map.center.longitude
     }
 }
 

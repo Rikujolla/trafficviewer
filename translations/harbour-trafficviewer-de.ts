@@ -82,10 +82,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Make history data</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Select LAM to cover</source>
         <translation type="unfinished"></translation>
     </message>
@@ -103,6 +99,10 @@
     </message>
     <message>
         <source>Cars per hour, LAM</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select LAM to my favourite</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -160,6 +160,17 @@
     </message>
 </context>
 <context>
+    <name>Search</name>
+    <message>
+        <source>Search</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Search page</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>Settings</name>
     <message>
         <source>Settings</source>
@@ -171,6 +182,18 @@
     </message>
     <message>
         <source>Adjust GPS update rate with slider</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Database maintenance</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Make history data</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Purge measured data to create or modify the history curve. Prepare for a wait up to two minutes.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

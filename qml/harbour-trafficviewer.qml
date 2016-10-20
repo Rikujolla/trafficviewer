@@ -47,6 +47,12 @@ ApplicationWindow
     property bool chView : false  // used to update plot vieW
     property int lammiSelected  // selected LAM from the map
     property int lammiPair // selected LAM pair from the map
+    property real lammiLatti // Favuorite LAM latitude
+    property real lammiLongi // Favourite LAM longitude
+    property int favourSelected: 902  // selected LAM for your favourite
+    property int favourPair: 1 // selected LAM pair your favourite
+    property real favourLatti: 62.655165527248755 // Favourite LAM latitude
+    property real favourLongi: 25.73116712970659 // Favourite LAM longitude
     property int tempTime
     property int coverLam  // Selected LAM to cover
     property int coverPair // Selected LAM direction to cover
@@ -55,8 +61,10 @@ ApplicationWindow
     property int carsLAM // Cars to cover
     property real currentLat // To record currentLat: of the mapcenter
     property real currentLong // To record currentLong: of the map center
-    property real differenceExists  // calculates creen difference to currentlatlong
-    property int gpsUpdateRate : 1000
+    property real gpsLat // Current position, latitude
+    property real gpsLong // Current position, longitude
+    property real differenceExists  // calculates screen difference to currentlatlong
+    property int gpsUpdateRate : 9000
 
     XmlListModel {
         id: lamStations

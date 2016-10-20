@@ -494,7 +494,7 @@ Rectangle
             updateHorizontalScale()
 
             drawHistory(ctx, "grey")
-            drawYesterday(ctx, "yellow")
+            //drawYesterday(ctx, "yellow")
             drawPlot(ctx, "red");
             drawFuture(ctx, "green");
 

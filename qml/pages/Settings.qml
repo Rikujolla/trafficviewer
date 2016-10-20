@@ -25,6 +25,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
+import QtQuick.LocalStorage 2.0
+import "../components/setting.js" as Mysettings
+import "tables.js" as Mytables
 
 
 Page {
@@ -79,12 +82,39 @@ Page {
 
             Slider {
                 width: parent.width
-                minimumValue: 1
+                minimumValue: 0
                 maximumValue: 10
-                value: 2
-                valueText: value + " " + "s"
-                onValueChanged: gpsUpdateRate = value * 1000
+                stepSize: 1
+                value: gpsUpdateRate/1000
+                valueText: value >0 ? value + " " + "s" : "no"
+                onValueChanged: {
+                    gpsUpdateRate = value * 1000
+                    value > 0 ? useLocation = true : useLocation = false
+                }
+            }
 
+            SectionHeader { text: qsTr("Database maintenance") }
+
+            Text {
+                font.pixelSize: Theme.fontSizeSmall
+                color: Theme.primaryColor
+                wrapMode: Text.WordWrap
+                width: parent.width
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    margins: Theme.paddingLarge
+                }
+                text: {qsTr("Purge measured data to create or modify the history curve. Prepare for a wait up to two minutes.")
+                }
+            }
+
+            Button {
+                text: qsTr("Make history data")
+                anchors.horizontalCenter: parent.horizontalCenter
+                onClicked: {
+                    Mytables.maintainDb()
+                }
             }
 
             /* Label {

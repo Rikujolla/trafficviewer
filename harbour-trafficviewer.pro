@@ -49,5 +49,7 @@ DISTFILES += \
     qml/data/lamData.xml \
     qml/pages/LocList.qml \
     qml/pages/Help.qml \
-    qml/pages/About.qml
+    qml/pages/About.qml \
+    qml/pages/Search.qml \
+    qml/components/setting.js
 

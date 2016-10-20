@@ -49,18 +49,27 @@ Page
                 text: qsTr("About")
                 onClicked: pageStack.push(Qt.resolvedUrl("About.qml"))
             }
-            MenuItem {
+            /*MenuItem {
                 text: qsTr("Make history data")
                 onClicked: {
                     Mytables.maintainDb()
                 }
-            }
+            }*/
             /*MenuItem {
                 text: qsTr("Purge database")
                 onClicked: {
                     Mytables.maintainDb()
                 }
             }*/
+            MenuItem {
+                text: qsTr("Select LAM to my favourite")
+                onClicked: {
+                    favourSelected = lammiSelected
+                    favourPair = lammiPair
+                    favourLatti = lammiLatti
+                    favourLongi = lammiLongi
+                }
+            }
 
             MenuItem {
                 text: qsTr("Select LAM to cover")
