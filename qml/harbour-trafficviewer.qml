@@ -203,15 +203,17 @@ ApplicationWindow
                 //waitXml.stop();
                 Mytables.loadLocation()
                 locationsLoaded = true
-                console.log("LAM-stations data updated")
+                //console.log("LAM-stations data updated")
             }
             else if (locationsLoaded) {
                 loadXmlIdle.start()
                 waitXml.stop();
-                console.log("Starting LAM measurement data capture")
+                //console.log("Starting LAM measurement data capture")
             }
 
-            else {console.log ("Updating LAM-stations data", lamStations.status)}
+            else {
+                //console.log ("Updating LAM-stations data", lamStations.status)
+            }
         }
     }
 
@@ -226,7 +228,7 @@ ApplicationWindow
         onTriggered: {
                 lamSpecs.reload()
                 waitXmlLoadIdle.start()
-                console.log("Starting traffic XML-data load")
+                //console.log("Starting traffic XML-data load")
         }
     }
 
@@ -240,9 +242,11 @@ ApplicationWindow
                 waitXmlLoadIdle.stop();
                 Mytables.addData()
                 dataLoad = false
-                console.log("Traffic XML-data added to SQL table", dataLoad, lamSpecs.status)
+                //console.log("Traffic XML-data added to SQL table", dataLoad, lamSpecs.status)
             }
-            else {console.log ("Loading traffic XML-data", lamSpecs.status)}
+            else {
+                //console.log ("Loading traffic XML-data", lamSpecs.status)
+            }
         }
     }
 

@@ -72,7 +72,7 @@ Page
             MenuItem {
                 text: speedView ? qsTr("To cars per hour view") : qsTr("To speed view")
                 onClicked: {
-                    console.log("Speed to car amounts")
+                    //console.log("Speed to car amounts")
                     speedView = !speedView
                     chView = true
                     //plot.canvas.requestPaint()

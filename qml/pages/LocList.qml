@@ -65,7 +65,7 @@ Page {
                 color: delegate.highlighted ? Theme.highlightColor : Theme.primaryColor
             }
             onClicked: {
-                console.log("Clicked " + index)
+                //console.log("Clicked " + index)
                 //console.log(lamSpecs.get(0).lamid, lamSpecs.get(index).lamLocaltime)
             }
         }

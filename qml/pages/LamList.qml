@@ -28,7 +28,7 @@ import Sailfish.Silica 1.0
 import QtQuick.XmlListModel 2.0
 
 Page {
-    onStatusChanged: console.log(lamSpecs.get(0).localtime)
+    //onStatusChanged: console.log(lamSpecs.get(0).localtime)
     id: page
     SilicaListView {
         id: listView
@@ -63,8 +63,8 @@ Page {
                 color: delegate.highlighted ? Theme.highlightColor : Theme.primaryColor
             }
             onClicked: {
-                console.log("Clicked " + index)
-                console.log(lamSpecs.get(0).lamid, lamSpecs.get(index).lamLocaltime)
+                //console.log("Clicked " + index)
+                //console.log(lamSpecs.get(0).lamid, lamSpecs.get(index).lamLocaltime)
             }
         }
 

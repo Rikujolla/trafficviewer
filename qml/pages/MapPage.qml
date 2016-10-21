@@ -36,7 +36,7 @@ import "tables.js" as Mytables
 
 Page {
     id: page
-    onStatusChanged: console.log("status", page.status)
+    //onStatusChanged: console.log("status", page.status)
     /*SilicaFlickable {
         anchors.fill: parent
 
@@ -153,7 +153,7 @@ Page {
                             speedView = false
                             pageStack.push(Qt.resolvedUrl("DrawData.qml"))
                             //dataLoad = true
-                            console.log("Lamindex", lammiSelected, lammiPair, lammiLatti, lammiLongi)
+                            //console.log("Lamindex", lammiSelected, lammiPair, lammiLatti, lammiLongi)
                         }
                     }
                 }
@@ -186,7 +186,7 @@ Page {
                             lammiLongi = lamPoints.get(index).longi
                             speedView = true
                             pageStack.push(Qt.resolvedUrl("DrawData.qml"))
-                            console.log("Lamindex", lammiSelected, lammiPair, lammiLatti, lammiLongi)
+                            //console.log("Lamindex", lammiSelected, lammiPair, lammiLatti, lammiLongi)
                         }
                     }
                 }
@@ -257,17 +257,17 @@ Page {
                 repeat:true
                 interval: 1000
                 onTriggered: {
-                    console.log(map.center, map.center.latitude)
+                    //console.log(map.center, map.center.latitude)
                     differenceExists = Math.abs(map.center.latitude-currentLat) + Math.abs(map.center.longitude-currentLong)
                     currentLat = map.center.latitude
                     currentLong = map.center.longitude
                     if (page.status == 2 && !dataReaded) {
                         Mytables.readData()
                         dataReaded = true;
-                        console.log("Updating LAM data to the screen")
+                        //console.log("Updating LAM data to the screen")
                     }
                     else if (differenceExists > 0.001) {
-                        console.log("Searching LAM-stations on screen", page.status)
+                        //console.log("Searching LAM-stations on screen", page.status)
                         Mytables.subsetLocation()
                         dataReaded = false;
                     }
@@ -288,9 +288,11 @@ Page {
                         waitXmlLoad.stop();
                         Mytables.addData()
                         dataLoad = false
-                        console.log("Data loaded", dataLoad, lamSpecs.status)
+                        //console.log("Data loaded", dataLoad, lamSpecs.status)
                     }
-                    else {console.log ("lamSpecs.not Ready", lamSpecs.status)}
+                    else {
+                        //console.log ("lamSpecs.not Ready", lamSpecs.status)
+                    }
                 }
             }
 

@@ -35,7 +35,7 @@ Page {
         //console.log("status")
         //Mydbases.loadLocation()
         searchModel.update()
-        console.log(searchModel.status)
+        //console.log(searchModel.status)
     }
 
     Plugin {
