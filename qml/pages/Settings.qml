@@ -39,11 +39,11 @@ Page {
 
         // PullDownMenu and PushUpMenu must be declared in SilicaFlickable, SilicaListView or SilicaGridView
         PullDownMenu {
-            /*MenuItem {
-                text: qsTr("List Page")
-                onClicked: pageStack.push(Qt.resolvedUrl("LamList.qml"))
-            }
             MenuItem {
+                text: qsTr("Save settings")
+                onClicked: Mysettings.saveSettings()
+            }
+            /*MenuItem {
                 text: qsTr("Map Page")
                 onClicked: pageStack.push(Qt.resolvedUrl("MapPage.qml"))
             }*/
@@ -86,7 +86,7 @@ Page {
                 maximumValue: 10
                 stepSize: 1
                 value: gpsUpdateRate/1000
-                valueText: value >0 ? value + " " + "s" : "no"
+                valueText: value >0 ? value + " " + "s" : qsTr("no update")
                 onValueChanged: {
                     gpsUpdateRate = value * 1000
                     value > 0 ? useLocation = true : useLocation = false

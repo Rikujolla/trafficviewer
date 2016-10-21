@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="fi">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="fi" version="2.1">
 <context>
     <name>About</name>
     <message>
@@ -41,7 +39,7 @@
     </message>
     <message>
         <source>The idea of the software is to give you actual traffic info in Finland and to help you to design your travelling based on actual and historical data.</source>
-        <translation>Ohjelman tarkoituksena on näyttää ajantasaista Liikenneviraston tuottamaa liikennetilannetta ja helpottamaan matkustussuunnitelmiasi perustuen ajankohtaiseen ja historiadataan.</translation>
+        <translation>Ohjelman tarkoituksena on näyttää ajantasaista Liikenneviraston tuottamaa liikennetilannetta ja helpottaa matkustussuunnitelmiasi perustuen ajankohtaiseen ja historiadataan.</translation>
     </message>
     <message>
         <source>The app shows open data from Finnish Transport Agency published under licence Creative Commons 4.0</source>
@@ -74,14 +72,6 @@
 <context>
     <name>DrawData</name>
     <message>
-        <source>Help</source>
-        <translation>Ohje</translation>
-    </message>
-    <message>
-        <source>About</source>
-        <translation>Tietoja</translation>
-    </message>
-    <message>
         <source>Select LAM to cover</source>
         <translation>Valitse LAM-piste aloitusnäyttöön</translation>
     </message>
@@ -103,7 +93,7 @@
     </message>
     <message>
         <source>Select LAM to my favourite</source>
-        <translation type="unfinished"></translation>
+        <translation>Valitse LAM-piste suosikikseni</translation>
     </message>
 </context>
 <context>
@@ -125,10 +115,6 @@
         <translation>Kaavionäkymä</translation>
     </message>
     <message>
-        <source>The chart view can be entered by tapping the traffic sign.</source>
-        <translation>Kaavionäkymään pääsee napauttamalla nopeusnäyttöä.</translation>
-    </message>
-    <message>
         <source>Yellow inside tells the data is less than five minutes old</source>
         <translation>Keltainen keskiosa kertoo datan olevan alle viisi minuuttia vanhaa</translation>
     </message>
@@ -139,6 +125,42 @@
     <message>
         <source>Red inside tells the data is more than ten minutes old</source>
         <translation>Punainen keskiosa kertoo datan olevan yli kymmenen minuuttia vanhaa</translation>
+    </message>
+    <message>
+        <source>Speed limit signs:</source>
+        <translation>Nopeusrajoitukset:</translation>
+    </message>
+    <message>
+        <source>In the blue additional panel below the speed limit sign cars per hour is shown</source>
+        <translation>Sinisessä lisäkilvessä näytetään autoja tunnissa</translation>
+    </message>
+    <message>
+        <source>Icons on the right side:</source>
+        <translation>Oikealla olevat ikonit:</translation>
+    </message>
+    <message>
+        <source>Center the map to your location</source>
+        <translation>Keskitä kartta sijaintiisi</translation>
+    </message>
+    <message>
+        <source>Open the settings page</source>
+        <translation>Avaa asetussivu</translation>
+    </message>
+    <message>
+        <source>Open your favourite LAM</source>
+        <translation>Avaa LAM-suosikkisi</translation>
+    </message>
+    <message>
+        <source>Open this help page</source>
+        <translation>Avaa tämä ohjesivu</translation>
+    </message>
+    <message>
+        <source>Open about page</source>
+        <translation>Avaa tietosivu</translation>
+    </message>
+    <message>
+        <source>The chart view can be entered by tapping the speed limit sign or the blue additional panel.</source>
+        <translation>Kaaviosivuun pääsee napauttamalla nopeusrajoitusta tai lisäkilpeä.</translation>
     </message>
 </context>
 <context>
@@ -152,49 +174,57 @@
     <name>MapPage</name>
     <message>
         <source>contributors</source>
-        <translation type="unfinished"></translation>
+        <translation>tekijät</translation>
     </message>
     <message>
         <source>Map data</source>
-        <translation type="unfinished"></translation>
+        <translation>Karttadata</translation>
     </message>
 </context>
 <context>
     <name>Search</name>
     <message>
         <source>Search</source>
-        <translation type="unfinished"></translation>
+        <translation>Hae</translation>
     </message>
     <message>
         <source>Search page</source>
-        <translation type="unfinished"></translation>
+        <translation>Hakusivu</translation>
     </message>
 </context>
 <context>
     <name>Settings</name>
     <message>
         <source>Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Asetukset</translation>
     </message>
     <message>
         <source>GPS settings</source>
-        <translation type="unfinished"></translation>
+        <translation>GPS-asetukset</translation>
     </message>
     <message>
         <source>Adjust GPS update rate with slider</source>
-        <translation type="unfinished"></translation>
+        <translation>Säädä GPS-päivitystiheyttä liukuvalitsimella</translation>
     </message>
     <message>
         <source>Database maintenance</source>
-        <translation type="unfinished"></translation>
+        <translation>Tietokannan huolto</translation>
     </message>
     <message>
         <source>Make history data</source>
-        <translation type="unfinished">Tee historiadata</translation>
+        <translation>Tee historiadata</translation>
     </message>
     <message>
         <source>Purge measured data to create or modify the history curve. Prepare for a wait up to two minutes.</source>
-        <translation type="unfinished"></translation>
+        <translation>Vähennä mitattua dataa luodaksesi historiakäyrän tai muokataksesi sitä. Valmistaudu odottamaan jopa kaksi minuuttia.</translation>
+    </message>
+    <message>
+        <source>Save settings</source>
+        <translation>Tallenna asetukset</translation>
+    </message>
+    <message>
+        <source>no update</source>
+        <translation>ei päivitystä</translation>
     </message>
 </context>
 </TS>

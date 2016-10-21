@@ -29,6 +29,7 @@ import QtQuick.XmlListModel 2.0
 import QtQuick.LocalStorage 2.0
 import "pages/tables.js" as Mytables
 import "pages"
+import "components/setting.js" as Mysettings
 
 ApplicationWindow
 {
@@ -49,7 +50,7 @@ ApplicationWindow
     property int lammiPair // selected LAM pair from the map
     property real lammiLatti // Favuorite LAM latitude
     property real lammiLongi // Favourite LAM longitude
-    property int favourSelected: 902  // selected LAM for your favourite
+    property int favourSelected: 448  // selected LAM for your favourite
     property int favourPair: 1 // selected LAM pair your favourite
     property real favourLatti: 62.655165527248755 // Favourite LAM latitude
     property real favourLongi: 25.73116712970659 // Favourite LAM longitude
@@ -64,7 +65,7 @@ ApplicationWindow
     property real gpsLat // Current position, latitude
     property real gpsLong // Current position, longitude
     property real differenceExists  // calculates screen difference to currentlatlong
-    property int gpsUpdateRate : 9000
+    property int gpsUpdateRate : 0
 
     XmlListModel {
         id: lamStations
@@ -245,7 +246,7 @@ ApplicationWindow
         }
     }
 
-    //onComponentCompleted: console.log("LAM", lamStations.get(0).LAM_NUMERO)
+    Component.onCompleted: Mysettings.loadSettings()
 }
 
 

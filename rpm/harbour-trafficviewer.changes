@@ -7,6 +7,9 @@
 
 # * date Author's Name <author's email> version-release
 # - Summary of changes
+* Wed Oct 20 2016 Riku Lahtinen <rikul.lajolla@kiu.as> 0.0.7-1
+- Technical version not for a release
+
 * Tue Sep 20 2016 Riku Lahtinen <rikul.lajolla@kiu.as> 0.0.6-1
 - Added cars per hour under speedsigns
 

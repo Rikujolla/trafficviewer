@@ -63,10 +63,20 @@ Page {
                     right: parent.right
                     margins: Theme.paddingLarge
                 }
-                text: {"-" + qsTr("Yellow inside tells the data is less than five minutes old") + "\n"
-                       + "-" + qsTr("Orange inside tells the data is more than five minutes but less than ten minutes old") + "\n"
-                       + "-" + qsTr("Red inside tells the data is more than ten minutes old") + "\n"
-                       + "-" + qsTr("Pure red is a station with no data in the phone or the data aquisition is on going")
+                text:
+                {
+                    qsTr("Speed limit signs:") + "\n" +
+                            "-" + qsTr("Yellow inside tells the data is less than five minutes old") + "\n" +
+                            "-" + qsTr("Orange inside tells the data is more than five minutes but less than ten minutes old") + "\n" +
+                            "-" + qsTr("Red inside tells the data is more than ten minutes old") + "\n" +
+                            "-" + qsTr("Pure red is a station with no data in the phone or the data aquisition is on going") + "\n" +
+                            "-" + qsTr("In the blue additional panel below the speed limit sign cars per hour is shown") + "\n" +
+                    qsTr("Icons on the right side:") + "\n" +
+                            "-" + qsTr("Center the map to your location") + "\n" +
+                            "-" + qsTr("Open the settings page") + "\n" +
+                            "-" + qsTr("Open your favourite LAM") + "\n" +
+                            "-" + qsTr("Open this help page") + "\n" +
+                            "-" + qsTr("Open about page")
                 }
             }
 
@@ -81,7 +91,7 @@ Page {
                     right: parent.right
                     margins: Theme.paddingLarge
                 }
-                text: {qsTr("The chart view can be entered by tapping the traffic sign.")
+                text: {qsTr("The chart view can be entered by tapping the speed limit sign or the blue additional panel.")
                 }
             }
 

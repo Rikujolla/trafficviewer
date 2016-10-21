@@ -25,6 +25,7 @@ import Sailfish.Silica 1.0
 import QtQuick.LocalStorage 2.0
 import "../components"
 import "tables.js" as Mytables
+import "../components/setting.js" as Mysettings
 
 Page
 {
@@ -41,25 +42,13 @@ Page
 
         // PullDownMenu and PushUpMenu must be declared in SilicaFlickable, SilicaListView or SilicaGridView
         PullDownMenu {
-            MenuItem {
+            /*MenuItem {
                 text: qsTr("Help")
                 onClicked: pageStack.push(Qt.resolvedUrl("Help.qml"))
             }
             MenuItem {
                 text: qsTr("About")
                 onClicked: pageStack.push(Qt.resolvedUrl("About.qml"))
-            }
-            /*MenuItem {
-                text: qsTr("Make history data")
-                onClicked: {
-                    Mytables.maintainDb()
-                }
-            }*/
-            /*MenuItem {
-                text: qsTr("Purge database")
-                onClicked: {
-                    Mytables.maintainDb()
-                }
             }*/
             MenuItem {
                 text: qsTr("Select LAM to my favourite")
@@ -68,14 +57,15 @@ Page
                     favourPair = lammiPair
                     favourLatti = lammiLatti
                     favourLongi = lammiLongi
+                    Mysettings.saveSettings()
                 }
             }
-
             MenuItem {
                 text: qsTr("Select LAM to cover")
                 onClicked: {
                     coverLam = lammiSelected
                     coverPair = lammiPair
+                    Mysettings.saveSettings()
                     //plot.canvas.requestPaint()
                 }
             }
@@ -88,10 +78,6 @@ Page
                     //plot.canvas.requestPaint()
                 }
             }
-            /*MenuItem {
-                text: qsTr("Map Page")
-                onClicked: pageStack.push(Qt.resolvedUrl("MapPage.qml"))
-            }*/
         }
 
         /*PushUpMenu {

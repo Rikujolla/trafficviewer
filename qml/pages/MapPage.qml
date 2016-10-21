@@ -312,7 +312,7 @@ Page {
         anchors.right: page.right
         icon.source: "image://theme/icon-m-gps?" + (useLocation ? (pressed
                                                     ? Theme.highlightColor
-                                                    : Theme.primaryColor): "red")
+                                                    : Theme.secondaryHighlightColor): "red")
         onClicked: {
             if (useLocation) {
             map.center.latitude = gpsLat
@@ -329,7 +329,7 @@ Page {
         anchors.right: page.right
         icon.source: "image://theme/icon-m-developer-mode?" + (pressed
                                                     ? Theme.highlightColor
-                                                    : Theme.primaryColor)
+                                                    : Theme.secondaryHighlightColor)
         onClicked: {
             pageStack.push(Qt.resolvedUrl("Settings.qml"))
         }
@@ -342,7 +342,7 @@ Page {
         anchors.right: page.right
         icon.source: "image://theme/icon-m-favorite?" + (pressed
                                                     ? Theme.highlightColor
-                                                    : Theme.primaryColor)
+                                                    : Theme.secondaryHighlightColor)
         onClicked: {
             lammiSelected = favourSelected
             lammiPair = favourPair
@@ -357,14 +357,42 @@ Page {
 
     IconButton {
         id: searchIcon
+        visible:false
         anchors.bottom: favoriteIcon.top
         //anchors.bottomMargin: 20
         anchors.right: page.right
         icon.source: "image://theme/icon-m-search?" + (pressed
                                                     ? Theme.highlightColor
-                                                    : Theme.primaryColor)
+                                                    : Theme.secondaryHighlightColor)
         onClicked: {
             pageStack.push(Qt.resolvedUrl("Search.qml"))
+        }
+    }
+
+    IconButton {
+        id: helpIcon
+        //visible:false
+        anchors.bottom: favoriteIcon.top
+        //anchors.bottomMargin: 20
+        anchors.right: page.right
+        icon.source: "image://theme/icon-m-question?" + (pressed
+                                                    ? Theme.highlightColor
+                                                    : Theme.secondaryHighlightColor)
+        onClicked: {
+            pageStack.push(Qt.resolvedUrl("Help.qml"))
+        }
+    }
+
+    IconButton {
+        id: aboutIcon
+        anchors.bottom: helpIcon.top
+        //anchors.bottomMargin: 20
+        anchors.right: page.right
+        icon.source: "image://theme/icon-m-about?" + (pressed
+                                                    ? Theme.highlightColor
+                                                    : Theme.secondaryHighlightColor)
+        onClicked: {
+            pageStack.push(Qt.resolvedUrl("About.qml"))
         }
     }
 

@@ -74,14 +74,6 @@
 <context>
     <name>DrawData</name>
     <message>
-        <source>Help</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>About</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Select LAM to cover</source>
         <translation type="unfinished"></translation>
     </message>
@@ -125,10 +117,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>The chart view can be entered by tapping the traffic sign.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Yellow inside tells the data is less than five minutes old</source>
         <translation type="unfinished"></translation>
     </message>
@@ -138,6 +126,42 @@
     </message>
     <message>
         <source>Red inside tells the data is more than ten minutes old</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Speed limit signs:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>In the blue additional panel below the speed limit sign cars per hour is shown</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Icons on the right side:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Center the map to your location</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open the settings page</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open your favourite LAM</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open this help page</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open about page</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The chart view can be entered by tapping the speed limit sign or the blue additional panel.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -194,6 +218,14 @@
     </message>
     <message>
         <source>Purge measured data to create or modify the history curve. Prepare for a wait up to two minutes.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>no update</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
