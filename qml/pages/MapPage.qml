@@ -36,7 +36,28 @@ import "tables.js" as Mytables
 
 Page {
     id: page
-    //onStatusChanged: console.log("status", page.status)
+    onStatusChanged: {
+        if (searchDone) {
+            map.center = QtPositioning.coordinate(searchLatti+0.01, searchLongi+0.01)
+            map.center = QtPositioning.coordinate(searchLatti, searchLongi)
+            map.zoomLevel = 14.5
+            searchDone = false
+        }
+        /*if (leftHanded) {
+            //
+            //helpIcon.anchors.right = undefined
+            gpsIcon.anchors.left = page.left
+            helpIcon.anchors.left = page.left
+        }
+        else {
+            //
+            //helpIcon.anchors.left = undefined
+            gpsIcon.anchors.right = page.right
+            helpIcon.anchors.right = page.right
+        }*/
+
+        //console.log("status", page.status)
+    }
     /*SilicaFlickable {
         anchors.fill: parent
 
@@ -69,6 +90,7 @@ Page {
     }
 
     Rectangle {
+        id:rect
         anchors.top: lblPosition.bottom
         anchors.fill: parent
 
@@ -92,8 +114,7 @@ Page {
                 name: "osm"
                 PluginParameter { name: "osm.mapping.copyright"; value: "© <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors" }
             }
-            //center: currentPosition.coordinate
-            center: QtPositioning.coordinate(62.74529734,25.77326947)
+            center: QtPositioning.coordinate(61.4042,23.7746)
             gesture.enabled: true
 
             /*onPinchFinished: {
@@ -119,7 +140,6 @@ Page {
                     radius:200.0
                     opacity: 1.0
                     z:40
-                    //center: QtPositioning.coordinate(62.74529734,25.77326947)
                     center: QtPositioning.coordinate(latti,longi)
                 }
             }
@@ -140,7 +160,6 @@ Page {
                     border.width: 3
                     opacity: 1.0
                     z:40
-                    //center: QtPositioning.coordinate(62.74529734,25.77326947)
                     topLeft: QtPositioning.coordinate(latti-0.002,longi-0.003)
                     bottomRight: QtPositioning.coordinate(latti-0.0036,longi+0.003)
                     MouseArea {
@@ -257,7 +276,7 @@ Page {
                 repeat:true
                 interval: 1000
                 onTriggered: {
-                    //console.log(map.center, map.center.latitude)
+                    //console.log(map.center)
                     differenceExists = Math.abs(map.center.latitude-currentLat) + Math.abs(map.center.longitude-currentLong)
                     currentLat = map.center.latitude
                     currentLong = map.center.longitude
@@ -305,12 +324,16 @@ Page {
             font.pixelSize: Theme.fontSizeSmall
             text: qsTr("Map data") + " © " + "<a href=\'http://www.openstreetmap.org/copyright\'>OpenStreetMap</a> " + qsTr("contributors")
             anchors.bottom : page.bottom
+            //anchors.left: leftHanded  ? undefined : rect.left
+            //anchors.right: leftHanded  ? rect.right : undefined
             onLinkActivated: Qt.openUrlExternally(link)
         }
 
     IconButton {
         id:gpsIcon
         anchors.bottom: page.bottom
+        //anchors.left: leftHanded  ? page.left : undefined
+        //anchors.right: leftHanded ? undefined : page.right
         anchors.right: page.right
         icon.source: "image://theme/icon-m-gps?" + (useLocation ? (pressed
                                                     ? Theme.highlightColor
@@ -327,20 +350,26 @@ Page {
     IconButton {
         id: settingsIcon
         anchors.bottom: gpsIcon.top
-        //anchors.bottomMargin: 20
+        //anchors.left: leftHanded  ? page.left : undefined
+        //anchors.right: leftHanded ? undefined : page.right
         anchors.right: page.right
         icon.source: "image://theme/icon-m-developer-mode?" + (pressed
                                                     ? Theme.highlightColor
                                                     : Theme.secondaryHighlightColor)
         onClicked: {
             pageStack.push(Qt.resolvedUrl("Settings.qml"))
+            //gpsIcon.anchors.left = undefined
+            //gpsIcon.anchors.right = undefined
+            //searchIcon.anchors.left = undefined
+            //searchIcon.anchors.right = undefined
         }
     }
 
     IconButton {
         id: favoriteIcon
         anchors.bottom: settingsIcon.top
-        //anchors.bottomMargin: 20
+        //anchors.left: leftHanded  ? page.left : undefined
+        //anchors.right: leftHanded ? undefined : page.right
         anchors.right: page.right
         icon.source: "image://theme/icon-m-favorite?" + (pressed
                                                     ? Theme.highlightColor
@@ -359,28 +388,33 @@ Page {
 
     IconButton {
         id: searchIcon
-        visible:false
+        //visible:false
         anchors.bottom: favoriteIcon.top
         //anchors.bottomMargin: 20
+        //anchors.left: leftHanded  ? page.left : undefined
+        //anchors.right: leftHanded ? undefined : page.right
         anchors.right: page.right
         icon.source: "image://theme/icon-m-search?" + (pressed
                                                     ? Theme.highlightColor
                                                     : Theme.secondaryHighlightColor)
         onClicked: {
-            pageStack.push(Qt.resolvedUrl("Search.qml"))
+            pageStack.push(Qt.resolvedUrl("Search2.qml"))
         }
     }
 
     IconButton {
         id: helpIcon
         //visible:false
-        anchors.bottom: favoriteIcon.top
+        anchors.bottom: searchIcon.top
         //anchors.bottomMargin: 20
+        //anchors.right: leftHanded ? undefined : page.right
+        //anchors.left: leftHanded  ? page.left : undefined
         anchors.right: page.right
         icon.source: "image://theme/icon-m-question?" + (pressed
                                                     ? Theme.highlightColor
                                                     : Theme.secondaryHighlightColor)
         onClicked: {
+            //if(leftHanded) {anchors.left = page.left}
             pageStack.push(Qt.resolvedUrl("Help.qml"))
         }
     }
@@ -389,6 +423,8 @@ Page {
         id: aboutIcon
         anchors.bottom: helpIcon.top
         //anchors.bottomMargin: 20
+        //anchors.left: leftHanded  ? page.left : undefined
+        //anchors.right: leftHanded ? undefined : page.right
         anchors.right: page.right
         icon.source: "image://theme/icon-m-about?" + (pressed
                                                     ? Theme.highlightColor
@@ -399,10 +435,24 @@ Page {
     }
 
     Component.onCompleted: {
-        map.center = QtPositioning.coordinate(61.461967+0.01,23.769631+0.01)
-        map.center = QtPositioning.coordinate(61.461967, 23.769631)
+        map.center = QtPositioning.coordinate(61.4042+0.01,23.7746+0.01)
+        map.center = QtPositioning.coordinate(61.4042,23.7746)
+        //map.center = QtPositioning.coordinate(61.461967+0.01,23.769631+0.01)
+        //map.center = QtPositioning.coordinate(61.461967, 23.769631)
         currentLat = map.center.latitude
         currentLong = map.center.longitude
+        /*if (leftHanded) {
+            //
+            //helpIcon.anchors.right = undefined
+            gpsIcon.anchors.left = page.left
+            helpIcon.anchors.left = page.left
+        }
+        else {
+            //
+            //helpIcon.anchors.left = undefined
+            gpsIcon.anchors.right = page.right
+            helpIcon.anchors.right = page.right
+        }*/
     }
 }
 

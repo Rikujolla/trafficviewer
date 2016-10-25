@@ -38,16 +38,12 @@ Page {
         anchors.fill: parent
 
         // PullDownMenu and PushUpMenu must be declared in SilicaFlickable, SilicaListView or SilicaGridView
-        PullDownMenu {
+        /*PullDownMenu {
             MenuItem {
                 text: qsTr("Save settings")
                 onClicked: Mysettings.saveSettings()
             }
-            /*MenuItem {
-                text: qsTr("Map Page")
-                onClicked: pageStack.push(Qt.resolvedUrl("MapPage.qml"))
-            }*/
-        }
+        }*/
 
         // Tell SilicaFlickable the height of its content.
         contentHeight: column.height
@@ -60,11 +56,11 @@ Page {
             width: page.width
             spacing: Theme.paddingLarge
             PageHeader {
-                title: qsTr("Settings")
+                title: qsTr("Search page")
             }
 
 
-            SectionHeader { text: qsTr("GPS settings") }
+            SectionHeader { text: qsTr("Search") }
 
             Text {
                 font.pixelSize: Theme.fontSizeSmall
@@ -76,23 +72,37 @@ Page {
                     right: parent.right
                     margins: Theme.paddingLarge
                 }
-                text: {qsTr("Adjust GPS update rate with slider")
+                text: {qsTr("Search with LAM-number")
                 }
             }
 
-            Slider {
-                width: parent.width
-                minimumValue: 0
-                maximumValue: 10
-                stepSize: 1
-                value: gpsUpdateRate/1000
-                valueText: value >0 ? value + " " + "s" : qsTr("no update")
-                onValueChanged: {
-                    gpsUpdateRate = value * 1000
-                    value > 0 ? useLocation = true : useLocation = false
-                    Mysettings.saveSettings()
+
+            TextField {
+                validator: IntValidator{bottom: 100; top: 2000;}
+                focus: true
+                placeholderText: qsTr("LAM-index")
+                inputMethodHints: Qt.ImhDigitsOnly
+                EnterKey.enabled: !errorHighlight
+                EnterKey.iconSource: "image://theme/icon-m-enter-close"
+                EnterKey.onClicked: {
+                    //lammiSelected = text
+                    //console.log(lammiSelected)
+                    Mytables.searchLAM(text)
+                    focus=false
                 }
             }
+
+            /*Timer {
+                id:killPage
+                running:searchDone
+                interval: 100
+                repeat:true
+                onTriggered: {
+                    pageStack.pop()
+                    searchDone = false
+
+                }
+            }*/
 
             //SectionHeader { text: qsTr("View settings") }
 
@@ -120,7 +130,7 @@ Page {
                 }
             }*/
 
-            SectionHeader { text: qsTr("Database maintenance") }
+            /*SectionHeader { text: qsTr("Database maintenance") }
 
             Text {
                 font.pixelSize: Theme.fontSizeSmall
@@ -142,7 +152,7 @@ Page {
                 onClicked: {
                     Mytables.maintainDb()
                 }
-            }
+            }*/
 
             /* Label {
                 x: Theme.paddingLarge

@@ -243,3 +243,26 @@ function makeHistory() {
                 }
                 )
 }
+
+function searchLAM(lam) {
+    //console.log("Select closest LAMs")
+    var db = LocalStorage.openDatabaseSync("TrafficviewerDB", "1.0", "Traffic viewer database", 1000000);
+
+    db.transaction(
+                function(tx) {
+                    // Create the table, if not existing
+                    tx.executeSql('CREATE TABLE IF NOT EXISTS Location (lamid INTEGER, latti REAL, longi REAL, offlat1 REAL, offlong1 REAL, offlat2 REAL, offlong2 REAL)');
+                    //tx.executeSql('CREATE TABLE IF NOT EXISTS Subloc (lamid INTEGER, latti REAL, longi REAL, offlat1 REAL, offlong1 REAL, offlat2 REAL, offlong2 REAL)');
+                    //tx.executeSql('DROP TABLE Subloc')
+                    //tx.executeSql('CREATE TABLE Subloc AS SELECT * FROM Location WHERE abs(latti-?) < 0.12 and abs(longi-?) < 0.12', [currentLat, currentLong])
+                    var rs = tx.executeSql('SELECT * FROM Location WHERE lamid = ?', lam)
+
+                    //var rs = tx.executeSql('SELECT * FROM Subloc')
+                    //console.log("Subtable table length ", rs.rows.length)
+                    searchLatti = rs.rows.item(0).latti
+                    searchLongi = rs.rows.item(0).longi
+                }
+                )
+    searchDone = true
+}
+

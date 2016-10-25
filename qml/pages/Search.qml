@@ -88,6 +88,8 @@ Page {
                 //pageStack.push(Qt.resolvedUrl("Loc.qml"))
             }
         }
+
+
         VerticalScrollDecorator {}
 
         Component.onCompleted: {

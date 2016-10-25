@@ -51,5 +51,6 @@ DISTFILES += \
     qml/pages/Help.qml \
     qml/pages/About.qml \
     qml/pages/Search.qml \
-    qml/components/setting.js
+    qml/components/setting.js \
+    qml/pages/Search2.qml
 

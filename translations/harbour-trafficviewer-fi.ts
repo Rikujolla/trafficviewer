@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="fi" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="fi">
 <context>
     <name>About</name>
     <message>
@@ -190,6 +192,25 @@
     <message>
         <source>Search page</source>
         <translation>Hakusivu</translation>
+    </message>
+</context>
+<context>
+    <name>Search2</name>
+    <message>
+        <source>Search page</source>
+        <translation type="unfinished">Hakusivu</translation>
+    </message>
+    <message>
+        <source>Search</source>
+        <translation type="unfinished">Hae</translation>
+    </message>
+    <message>
+        <source>Search with LAM-number</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>LAM-index</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

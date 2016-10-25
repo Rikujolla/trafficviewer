@@ -195,6 +195,25 @@
     </message>
 </context>
 <context>
+    <name>Search2</name>
+    <message>
+        <source>Search page</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Search</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Search with LAM-number</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>LAM-index</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>Settings</name>
     <message>
         <source>Settings</source>

@@ -66,6 +66,10 @@ ApplicationWindow
     property real gpsLong // Current position, longitude
     property real differenceExists  // calculates screen difference to currentlatlong
     property int gpsUpdateRate : 0
+    property bool leftHanded : false // Tells, if the user wants to use thhe phone with left hand
+    property bool searchDone : false
+    property real searchLatti
+    property real searchLongi
 
     XmlListModel {
         id: lamStations
