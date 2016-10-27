@@ -214,6 +214,17 @@
     </message>
 </context>
 <context>
+    <name>Search3</name>
+    <message>
+        <source>Search LAM</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Search a LAM location with a LAM-number</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>Settings</name>
     <message>
         <source>Settings</source>

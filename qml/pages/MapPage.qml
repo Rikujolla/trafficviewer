@@ -398,7 +398,16 @@ Page {
                                                     ? Theme.highlightColor
                                                     : Theme.secondaryHighlightColor)
         onClicked: {
-            pageStack.push(Qt.resolvedUrl("Search2.qml"))
+            //pageStack.push(Qt.resolvedUrl("Search2.qml"))
+            var dialog = pageStack.push(Qt.resolvedUrl("Search3.qml"),
+                                        {"lamID": 901})
+            dialog.accepted.connect(function() {
+                //header.title = "My name: " + dialog.name
+                console.log(dialog.lamID)
+                Mytables.searchLAM(dialog.lamID)
+
+            })
+
         }
     }
 
