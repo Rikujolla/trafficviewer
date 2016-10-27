@@ -185,11 +185,11 @@ ApplicationWindow
         /*ListElement {
             name: "Prognosis"
             kolor: "green"
-        }*/
+        }
         ListElement {
             name: "Yesterday"
             kolor: "yellow"
-        }
+        }*/
         ListElement {
             name: "History"
             kolor: "grey"

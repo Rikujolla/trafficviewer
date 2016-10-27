@@ -231,7 +231,7 @@ Rectangle
     ListView
     {
         x: 150
-        y: 150
+        y: 100
         z: 11
         height: fontSize*1.2*10
         id: legend

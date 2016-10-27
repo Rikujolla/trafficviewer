@@ -7,6 +7,10 @@
 
 # * date Author's Name <author's email> version-release
 # - Summary of changes
+* Thu Oct 27 2016 Riku Lahtinen <rikul.lajolla@kiu.as> 0.0.8-1
+- Signs on the right side of roads in Keski-Suomi, Pirkabnaa and Satakunta
+- Icons added to a map view
+
 * Wed Oct 20 2016 Riku Lahtinen <rikul.lajolla@kiu.as> 0.0.7-1
 - Technical version not for a release
 
