@@ -1,5 +1,5 @@
     function saveSettings() {
-        //console.log("Save Settings")
+
         var db = LocalStorage.openDatabaseSync("RushDB", "1.0", "Rush hour database", 1000000);
 
         db.transaction(
@@ -11,6 +11,10 @@
                 var rs = tx.executeSql('SELECT * FROM Settings WHERE name = ?', 'gpsUpdateRate');
                 if (rs.rows.length > 0) {tx.executeSql('UPDATE Settings SET valint=? WHERE name=?', [gpsUpdateRate, 'gpsUpdateRate'])}
                 else {tx.executeSql('INSERT INTO Settings VALUES(?, ?, ?, ?, ?)', [ 'gpsUpdateRate', '', '', '', gpsUpdateRate ])}
+                // useLocation
+                rs = tx.executeSql('SELECT * FROM Settings WHERE name = ?', 'useLocation');
+                if (rs.rows.length > 0) {tx.executeSql('UPDATE Settings SET valint=? WHERE name=?', [useLocation, 'useLocation'])}
+                else {tx.executeSql('INSERT INTO Settings VALUES(?, ?, ?, ?, ?)', [ 'useLocation', '', '', '', useLocation ])}
                 // favourSelected
                 rs = tx.executeSql('SELECT * FROM Settings WHERE name = ?', 'favourSelected');
                 if (rs.rows.length > 0) {tx.executeSql('UPDATE Settings SET valint=? WHERE name=?', [favourSelected, 'favourSelected'])}
@@ -35,18 +39,12 @@
                 rs = tx.executeSql('SELECT * FROM Settings WHERE name = ?', 'coverPair');
                 if (rs.rows.length > 0) {tx.executeSql('UPDATE Settings SET valint=? WHERE name=?', [coverPair, 'coverPair'])}
                 else {tx.executeSql('INSERT INTO Settings VALUES(?, ?, ?, ?, ?)', [ 'coverPair', '', '', '', coverPair ])}
-                /*// playMode
-                rs = tx.executeSql('SELECT * FROM Settings WHERE name = ?', 'playMode');
-                if (rs.rows.length > 0) {tx.executeSql('UPDATE Settings SET valte=? WHERE name=?', [playMode, 'playMode'])}
-                else {tx.executeSql('INSERT INTO Settings VALUES(?, ?, ?, ?, ?)', [ 'playMode', '', playMode, '', '' ])}*/
-
             }
         )
-
     }
 
 function loadSettings() {
-    //console.log("Load Settings")
+
     var db = LocalStorage.openDatabaseSync("RushDB", "1.0", "Rush hour database", 1000000);
 
     db.transaction(
@@ -57,6 +55,10 @@ function loadSettings() {
             // gpsUpdateRate
             var rs = tx.executeSql('SELECT * FROM Settings WHERE name = ?', 'gpsUpdateRate');
             if (rs.rows.length > 0) {gpsUpdateRate = rs.rows.item(0).valint}
+            else {}
+            // useLocation
+            rs = tx.executeSql('SELECT * FROM Settings WHERE name = ?', 'useLocation');
+            if (rs.rows.length > 0) {useLocation = rs.rows.item(0).valint}
             else {}
             // favourSelected
             rs = tx.executeSql('SELECT * FROM Settings WHERE name = ?', 'favourSelected');
@@ -82,13 +84,7 @@ function loadSettings() {
             rs = tx.executeSql('SELECT * FROM Settings WHERE name = ?', 'coverPair');
             if (rs.rows.length > 0) {coverPair = rs.rows.item(0).valint}
             else {}
-            /*// playMode
-            rs = tx.executeSql('SELECT * FROM Settings WHERE name = ?', 'playMode');
-            if (rs.rows.length > 0) {playMode = rs.rows.item(0).valte}
-            else {}*/
-
         }
 
     )
-
 }

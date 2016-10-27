@@ -39,7 +39,7 @@ ApplicationWindow
     _defaultPageOrientations: Orientation.All
 
     property bool testData : false // Used to test
-    property bool useLocation : true // When starting, GPS is used
+    property bool useLocation : false // When starting, GPS is used
     property bool dataLoad : true // Selects if data is reloaded or updated to screen
     property bool dataReaded : false // Tells if the data has been readed to map recently
     property bool locationsLoaded : false

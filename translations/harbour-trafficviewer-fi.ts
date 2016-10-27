@@ -198,30 +198,30 @@
     <name>Search2</name>
     <message>
         <source>Search page</source>
-        <translation type="unfinished">Hakusivu</translation>
+        <translation>Hakusivu</translation>
     </message>
     <message>
         <source>Search</source>
-        <translation type="unfinished">Hae</translation>
+        <translation>Hae</translation>
     </message>
     <message>
         <source>Search with LAM-number</source>
-        <translation type="unfinished"></translation>
+        <translation>Hae LAM-numerolla</translation>
     </message>
     <message>
         <source>LAM-index</source>
-        <translation type="unfinished"></translation>
+        <translation>LAM-indeksi</translation>
     </message>
 </context>
 <context>
     <name>Search3</name>
     <message>
         <source>Search LAM</source>
-        <translation type="unfinished"></translation>
+        <translation>Etsi LAM</translation>
     </message>
     <message>
         <source>Search a LAM location with a LAM-number</source>
-        <translation type="unfinished"></translation>
+        <translation>Hae sijainti LAM-numeron avulla</translation>
     </message>
 </context>
 <context>
