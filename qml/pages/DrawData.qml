@@ -97,6 +97,7 @@ Page
         title: speedView ? qsTr("Speed, LAM") + " " + lammiSelected : qsTr("Cars per hour, LAM") + " " + lammiSelected
     }
 
+
     LinePlot
     {
         //dataListModel: dataList

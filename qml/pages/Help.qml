@@ -75,6 +75,7 @@ Page {
                             "-" + qsTr("Center the map to your location") + "\n" +
                             "-" + qsTr("Open the settings page") + "\n" +
                             "-" + qsTr("Open your favourite LAM") + "\n" +
+                            "-" + qsTr("Open search page") + "\n" +
                             "-" + qsTr("Open this help page") + "\n" +
                             "-" + qsTr("Open about page")
                 }
@@ -91,7 +92,9 @@ Page {
                     right: parent.right
                     margins: Theme.paddingLarge
                 }
-                text: {qsTr("The chart view can be entered by tapping the speed limit sign or the blue additional panel.")
+                text: {
+                    qsTr("The chart view can be entered by tapping the speed limit sign or the blue additional panel.") + "\n" +
+                       qsTr("The day can be changed from the icons above the cart. Icons become visible by tapping the screen. As a default history mean data curve and the selected day data are shown. The day before data can also be shown by the switch on the settings page.")
                 }
             }
 

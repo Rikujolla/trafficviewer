@@ -164,6 +164,14 @@
         <source>The chart view can be entered by tapping the speed limit sign or the blue additional panel.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Open search page</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The day can be changed from the icons above the cart. Icons become visible by tapping the screen. As a default history mean data curve and the selected day data are shown. The day before data can also be shown by the switch on the settings page.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>LocList</name>
@@ -256,6 +264,30 @@
     </message>
     <message>
         <source>no update</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove zeros</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>View settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show the day before</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>For some measurement points there seems to be situations the traffic amount is pure zero during a day. By this you can remove zero values from measured data between 7 and 17 o&apos;clock. The phase is recommeded before making the history data. Prepare for a wait.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>harbour-trafficviewer</name>
+    <message>
+        <source>The history</source>
+        <extracomment>Translation not yet working. It is a part of a list element and needs more coding</extracomment>
         <translation type="unfinished"></translation>
     </message>
 </context>

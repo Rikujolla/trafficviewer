@@ -35,6 +35,7 @@ ApplicationWindow
 {
     initialPage: Component { MapPage { } }
     cover: Qt.resolvedUrl("cover/CoverPage.qml")
+    //cover: null
     allowedOrientations: Orientation.All
     _defaultPageOrientations: Orientation.All
 
@@ -70,6 +71,7 @@ ApplicationWindow
     property bool searchDone : false
     property real searchLatti
     property real searchLongi
+    property bool drawYesterdayValues: false
 
     XmlListModel {
         id: lamStations
@@ -179,19 +181,20 @@ ApplicationWindow
     ListModel {
         id:dataTitles
         ListElement {
-            name: "Today"
+            name: "The day"
             kolor: "red"
         }
         /*ListElement {
             name: "Prognosis"
             kolor: "green"
-        }
-        ListElement {
-            name: "Yesterday"
-            kolor: "yellow"
         }*/
         ListElement {
-            name: "History"
+            name: "The day before"
+            kolor: "yellow"
+        }
+        ListElement {
+            //: Translation not yet working. It is a part of a list element and needs more coding
+            name: QT_TR_NOOP("The history")
             kolor: "grey"
         }
     }

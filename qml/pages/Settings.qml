@@ -94,7 +94,18 @@ Page {
                 }
             }
 
-            //SectionHeader { text: qsTr("View settings") }
+            SectionHeader { text: qsTr("View settings") }
+
+            TextSwitch {
+                //id: ??
+                text: qsTr("Show the day before")
+                visible : true
+                checked: drawYesterdayValues
+                onCheckedChanged: {
+                    checked ? drawYesterdayValues = true : drawYesterdayValues = false
+                    Mysettings.saveSettings()
+                }
+            }
 
             /*Text {
                 font.pixelSize: Theme.fontSizeSmall
@@ -132,6 +143,28 @@ Page {
                     right: parent.right
                     margins: Theme.paddingLarge
                 }
+                text: {qsTr("For some measurement points there seems to be situations the traffic amount is pure zero during a day. By this you can remove zero values from measured data between 7 and 17 o'clock. The phase is recommeded before making the history data. Prepare for a wait.")
+                }
+            }
+
+            Button {
+                text: qsTr("Remove zeros")
+                anchors.horizontalCenter: parent.horizontalCenter
+                onClicked: {
+                    Mytables.removeZeros();
+                }
+            }
+
+            Text {
+                font.pixelSize: Theme.fontSizeSmall
+                color: Theme.primaryColor
+                wrapMode: Text.WordWrap
+                width: parent.width
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    margins: Theme.paddingLarge
+                }
                 text: {qsTr("Purge measured data to create or modify the history curve. Prepare for a wait up to two minutes.")
                 }
             }
@@ -143,13 +176,6 @@ Page {
                     Mytables.maintainDb()
                 }
             }
-
-            /* Label {
-                x: Theme.paddingLarge
-                text: qsTr("Hello Sailors")
-                color: Theme.secondaryHighlightColor
-                font.pixelSize: Theme.fontSizeExtraLarge
-            }*/
 
 
         }

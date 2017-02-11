@@ -39,6 +39,10 @@
                 rs = tx.executeSql('SELECT * FROM Settings WHERE name = ?', 'coverPair');
                 if (rs.rows.length > 0) {tx.executeSql('UPDATE Settings SET valint=? WHERE name=?', [coverPair, 'coverPair'])}
                 else {tx.executeSql('INSERT INTO Settings VALUES(?, ?, ?, ?, ?)', [ 'coverPair', '', '', '', coverPair ])}
+                // drawYesterdayValues
+                rs = tx.executeSql('SELECT * FROM Settings WHERE name = ?', 'drawYesterdayValues');
+                if (rs.rows.length > 0) {tx.executeSql('UPDATE Settings SET valint=? WHERE name=?', [drawYesterdayValues, 'drawYesterdayValues'])}
+                else {tx.executeSql('INSERT INTO Settings VALUES(?, ?, ?, ?, ?)', [ 'drawYesterdayValues', '', '', '', drawYesterdayValues ])}
             }
         )
     }
@@ -83,6 +87,10 @@ function loadSettings() {
             // coverPair
             rs = tx.executeSql('SELECT * FROM Settings WHERE name = ?', 'coverPair');
             if (rs.rows.length > 0) {coverPair = rs.rows.item(0).valint}
+            else {}
+            // drawYesterdayValues
+            rs = tx.executeSql('SELECT * FROM Settings WHERE name = ?', 'drawYesterdayValues');
+            if (rs.rows.length > 0) {drawYesterdayValues = rs.rows.item(0).valint}
             else {}
         }
 

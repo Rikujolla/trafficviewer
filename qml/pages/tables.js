@@ -1,5 +1,5 @@
 function loadLocation() {
-    //console.log("lokaatio")
+
     var db = LocalStorage.openDatabaseSync("TrafficviewerDB", "1.0", "Traffic viewer database", 1000000);
 
     db.transaction(
@@ -8,7 +8,6 @@ function loadLocation() {
                     tx.executeSql('CREATE TABLE IF NOT EXISTS Location (lamid INTEGER, latti REAL, longi REAL, offlat1 REAL, offlong1 REAL, offlat2 REAL, offlong2 REAL)');
 
                     tx.executeSql('DELETE FROM Location')
-                    //console.log(lamStations.count, "status", lamStations.status)
 
                     for(var i = 0; i < lamStations.count; i++) {
 
@@ -20,14 +19,14 @@ function loadLocation() {
                     for(i = 0; i < rs.rows.length; i++) {
                         lamBarePoints.append({"iidee": rs.rows.item(i).lamid, "pair": 0, "latti":rs.rows.item(i).latti + rs.rows.item(i).offlat1, "longi":rs.rows.item(i).longi + rs.rows.item(i).offlong1, "veloc":rs.rows.item(i).averagespeed1})
                         lamBarePoints.append({"iidee": rs.rows.item(i).lamid, "pair": 1, "latti":rs.rows.item(i).latti + rs.rows.item(i).offlat2, "longi":rs.rows.item(i).longi + rs.rows.item(i).offlong2, "veloc":rs.rows.item(i).averagespeed2})
-
                     }
                 }
                 )
 }
 
+/// The function adds traffic data to valuetable from xml data loaded
 function addData() {
-    //console.log("Add data")
+
     var db = LocalStorage.openDatabaseSync("TrafficviewerDB", "1.0", "Traffic viewer database", 1000000);
 
     db.transaction(
@@ -35,12 +34,9 @@ function addData() {
                     // Create the table, if not existing
                     tx.executeSql('CREATE TABLE IF NOT EXISTS Valuetable (valamid INTEGER, lamlocaltime TEXT, trafficvolume1 INTEGER, trafficvolume2 INTEGER, averagespeed1 INTEGER, averagespeed2 INTEGER)');
 
-                    //console.log("LAM measurement", lamSpecs.count, lamStations.count, "status", lamSpecs.status)
-
                     for(var i = 0; i < lamSpecs.count; i++) {
                         tx.executeSql('INSERT INTO Valuetable VALUES (?,?,?,?,?,?)', [lamSpecs.get(i).lamid, lamSpecs.get(i).lamLocaltime, lamSpecs.get(i).trafficvolume1, lamSpecs.get(i).trafficvolume2, lamSpecs.get(i).averagespeed1, lamSpecs.get(i).averagespeed2])
                     }
-
                 }
                 )
     subsetLocation()
@@ -48,7 +44,7 @@ function addData() {
 
 //////// Function readData() reads data to map
 function readData() {
-    //console.log("Read data to map")
+
     var db = LocalStorage.openDatabaseSync("TrafficviewerDB", "1.0", "Traffic viewer database", 1000000);
 
     db.transaction(
@@ -60,7 +56,7 @@ function readData() {
 
                     var rs = tx.executeSql('SELECT *, max(lamlocaltime), strftime(?,?)-strftime(?,lamlocaltime) AS age FROM Valuetable INNER JOIN Subloc ON Valuetable.valamid = Subloc.lamid GROUP BY Valuetable.valamid',['%s', 'now', '%s'])
                     //rs = tx.executeSql('SELECT * FROM Locations INNER JOIN Priorities ON Locations.theplace = Priorities.theplace INNER JOIN Cellinfo ON Priorities.theplace = Cellinfo.theplace WHERE Priorities.cell = ? AND Cellinfo.thecelli = ? ORDER BY tolerlong ASC LIMIT 1', ['1',currentCell]);
-                    //console.log("rspituus ", rs.rows.length)
+
                     lamPoints.clear();
                     for(var i = 0; i < rs.rows.length; i++) {
                         //console.log(rs.rows.item(i).age)
@@ -82,8 +78,9 @@ function readData() {
                 )
 }
 
-function drawSpeed() {
-    //console.log("Draw speed")
+/// The function drawSpeed() reads data to lists to plot curves
+function drawSpeed(daysbf) {
+
     var db = LocalStorage.openDatabaseSync("TrafficviewerDB", "1.0", "Traffic viewer database", 1000000);
 
     db.transaction(
@@ -98,12 +95,32 @@ function drawSpeed() {
                     var time = new Date().getTime()
                     var offset = new Date().getTimezoneOffset()
                     var zeero = new Date(time + offset*60*1000 - time%(24*60*60*1000)) //RLAH
-                    //console.log(time, offset, zeero)
-                    var rs = tx.executeSql('SELECT * FROM Valuetable WHERE valamid =? AND date(lamlocaltime,?) > date(?,?,?)', [lammiSelected, 'localtime','now', 'localtime','-1 day'])
-                    var ry = tx.executeSql('SELECT *, datetime(lamlocaltime,?,?) AS lamtime FROM Valuetable WHERE valamid =? AND date(lamlocaltime,?) > date(?,?,?) AND date(lamlocaltime,?) < date(?,?)', ["+1 day","localtime", lammiSelected, 'localtime', 'now', 'localtime','-2 day','localtime', 'now', 'localtime'])
-                    var rw = tx.executeSql('SELECT strftime(?,?,?)AS wdaynow', ['%w', 'now', 'localtime'])
-                    //console.log('Today', rw.rows.item(0).wdaynow)
-                    var rt = tx.executeSql('SELECT *, datetime(htime+?,?,?) AS hhtime FROM Historystable WHERE valamid=? AND wday=?', [(time + offset*60*1000 - time%(24*60*60*1000))/1000, 'unixepoch', 'localtime', lammiSelected, rw.rows.item(0).wdaynow])
+                    switch (daysbf){
+                    case 0:
+                        var dbf = "now"
+                        var dbfm = "-" + daysbf + " days"; // As above but minus
+                        var dbfminus = "-" + (daysbf+1) + " days"; // Making string for sqlquery days before minus 1 as negative
+                        var dbfminusmin = "-" + (daysbf+2) + " days"; // Making string for sqlquery days before minus 2 as negative
+                        var dbfplus = "+" + 1 + " days"; // Making string for sqlquery daysbf plus one as negative
+                        break;
+                    default:
+                        dbf = "+" + daysbf + " days"; // Making string for sqlquery days before
+                        dbfm = "-" + daysbf + " days"; // As above but minus
+                        dbfminus = "-" + (daysbf+1) + " days"; // Making string for sqlquery days before minus 1 as negative
+                        dbfminusmin = "-" + (daysbf+2) + " days"; // Making string for sqlquery days before minus 2 as negative
+                        dbfplus = "-" + (daysbf-1) + " days"; // Making string for sqlquery daysbf plus one as negative
+                        //console.log (dbf, dbfminus, dbfplus);
+                    }
+                    var rs = tx.executeSql('SELECT * FROM Valuetable WHERE valamid =? AND date(lamlocaltime,?) > date(?,?,?) AND date(lamlocaltime,?) < date(?,?,?)', [lammiSelected, 'localtime', 'now',dbfminus,'localtime','localtime', 'now',dbfplus, 'localtime'])
+                    if (daysbf == 0) {
+                        var rw = tx.executeSql('SELECT strftime(?,?,?)AS wdaynow', ['%w', 'now', 'localtime'])
+                    }
+                    else {
+                        rw = tx.executeSql('SELECT strftime(?,?,?,?)AS wdaynow', ['%w', 'now', dbfm, 'localtime'])
+                    }
+                    //console.log('The day', rw.rows.item(0).wdaynow)
+                    var ry = tx.executeSql('SELECT *, datetime(lamlocaltime,?,?) AS lamtime FROM Valuetable WHERE valamid =? AND date(lamlocaltime,?) > date(?,?,?) AND date(lamlocaltime,?) < date(?,?,?)', ['+1 day','localtime', lammiSelected, 'localtime', 'now',dbfminusmin,'localtime','localtime', 'now',dbfm, 'localtime'])
+                    var rt = tx.executeSql('SELECT *, datetime(htime+?,?,?) AS hhtime FROM Historystable WHERE valamid=? AND wday=?', [(time + offset*60*1000 - time%(24*60*60*1000)- daysbf*24*60*60*1000)/1000, 'unixepoch', 'localtime', lammiSelected, rw.rows.item(0).wdaynow])
 
                     dataList.clear();
                     for(var i = 0; i < rs.rows.length; i++) {
@@ -168,8 +185,9 @@ function drawSpeed() {
                 )
 }
 
+/// Function maintainDb() removes double lines from Valuetable and calls makeHistory() function
 function maintainDb() {
-    //console.log("Maintain data")
+
     var db = LocalStorage.openDatabaseSync("TrafficviewerDB", "1.0", "Traffic viewer database", 1000000);
     //db.vacuum()
     db.transaction(
@@ -189,8 +207,8 @@ function maintainDb() {
     makeHistory();
 }
 
+/// Function subsetLocation() selects points to view to have values. Makes display response better
 function subsetLocation() {
-    //console.log("Select closest LAMs")
     var db = LocalStorage.openDatabaseSync("TrafficviewerDB", "1.0", "Traffic viewer database", 1000000);
 
     db.transaction(
@@ -207,6 +225,7 @@ function subsetLocation() {
                 )
 }
 
+/// Function makeHistory() permanently attaches daily values to the history curve.
 function makeHistory() {
     //console.log("Make history")
     var db = LocalStorage.openDatabaseSync("TrafficviewerDB", "1.0", "Traffic viewer database", 1000000);
@@ -214,9 +233,6 @@ function makeHistory() {
     db.transaction(
                 function(tx) {
                     // Create the table, if not existing
-                    //var time = new Date().getTime()
-                    //var offset = new Date().getTimezoneOffset()
-                    //var zeero = new Date(time + offset*60*1000 - time%(24*60*60*1000)) //RLAH
                     tx.executeSql('CREATE TABLE IF NOT EXISTS Valuetable (valamid INTEGER, lamlocaltime TEXT, trafficvolume1 INTEGER, trafficvolume2 INTEGER, averagespeed1 INTEGER, averagespeed2 INTEGER)');
                     tx.executeSql('CREATE TABLE IF NOT EXISTS Location (lamid INTEGER, latti REAL, longi REAL, offlat1 REAL, offlong1 REAL, offlat2 REAL, offlong2 REAL)');
                     tx.executeSql('CREATE TABLE IF NOT EXISTS History (lamid INTEGER, latti REAL, longi REAL, offlat1 REAL, offlong1 REAL, offlat2 REAL, offlong2 REAL)');
@@ -244,8 +260,9 @@ function makeHistory() {
                 )
 }
 
+/// Function searchLAM() finds the lam specified by lam number
 function searchLAM(lam) {
-    //console.log("Select closest LAMs")
+
     var db = LocalStorage.openDatabaseSync("TrafficviewerDB", "1.0", "Traffic viewer database", 1000000);
 
     db.transaction(
@@ -266,3 +283,20 @@ function searchLAM(lam) {
     searchDone = true
 }
 
+/// Function removeZeros() removes zero values from data
+function removeZeros() {
+    var db = LocalStorage.openDatabaseSync("TrafficviewerDB", "1.0", "Traffic viewer database", 1000000);
+    //db.vacuum()
+    db.transaction(
+                function(tx) {
+                    // Create the table, if not existing
+                    tx.executeSql('CREATE TABLE IF NOT EXISTS Valuetable (valamid INTEGER, lamlocaltime TEXT, trafficvolume1 INTEGER, trafficvolume2 INTEGER, averagespeed1 INTEGER, averagespeed2 INTEGER)');
+                    // Delete double values
+                    tx.executeSql('DELETE FROM Valuetable WHERE rowid NOT IN (SELECT max(rowid) FROM Valuetable GROUP BY valamid, lamlocaltime)')
+                    // Delete zeros between 7 and 17 localtime, (is the behaviour same in all zones??
+                    //var rs = tx.executeSql('SELECT * FROM Valuetable WHERE ((strftime(?,lamlocaltime,?))%?) > ? AND ((strftime(?,lamlocaltime,?))%?) < ? AND trafficvolume1 = ? AND trafficvolume2 = ?', ['%s', 'localtime', 86400, 25199, '%s', 'localtime', 86400,61201, 0, 0])
+                    tx.executeSql('DELETE FROM Valuetable WHERE ((strftime(?,lamlocaltime,?))%?) > ? AND ((strftime(?,lamlocaltime,?))%?) < ? AND trafficvolume1 = ? AND trafficvolume2 = ?', ['%s', 'localtime', 86400, 25199, '%s', 'localtime', 86400,61201, 0, 0])
+
+                }
+                )
+}

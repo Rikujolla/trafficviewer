@@ -38,6 +38,7 @@ Rectangle
     //property var dataListModel: [80, 85]
     //property var parInfoModel: null
     //property string column: "value"
+    property int daysBefore: 0 // used to visualize previous days
     property bool plotDraggingActive //to remove errormessage, not knowing why to use this boolean
 
     property real min : 0.0
@@ -152,6 +153,65 @@ Rectangle
         canvas.requestPaint()
     }
 
+    IconButton {
+        id: nowIcon
+        z:15
+        visible:legend.opacity == 1.0
+        anchors.bottom: parent.top
+        anchors.bottomMargin: -Screen.height/30
+        //anchors.bottomMargin: 20
+        //anchors.right: leftHanded ? undefined : page.right
+        //anchors.left: leftHanded  ? page.left : undefined
+        anchors.horizontalCenter: parent.horizontalCenter
+        icon.source: "image://theme/icon-m-day?" + (pressed
+                                                    ? Theme.highlightColor
+                                                    : Theme.secondaryHighlightColor)
+        onClicked: {
+            daysBefore = 0;
+            Mytables.drawSpeed(daysBefore)
+            canvas.requestPaint()
+            console.log("now", daysBefore)
+        }
+    }
+
+    IconButton {
+        id: backIcon
+        z:15
+        visible:legend.opacity == 1.0
+        anchors.bottom: parent.top
+        anchors.bottomMargin: -Screen.height/30
+        anchors.right: nowIcon.left
+        icon.source: "image://theme/icon-m-back?" + (pressed
+                                                    ? Theme.highlightColor
+                                                    : Theme.secondaryHighlightColor)
+        onClicked: {
+            daysBefore++;
+            Mytables.drawSpeed(daysBefore)
+            canvas.requestPaint()
+            console.log("back", daysBefore)
+        }
+    }
+
+    IconButton {
+        id: fwdIcon
+        z:15
+        visible:legend.opacity == 1.0
+        anchors.bottom: parent.top
+        anchors.bottomMargin: -Screen.height/30
+        //anchors.bottomMargin: 20
+        //anchors.right: leftHanded ? undefined : page.right
+        //anchors.left: leftHanded  ? page.left : undefined
+        anchors.left: nowIcon.right
+        icon.source: "image://theme/icon-m-forward?" + (pressed
+                                                    ? Theme.highlightColor
+                                                    : Theme.secondaryHighlightColor)
+        onClicked: {
+            daysBefore > 0 ? daysBefore-- : daysBefore = 0;
+            Mytables.drawSpeed(daysBefore)
+            canvas.requestPaint()
+            console.log("forward", daysBefore)
+        }
+    }
     Text
     {
         id: xStart
@@ -258,7 +318,7 @@ Rectangle
                 Text
                 {
                     //text: name
-                    text: name
+                    text: qsTr(dataTitles.get(index).name)
                     color: Theme.primaryColor
                     font.pointSize: fontSize
                     font.bold: fontBold
@@ -462,7 +522,7 @@ Rectangle
 
         onPaint:
         {
-            Mytables.drawSpeed()
+            Mytables.drawSpeed(daysBefore)
 
             var ctx = canvas.getContext("2d");
 
@@ -483,8 +543,8 @@ Rectangle
             var time = new Date().getTime()
             var offset = new Date().getTimezoneOffset()
             console.log("offset", offset)
-            xstart = new Date(time + offset*60*1000 - time%(24*60*60*1000)) //RLAH
-            xend = new Date(time + 24*60*60*1000 + offset*60*1000- time%(24*60*60*1000)) //RLAH
+            xstart = new Date(time + offset*60*1000 - time%(24*60*60*1000) - daysBefore*24*60*60*1000) //RLAH
+            xend = new Date(time + 24*60*60*1000 + offset*60*1000- time%(24*60*60*1000) - daysBefore*24*60*60*1000) //RLAH
 
             speedView ? max = 140.0 : max = 350.0;
 
@@ -494,7 +554,9 @@ Rectangle
             updateHorizontalScale()
 
             drawHistory(ctx, "grey")
-            //drawYesterday(ctx, "yellow")
+            if (drawYesterdayValues == true) {
+                drawYesterday(ctx, "yellow")
+            }
             drawPlot(ctx, "red");
             drawFuture(ctx, "green");
 
