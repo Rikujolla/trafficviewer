@@ -97,6 +97,14 @@
         <source>Select LAM to my favourite</source>
         <translation>Valitse LAM-piste suosikikseni</translation>
     </message>
+    <message>
+        <source>To density view</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>To cumulative view</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Help</name>

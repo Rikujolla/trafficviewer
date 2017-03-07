@@ -78,6 +78,16 @@ Page
                     //plot.canvas.requestPaint()
                 }
             }
+            MenuItem {
+                visible: !speedView
+                text: cumulativeView ? qsTr("To density view") : qsTr("To cumulative view")
+                onClicked: {
+                    //console.log("cumulative")
+                    cumulativeView = !cumulativeView
+                    chView = true
+                    //plot.canvas.requestPaint()
+                }
+            }
         }
 
         /*PushUpMenu {

@@ -90,7 +90,11 @@ function drawSpeed(daysbf) {
                     tx.executeSql('CREATE TABLE IF NOT EXISTS Location (lamid INTEGER, latti REAL, longi REAL, offlat1 REAL, offlong1 REAL, offlat2 REAL, offlong2 REAL)');
                     tx.executeSql('CREATE TABLE IF NOT EXISTS Valuetable (valamid INTEGER, lamlocaltime TEXT, trafficvolume1 INTEGER, trafficvolume2 INTEGER, averagespeed1 INTEGER, averagespeed2 INTEGER)');
                     tx.executeSql('CREATE TABLE IF NOT EXISTS Historystable (valamid INTEGER, wday TEXT, htime INTEGER, mtr1 REAL, mtr2 REAL, msp1 REAL, msp2 REAL, nhist INTEGER)');
+                    tx.executeSql('CREATE TABLE IF NOT EXISTS Theday (lamid INTEGER, latti REAL, longi REAL, offlat1 REAL, offlong1 REAL, offlat2 REAL, offlong2 REAL)');
+                    tx.executeSql('DROP TABLE Theday')
                     //tx.executeSql('DELETE FROM Valuetable')
+
+
 
                     var time = new Date().getTime()
                     var offset = new Date().getTimezoneOffset()
@@ -111,7 +115,12 @@ function drawSpeed(daysbf) {
                         dbfplus = "-" + (daysbf-1) + " days"; // Making string for sqlquery daysbf plus one as negative
                         //console.log (dbf, dbfminus, dbfplus);
                     }
-                    var rs = tx.executeSql('SELECT * FROM Valuetable WHERE valamid =? AND date(lamlocaltime,?) > date(?,?,?) AND date(lamlocaltime,?) < date(?,?,?)', [lammiSelected, 'localtime', 'now',dbfminus,'localtime','localtime', 'now',dbfplus, 'localtime'])
+                    var hfillin = 0; //Fill-indata for history
+                    var tfillin = 0; //Fill-indata for the day
+                    //var tquality = 0; // The day data quality, the mount of the measured data divided by maximum
+                    if (!cumulativeView) {
+                        var rs = tx.executeSql('SELECT * FROM Valuetable WHERE valamid =? AND date(lamlocaltime,?) > date(?,?,?) AND date(lamlocaltime,?) < date(?,?,?)', [lammiSelected, 'localtime', 'now',dbfminus,'localtime','localtime', 'now',dbfplus, 'localtime'])
+                    }
                     if (daysbf == 0) {
                         var rw = tx.executeSql('SELECT strftime(?,?,?)AS wdaynow', ['%w', 'now', 'localtime'])
                     }
@@ -119,10 +128,44 @@ function drawSpeed(daysbf) {
                         rw = tx.executeSql('SELECT strftime(?,?,?,?)AS wdaynow', ['%w', 'now', dbfm, 'localtime'])
                     }
                     //console.log('The day', rw.rows.item(0).wdaynow)
+
+                    if (cumulativeView) { // need to remove extra lines for cumulative view, not needed for density view, slows the software??
+                    //tx.executeSql('DELETE FROM Valuetable WHERE rowid NOT IN (SELECT max(rowid) FROM Valuetable GROUP BY valamid, lamlocaltime)')
+                        tx.executeSql('DELETE FROM Valuetable WHERE valamid=? AND rowid NOT IN (SELECT max(rowid) FROM Valuetable GROUP BY valamid, lamlocaltime)', lammiSelected)
+                        //tx.executeSql('CREATE TABLE IF NOT EXISTS Theday (lamid INTEGER, latti REAL, longi REAL, offlat1 REAL, offlong1 REAL, offlat2 REAL, offlong2 REAL)');
+                        //tx.executeSql('DROP TABLE Theday')
+                        // Toimii tänään tx.executeSql('CREATE TABLE Theday AS SELECT valamid, strftime(?,lamlocaltime,?) AS wday, ((strftime(?,lamlocaltime,?)+?)%?)-((strftime(?,lamlocaltime,?)+?)%?)%? AS htime, total(trafficvolume1) AS mtr1, total(trafficvolume2) AS mtr2, total(averagespeed1) AS msp1, total(averagespeed2) AS msp2, count(rowid) AS nhist FROM Valuetable WHERE valamid=? AND (strftime(?,?) - strftime(?,lamlocaltime))< ? AND wday = ? GROUP BY valamid, htime, wday', ['%w', 'localtime','%s', 'localtime', 120, 86400, '%s', 'localtime', 120, 86400, 600,lammiSelected,'%s', 'now', '%s', 86400, rw.rows.item(0).wdaynow])
+                        tx.executeSql('CREATE TABLE Theday AS SELECT valamid, strftime(?,lamlocaltime,?) AS wday, ((strftime(?,lamlocaltime,?)+?)%?)-((strftime(?,lamlocaltime,?)+?)%?)%? AS htime, total(trafficvolume1) AS mtr1, total(trafficvolume2) AS mtr2, total(averagespeed1) AS msp1, total(averagespeed2) AS msp2, count(rowid) AS nhist FROM Valuetable WHERE valamid=? AND (strftime(?,?) - strftime(?,lamlocaltime))< ? AND (strftime(?,?) - strftime(?,lamlocaltime))> ? AND wday = ? GROUP BY valamid, htime, wday', ['%w', 'localtime','%s', 'localtime', 120, 86400, '%s', 'localtime', 120, 86400, 600,lammiSelected,'%s', 'now', '%s', 86400*(daysbf+1), '%s', 'now', '%s', 86400*(daysbf-1),rw.rows.item(0).wdaynow])
+                        rs = tx.executeSql('SELECT * FROM Theday')
+                        var rss = tx.executeSql('SELECT sum(nhist) AS thesum, max(htime) AS themax FROM Theday');
+                        thedayQuality = 300*100*rss.rows.item(0).thesum/rss.rows.item(0).themax;
+                        console.log(rss.rows.item(0).thesum, rss.rows.item(0).themax, thedayQuality);
+                        /*for(var j = 0; j < rs.rows.length; j++) {
+                            console.log("The day", rs.rows.item(j).valamid, rs.rows.item(j).wday, rs.rows.item(j).htime, rs.rows.item(j).mtr1, rs.rows.item(j).nhist)
+                        }*/
+                        tx.executeSql('INSERT INTO Theday SELECT * FROM Historystable WHERE valamid=? AND wday=? AND htime < ?', [lammiSelected, rw.rows.item(0).wdaynow, rs.rows.item(rs.rows.length-1).htime])
+
+                        //var rs = tx.executeSql('SELECT * from Theday, Historystable WHERE Historystable.valamid=? AND Historystable.wday=?', [lammiSelected, rw.rows.item(0).wdaynow])
+                        //rs = tx.executeSql('SELECT * FROM Theday')
+                        /*for(j = 0; j < rs.rows.length; j++) {
+                            console.log("History joint", rs.rows.item(j).valamid, rs.rows.item(j).wday, rs.rows.item(j).htime, rs.rows.item(j).mtr1, rs.rows.item(j).nhist)
+                        }*/
+                        tx.executeSql('DELETE FROM Theday WHERE rowid NOT IN (SELECT min(rowid) FROM Theday GROUP BY htime)')
+                        rs = tx.executeSql('SELECT *, datetime(htime+?,?,?) AS hhtime FROM Theday ORDER BY htime ASC', [(time + offset*60*1000 - time%(24*60*60*1000)- daysbf*24*60*60*1000)/1000, 'unixepoch', 'localtime'])
+                        /*for(j = 0; j < rs.rows.length; j++) {
+                            console.log("Reduced", rs.rows.item(j).valamid, rs.rows.item(j).wday, rs.rows.item(j).htime, rs.rows.item(j).hhtime, rs.rows.item(j).mtr1, rs.rows.item(j).nhist)
+                        }*/
+                    }
+
                     var ry = tx.executeSql('SELECT *, datetime(lamlocaltime,?,?) AS lamtime FROM Valuetable WHERE valamid =? AND date(lamlocaltime,?) > date(?,?,?) AND date(lamlocaltime,?) < date(?,?,?)', ['+1 day','localtime', lammiSelected, 'localtime', 'now',dbfminusmin,'localtime','localtime', 'now',dbfm, 'localtime'])
                     var rt = tx.executeSql('SELECT *, datetime(htime+?,?,?) AS hhtime FROM Historystable WHERE valamid=? AND wday=?', [(time + offset*60*1000 - time%(24*60*60*1000)- daysbf*24*60*60*1000)/1000, 'unixepoch', 'localtime', lammiSelected, rw.rows.item(0).wdaynow])
 
+
+
                     dataList.clear();
+                    var tempSumTraf1 = 0;
+                    var tempSumTraf1Yest = 0;
+                    var tempSumTraf1Hist = 0;
                     for(var i = 0; i < rs.rows.length; i++) {
                         if (speedView){
                             if (lammiPair == 0) {
@@ -134,10 +177,49 @@ function drawSpeed(daysbf) {
                         }
                         else {
                             if (lammiPair == 0) {
-                                dataList.append({"timestamp":rs.rows.item(i).lamlocaltime, "speed":rs.rows.item(i).trafficvolume1})
+                                if (!cumulativeView) {
+                                    dataList.append({"timestamp":rs.rows.item(i).lamlocaltime, "speed":rs.rows.item(i).trafficvolume1})
+                                }
+                                else {
+                                    // Creating fill-in data if there are not all ten minutes points in the day data by adding mean values between
+                                    if (i>0 && (rs.rows.item(i).htime - rs.rows.item(i-1).htime >600)) {
+                                        tfillin = ((rs.rows.item(i).htime - rs.rows.item(i-1).htime)/600 -1) * (rs.rows.item(i-1).mtr1/rs.rows.item(i-1).nhist + rs.rows.item(i).mtr1/rs.rows.item(i).nhist)/2
+                                        console.log("DayFilling", hfillin, rs.rows.item(i).htime, rs.rows.item(i).hhtime, rs.rows.item(i).mtr1/rs.rows.item(i).nhist, tempSumTraf1Hist)
+                                    }
+                                    else if (i==0 && rs.rows.item(i).htime > 0) {
+                                        // Filling mean of the missing data assuming the first value to be zero
+                                        tfillin = ((rs.rows.item(i).htime)/600) * (rs.rows.item(i).mtr1/rs.rows.item(i).nhist)/2
+                                        console.log("DayFilling0", hfillin, rs.rows.item(i).htime, rs.rows.item(i).hhtime, rs.rows.item(i).mtr1/rs.rows.item(i).nhist, tempSumTraf1Hist)
+
+                                    }
+                                    tempSumTraf1 = tempSumTraf1 + rs.rows.item(i).mtr1/rs.rows.item(i).nhist + tfillin;
+                                    dataList.append({"timestamp":rs.rows.item(i).hhtime, "speed":tempSumTraf1})
+                                    tfillin = 0;
+                                    //console.log(rs.rows.item(i).htime, rs.rows.item(i).hhtime, rs.rows.item(i).mtr1/rs.rows.item(i).nhist, tempSumTraf1)
+                                }
                             }
                             else {
-                                dataList.append({"timestamp":rs.rows.item(i).lamlocaltime, "speed":rs.rows.item(i).trafficvolume2})
+                                if (!cumulativeView) {
+                                    dataList.append({"timestamp":rs.rows.item(i).lamlocaltime, "speed":rs.rows.item(i).trafficvolume2})
+                                }
+                                else {
+                                    // Creating fill-in data if there are not all ten minutes points in the day data by adding mean values between
+                                    if (i>0 && (rs.rows.item(i).htime - rs.rows.item(i-1).htime >600)) {
+                                        tfillin = ((rs.rows.item(i).htime - rs.rows.item(i-1).htime)/600 -1) * (rs.rows.item(i-1).mtr2/rs.rows.item(i-1).nhist + rs.rows.item(i).mtr2/rs.rows.item(i).nhist)/2
+                                        console.log("DayFilling", hfillin, rs.rows.item(i).htime, rs.rows.item(i).hhtime, rs.rows.item(i).mtr2/rs.rows.item(i).nhist, tempSumTraf1Hist)
+                                    }
+                                    else if (i==0 && rs.rows.item(i).htime > 0) {
+                                        // Filling mean of the missing data assuming the first value to be zero
+                                        tfillin = ((rs.rows.item(i).htime)/600) * (rs.rows.item(i).mtr2/rs.rows.item(i).nhist)/2
+                                        console.log("DayFilling0", hfillin, rs.rows.item(i).htime, rs.rows.item(i).hhtime, rs.rows.item(i).mtr2/rs.rows.item(i).nhist, tempSumTraf1Hist)
+
+                                    }
+                                    tempSumTraf1 = tempSumTraf1 + rs.rows.item(i).mtr2/rs.rows.item(i).nhist + tfillin;
+                                    dataList.append({"timestamp":rs.rows.item(i).hhtime, "speed":tempSumTraf1})
+                                    tfillin = 0;
+                                    //console.log(rs.rows.item(i).htime, rs.rows.item(i).hhtime, rs.rows.item(i).mtr2/rs.rows.item(i).nhist, tempSumTraf1)
+                                }
+
                             }
                         }
                     }
@@ -154,7 +236,13 @@ function drawSpeed(daysbf) {
                         }
                         else {
                             if (lammiPair == 0) {
+                                if (!cumulativeView) {
                                 dataYesterday.append({"timestamp":ry.rows.item(i).lamtime, "speed":ry.rows.item(i).trafficvolume1})
+                                }
+                                else {
+                                    tempSumTraf1Yest = tempSumTraf1Yest + ry.rows.item(i).trafficvolume1
+                                    dataYesterday.append({"timestamp":ry.rows.item(i).lamtime, "speed":tempSumTraf1Yest})
+                                }
                             }
                             else {
                                 dataYesterday.append({"timestamp":ry.rows.item(i).lamtime, "speed":ry.rows.item(i).trafficvolume2})
@@ -163,6 +251,7 @@ function drawSpeed(daysbf) {
                     }
 
                     dataHistory.clear();
+                    //console.log("History", rt.rows.length);
                     for(i = 0; i < rt.rows.length; i++) {
                         if (speedView){
                             if (lammiPair == 0) {
@@ -174,10 +263,51 @@ function drawSpeed(daysbf) {
                         }
                         else {
                             if (lammiPair == 0) {
+                                if (!cumulativeView) {
                                 dataHistory.append({"timestamp":rt.rows.item(i).hhtime, "speed":rt.rows.item(i).mtr1/rt.rows.item(i).nhist})
+                                }
+                                else {
+                                    // Creating fill-in data if there are not all ten minutes points in history by adding mean values between
+                                    if (i>0 && (rt.rows.item(i).htime - rt.rows.item(i-1).htime >600)) {
+                                        hfillin = ((rt.rows.item(i).htime - rt.rows.item(i-1).htime)/600 -1) * (rt.rows.item(i-1).mtr1/rt.rows.item(i-1).nhist + rt.rows.item(i).mtr1/rt.rows.item(i).nhist)/2
+                                        console.log("HistoryFilling", hfillin, rt.rows.item(i).htime, rt.rows.item(i).hhtime, rt.rows.item(i).mtr1/rt.rows.item(i).nhist, tempSumTraf1Hist)
+                                    }
+                                    else if (i==0 && rt.rows.item(i).htime > 0) {
+                                        // Filling mean of the missing data assuming the first value to be zero
+                                        hfillin = ((rt.rows.item(i).htime)/600) * (rt.rows.item(i).mtr1/rt.rows.item(i).nhist)/2
+                                        console.log("HistoryFilling0", hfillin, rt.rows.item(i).htime, rt.rows.item(i).hhtime, rt.rows.item(i).mtr1/rt.rows.item(i).nhist, tempSumTraf1Hist)
+
+                                    }
+
+                                    tempSumTraf1Hist = tempSumTraf1Hist + rt.rows.item(i).mtr1/rt.rows.item(i).nhist + hfillin;
+                                    dataHistory.append({"timestamp":rt.rows.item(i).hhtime, "speed":tempSumTraf1Hist})
+                                    hfillin = 0;
+                                    //console.log(rt.rows.item(i).htime, rt.rows.item(i).hhtime, rt.rows.item(i).mtr1/rt.rows.item(i).nhist, tempSumTraf1Hist)
+                                }
                             }
                             else {
+                                if (!cumulativeView) {
                                 dataHistory.append({"timestamp":rt.rows.item(i).hhtime, "speed":rt.rows.item(i).mtr2/rt.rows.item(i).nhist})
+                                }
+                                else {
+                                    // Creating fill-in data if there are not all ten minutes points in history by adding mean values between
+                                    if (i>0 && (rt.rows.item(i).htime - rt.rows.item(i-1).htime >600)) {
+                                        hfillin = ((rt.rows.item(i).htime - rt.rows.item(i-1).htime)/600 -1) * (rt.rows.item(i-1).mtr2/rt.rows.item(i-1).nhist + rt.rows.item(i).mtr2/rt.rows.item(i).nhist)/2
+                                        console.log("HistoryFilling", hfillin, rt.rows.item(i).htime, rt.rows.item(i).hhtime, rt.rows.item(i).mtr2/rt.rows.item(i).nhist, tempSumTraf1Hist)
+                                    }
+                                    else if (i==0 && rt.rows.item(i).htime > 0) {
+                                        // Filling mean of the missing data assuming the first value to be zero
+                                        hfillin = ((rt.rows.item(i).htime)/600) * (rt.rows.item(i).mtr2/rt.rows.item(i).nhist)/2
+                                        console.log("HistoryFilling0", hfillin, rt.rows.item(i).htime, rt.rows.item(i).hhtime, rt.rows.item(i).mtr2/rt.rows.item(i).nhist, tempSumTraf1Hist)
+
+                                    }
+
+                                    tempSumTraf1Hist = tempSumTraf1Hist + rt.rows.item(i).mtr2/rt.rows.item(i).nhist + hfillin;
+                                    dataHistory.append({"timestamp":rt.rows.item(i).hhtime, "speed":tempSumTraf1Hist})
+                                    hfillin = 0;
+                                    //console.log(rt.rows.item(i).htime, rt.rows.item(i).hhtime, rt.rows.item(i).mtr2/rt.rows.item(i).nhist, tempSumTraf1Hist)
+                                }
+
                             }
                         }
                     }

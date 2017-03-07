@@ -72,6 +72,8 @@ ApplicationWindow
     property real searchLatti
     property real searchLongi
     property bool drawYesterdayValues: false
+    property bool cumulativeView: false
+    property int thedayQuality // the quality of the day data
 
     XmlListModel {
         id: lamStations

@@ -64,7 +64,7 @@ Rectangle
         var last = dataHistory.count - 1;
         var first = 0;
         var koo = 1.0
-        if (!speedView) {koo = 12.0}
+        if (!speedView) {if (!cumulativeView) {koo = 12.0} else {koo = 2.0}}
 
         for (var i = first; i <= last; i++)
         {
@@ -318,7 +318,7 @@ Rectangle
                 Text
                 {
                     //text: name
-                    text: qsTr(dataTitles.get(index).name)
+                    text: qsTr(dataTitles.get(index).name) + (index == 0 && cumulativeView ? ", quality " + thedayQuality + "%" : "")
                     color: Theme.primaryColor
                     font.pointSize: fontSize
                     font.bold: fontBold
@@ -423,7 +423,7 @@ Rectangle
                 //console.log(s)
                 var x = (s.getTime() - xstart)/(xend-xstart);
                 var y = (dataHistory.get(i).speed-min)/(max-min);
-                if (speedView) {} else{y=y*12};
+                if (speedView) {} else if (!cumulativeView){y=y*12} else {y=y*2}; //hardcoding should be parametrized
                 if (i == 0)
                 {
                     ctx.moveTo(x * canvas.width, (1-y) * canvas.height);
@@ -450,7 +450,7 @@ Rectangle
                 var s = new Date(dataYesterday.get(i).timestamp)
                 var x = (s.getTime() - xstart)/(xend-xstart);
                 var y = (dataYesterday.get(i).speed-min)/(max-min);
-                if (speedView) {} else{y=y*12};
+                if (speedView) {} else if (!cumulativeView){y=y*12} else{y=y*2}; //hardcoding should be parametrized
                 if (i == 0)
                 {
                     ctx.moveTo(x * canvas.width, (1-y) * canvas.height);
@@ -477,7 +477,7 @@ Rectangle
                 var s = new Date(dataList.get(i).timestamp)
                 var x = (s.getTime() - xstart)/(xend-xstart);
                 var y = (dataList.get(i).speed-min)/(max-min);
-                if (speedView) {} else{y=y*12};
+                if (speedView) {} else if (!cumulativeView){y=y*12} else{y=y*2}; //hardcoding should be parametrized
                 if (i == 0)
                 {
                     ctx.moveTo(x * canvas.width, (1-y) * canvas.height);
@@ -504,7 +504,7 @@ Rectangle
                 var s = new Date(dataFuture.get(i).timestamp)
                 var x = (s.getTime() - xstart)/(xend-xstart);
                 var y = (dataFuture.get(i).speed-min)/(max-min);
-
+                if (speedView) {} else if (!cumulativeView){y=y*12} else{y=y*2}; //hardcoding should be parametrized
                 if (i == 0)
                 {
                     ctx.moveTo(x * canvas.width, (1-y) * canvas.height);
