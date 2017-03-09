@@ -74,6 +74,7 @@ ApplicationWindow
     property bool drawYesterdayValues: false
     property bool cumulativeView: false
     property int thedayQuality // the quality of the day data
+    property int doublesAway:0 // Saves localtime when double values have been removed
 
     XmlListModel {
         id: lamStations

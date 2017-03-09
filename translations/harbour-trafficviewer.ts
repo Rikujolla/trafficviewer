@@ -180,6 +180,10 @@
         <source>The day can be changed from the icons above the cart. Icons become visible by tapping the screen. As a default history mean data curve and the selected day data are shown. The day before data can also be shown by the switch on the settings page.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Cumulative chart view makes the view unresponsible for a while. Also day changes require some seconds to update the results.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>LocList</name>

@@ -7,6 +7,10 @@
 
 # * date Author's Name <author's email> version-release
 # - Summary of changes
+* Thu Mar 09 2017 Riku Lahtinen <rikul.lajolla@kiu.as> 0.0.9-1
+- Added cumulative chart views
+- Possibility to remove zero values during daytime
+
 * Thu Oct 27 2016 Riku Lahtinen <rikul.lajolla@kiu.as> 0.0.8-1
 - Signs on the right side of roads in Keski-Suomi, Pirkanmaa and Satakunta
 - Icons added to a map view

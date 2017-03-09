@@ -130,16 +130,16 @@ function drawSpeed(daysbf) {
                     //console.log('The day', rw.rows.item(0).wdaynow)
 
                     if (cumulativeView) { // need to remove extra lines for cumulative view, not needed for density view, slows the software??
-                    //tx.executeSql('DELETE FROM Valuetable WHERE rowid NOT IN (SELECT max(rowid) FROM Valuetable GROUP BY valamid, lamlocaltime)')
-                        tx.executeSql('DELETE FROM Valuetable WHERE valamid=? AND rowid NOT IN (SELECT max(rowid) FROM Valuetable GROUP BY valamid, lamlocaltime)', lammiSelected)
-                        //tx.executeSql('CREATE TABLE IF NOT EXISTS Theday (lamid INTEGER, latti REAL, longi REAL, offlat1 REAL, offlong1 REAL, offlat2 REAL, offlong2 REAL)');
-                        //tx.executeSql('DROP TABLE Theday')
+                        //tx.executeSql('DELETE FROM Valuetable WHERE valamid=? AND rowid NOT IN (SELECT max(rowid) FROM Valuetable GROUP BY valamid, lamlocaltime)', lammiSelected)
+                        //console.log("doubles", doublesAway)
+                        tx.executeSql('DELETE FROM Valuetable WHERE valamid=? AND (strftime(?,lamlocaltime)) >= ? AND rowid NOT IN (SELECT max(rowid) FROM Valuetable GROUP BY valamid, lamlocaltime)', [lammiSelected, '%s', doublesAway])
+                        //tx.executeSql('DELETE FROM Valuetable WHERE valamid=? AND (strftime(?,?) - strftime(?,lamlocaltime))< ? AND rowid NOT IN (SELECT max(rowid) FROM Valuetable GROUP BY valamid, lamlocaltime)', [lammiSelected, '%s', 'now', '%s', 3600])
                         // Toimii tänään tx.executeSql('CREATE TABLE Theday AS SELECT valamid, strftime(?,lamlocaltime,?) AS wday, ((strftime(?,lamlocaltime,?)+?)%?)-((strftime(?,lamlocaltime,?)+?)%?)%? AS htime, total(trafficvolume1) AS mtr1, total(trafficvolume2) AS mtr2, total(averagespeed1) AS msp1, total(averagespeed2) AS msp2, count(rowid) AS nhist FROM Valuetable WHERE valamid=? AND (strftime(?,?) - strftime(?,lamlocaltime))< ? AND wday = ? GROUP BY valamid, htime, wday', ['%w', 'localtime','%s', 'localtime', 120, 86400, '%s', 'localtime', 120, 86400, 600,lammiSelected,'%s', 'now', '%s', 86400, rw.rows.item(0).wdaynow])
                         tx.executeSql('CREATE TABLE Theday AS SELECT valamid, strftime(?,lamlocaltime,?) AS wday, ((strftime(?,lamlocaltime,?)+?)%?)-((strftime(?,lamlocaltime,?)+?)%?)%? AS htime, total(trafficvolume1) AS mtr1, total(trafficvolume2) AS mtr2, total(averagespeed1) AS msp1, total(averagespeed2) AS msp2, count(rowid) AS nhist FROM Valuetable WHERE valamid=? AND (strftime(?,?) - strftime(?,lamlocaltime))< ? AND (strftime(?,?) - strftime(?,lamlocaltime))> ? AND wday = ? GROUP BY valamid, htime, wday', ['%w', 'localtime','%s', 'localtime', 120, 86400, '%s', 'localtime', 120, 86400, 600,lammiSelected,'%s', 'now', '%s', 86400*(daysbf+1), '%s', 'now', '%s', 86400*(daysbf-1),rw.rows.item(0).wdaynow])
                         rs = tx.executeSql('SELECT * FROM Theday')
                         var rss = tx.executeSql('SELECT sum(nhist) AS thesum, max(htime) AS themax FROM Theday');
                         thedayQuality = 300*100*rss.rows.item(0).thesum/rss.rows.item(0).themax;
-                        console.log(rss.rows.item(0).thesum, rss.rows.item(0).themax, thedayQuality);
+                        //console.log(rss.rows.item(0).thesum, rss.rows.item(0).themax, thedayQuality);
                         /*for(var j = 0; j < rs.rows.length; j++) {
                             console.log("The day", rs.rows.item(j).valamid, rs.rows.item(j).wday, rs.rows.item(j).htime, rs.rows.item(j).mtr1, rs.rows.item(j).nhist)
                         }*/
@@ -240,12 +240,18 @@ function drawSpeed(daysbf) {
                                 dataYesterday.append({"timestamp":ry.rows.item(i).lamtime, "speed":ry.rows.item(i).trafficvolume1})
                                 }
                                 else {
-                                    tempSumTraf1Yest = tempSumTraf1Yest + ry.rows.item(i).trafficvolume1
-                                    dataYesterday.append({"timestamp":ry.rows.item(i).lamtime, "speed":tempSumTraf1Yest})
+                                    // Maybe some day this works
+                                    //tempSumTraf1Yest = tempSumTraf1Yest + ry.rows.item(i).trafficvolume1
+                                    //dataYesterday.append({"timestamp":ry.rows.item(i).lamtime, "speed":tempSumTraf1Yest})
                                 }
                             }
                             else {
+                                if (!cumulativeView) {
                                 dataYesterday.append({"timestamp":ry.rows.item(i).lamtime, "speed":ry.rows.item(i).trafficvolume2})
+                                }
+                                else {
+                                    // Maybe some day this works
+                                }
                             }
                         }
                     }
@@ -322,6 +328,10 @@ function maintainDb() {
     //db.vacuum()
     db.transaction(
                 function(tx) {
+                    // Record time when doubles removed, makes chart creation faster
+                    var rs = tx.executeSql('SELECT strftime(?,?) AS mod', ['%s', 'now'])
+                    //console.log("glob", rs.rows.item(0).mod)
+                    doublesAway = rs.rows.item(0).mod;
                     // Create the table, if not existing
                     tx.executeSql('CREATE TABLE IF NOT EXISTS Valuetable (valamid INTEGER, lamlocaltime TEXT, trafficvolume1 INTEGER, trafficvolume2 INTEGER, averagespeed1 INTEGER, averagespeed2 INTEGER)');
 
@@ -419,6 +429,10 @@ function removeZeros() {
     //db.vacuum()
     db.transaction(
                 function(tx) {
+                    // Record time when doubles removed, makes chart creation faster
+                    var rs = tx.executeSql('SELECT strftime(?,?) AS mod', ['%s', 'now'])
+                    //console.log("glob", rs.rows.item(0).mod)
+                    doublesAway = rs.rows.item(0).mod;
                     // Create the table, if not existing
                     tx.executeSql('CREATE TABLE IF NOT EXISTS Valuetable (valamid INTEGER, lamlocaltime TEXT, trafficvolume1 INTEGER, trafficvolume2 INTEGER, averagespeed1 INTEGER, averagespeed2 INTEGER)');
                     // Delete double values

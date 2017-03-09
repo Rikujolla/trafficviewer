@@ -151,6 +151,7 @@ Page {
                 text: qsTr("Remove zeros")
                 anchors.horizontalCenter: parent.horizontalCenter
                 onClicked: {
+                    enabled = false;
                     Mytables.removeZeros();
                 }
             }
@@ -173,13 +174,19 @@ Page {
                 text: qsTr("Make history data")
                 anchors.horizontalCenter: parent.horizontalCenter
                 onClicked: {
-                    Mytables.maintainDb()
+                    enabled = false;
+                    Mytables.maintainDb();
                 }
+            }
+            Component.onDestruction:{
+                console.log("delataan");
+                Mysettings.saveSettings();
             }
 
 
         }
     }
+
 }
 
 

@@ -99,11 +99,11 @@
     </message>
     <message>
         <source>To density view</source>
-        <translation type="unfinished"></translation>
+        <translation>Tiheysnäkymään</translation>
     </message>
     <message>
         <source>To cumulative view</source>
-        <translation type="unfinished"></translation>
+        <translation>Kertymänäkymään</translation>
     </message>
 </context>
 <context>
@@ -179,6 +179,10 @@
     <message>
         <source>The day can be changed from the icons above the cart. Icons become visible by tapping the screen. As a default history mean data curve and the selected day data are shown. The day before data can also be shown by the switch on the settings page.</source>
         <translation>Päivä voidaan vaihtaa kaavion päällä olevilla ikoneilla. Ikonit tulevat näkyviin napauttamalla näyttöä. Oletuksena näytetään historian keskiarvokäyrä ja valitun päivän tiedot. Edellisen päivän tiedot saadaan näkyviin asetussivun valitsimella.</translation>
+    </message>
+    <message>
+        <source>Cumulative chart view makes the view unresponsible for a while. Also day changes require some seconds to update the results.</source>
+        <translation>Kertymänäkymässä sovellus ei vastaa hetkeen. Myös päivien vaihtaminen vaatii muutaman sekunnin, jotta tiedot päivittyvät.</translation>
     </message>
 </context>
 <context>

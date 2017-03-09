@@ -170,7 +170,7 @@ Rectangle
             daysBefore = 0;
             Mytables.drawSpeed(daysBefore)
             canvas.requestPaint()
-            console.log("now", daysBefore)
+            //console.log("now", daysBefore)
         }
     }
 
@@ -188,7 +188,7 @@ Rectangle
             daysBefore++;
             Mytables.drawSpeed(daysBefore)
             canvas.requestPaint()
-            console.log("back", daysBefore)
+            //console.log("back", daysBefore)
         }
     }
 
@@ -209,7 +209,7 @@ Rectangle
             daysBefore > 0 ? daysBefore-- : daysBefore = 0;
             Mytables.drawSpeed(daysBefore)
             canvas.requestPaint()
-            console.log("forward", daysBefore)
+            //console.log("forward", daysBefore)
         }
     }
     Text
@@ -542,7 +542,7 @@ Rectangle
             //now.set(Calendar.HOUR_OF_DAY, 0);
             var time = new Date().getTime()
             var offset = new Date().getTimezoneOffset()
-            console.log("offset", offset)
+            //console.log("offset", offset)
             xstart = new Date(time + offset*60*1000 - time%(24*60*60*1000) - daysBefore*24*60*60*1000) //RLAH
             xend = new Date(time + 24*60*60*1000 + offset*60*1000- time%(24*60*60*1000) - daysBefore*24*60*60*1000) //RLAH
 
