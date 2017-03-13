@@ -32,10 +32,10 @@ function addData() {
     db.transaction(
                 function(tx) {
                     // Create the table, if not existing
-                    tx.executeSql('CREATE TABLE IF NOT EXISTS Valuetable (valamid INTEGER, lamlocaltime TEXT, trafficvolume1 INTEGER, trafficvolume2 INTEGER, averagespeed1 INTEGER, averagespeed2 INTEGER)');
+                    tx.executeSql('CREATE TABLE IF NOT EXISTS Valuetable (valamid INTEGER, lamlocaltime TEXT, trafficvolume1 INTEGER, trafficvolume2 INTEGER, averagespeed1 INTEGER, averagespeed2 INTEGER, UNIQUE(valamid,lamlocaltime))');
 
                     for(var i = 0; i < lamSpecs.count; i++) {
-                        tx.executeSql('INSERT INTO Valuetable VALUES (?,?,?,?,?,?)', [lamSpecs.get(i).lamid, lamSpecs.get(i).lamLocaltime, lamSpecs.get(i).trafficvolume1, lamSpecs.get(i).trafficvolume2, lamSpecs.get(i).averagespeed1, lamSpecs.get(i).averagespeed2])
+                        tx.executeSql('INSERT OR IGNORE INTO Valuetable VALUES (?,?,?,?,?,?)', [lamSpecs.get(i).lamid, lamSpecs.get(i).lamLocaltime, lamSpecs.get(i).trafficvolume1, lamSpecs.get(i).trafficvolume2, lamSpecs.get(i).averagespeed1, lamSpecs.get(i).averagespeed2])
                     }
                 }
                 )
@@ -51,7 +51,7 @@ function readData() {
                 function(tx) {
                     // Create the table, if not existing
                     tx.executeSql('CREATE TABLE IF NOT EXISTS Location (lamid INTEGER, latti REAL, longi REAL, offlat1 REAL, offlong1 REAL, offlat2 REAL, offlong2 REAL)');
-                    tx.executeSql('CREATE TABLE IF NOT EXISTS Valuetable (valamid INTEGER, lamlocaltime TEXT, trafficvolume1 INTEGER, trafficvolume2 INTEGER, averagespeed1 INTEGER, averagespeed2 INTEGER)');
+                    tx.executeSql('CREATE TABLE IF NOT EXISTS Valuetable (valamid INTEGER, lamlocaltime TEXT, trafficvolume1 INTEGER, trafficvolume2 INTEGER, averagespeed1 INTEGER, averagespeed2 INTEGER, UNIQUE(valamid,lamlocaltime))');
                     tx.executeSql('CREATE TABLE IF NOT EXISTS Subloc (lamid INTEGER, latti REAL, longi REAL, offlat1 REAL, offlong1 REAL, offlat2 REAL, offlong2 REAL)');
 
                     var rs = tx.executeSql('SELECT *, max(lamlocaltime), strftime(?,?)-strftime(?,lamlocaltime) AS age FROM Valuetable INNER JOIN Subloc ON Valuetable.valamid = Subloc.lamid GROUP BY Valuetable.valamid',['%s', 'now', '%s'])
@@ -88,7 +88,7 @@ function drawSpeed(daysbf) {
 
                     // Create the table, if not existing
                     tx.executeSql('CREATE TABLE IF NOT EXISTS Location (lamid INTEGER, latti REAL, longi REAL, offlat1 REAL, offlong1 REAL, offlat2 REAL, offlong2 REAL)');
-                    tx.executeSql('CREATE TABLE IF NOT EXISTS Valuetable (valamid INTEGER, lamlocaltime TEXT, trafficvolume1 INTEGER, trafficvolume2 INTEGER, averagespeed1 INTEGER, averagespeed2 INTEGER)');
+                    tx.executeSql('CREATE TABLE IF NOT EXISTS Valuetable (valamid INTEGER, lamlocaltime TEXT, trafficvolume1 INTEGER, trafficvolume2 INTEGER, averagespeed1 INTEGER, averagespeed2 INTEGER, UNIQUE(valamid,lamlocaltime))');
                     tx.executeSql('CREATE TABLE IF NOT EXISTS Historystable (valamid INTEGER, wday TEXT, htime INTEGER, mtr1 REAL, mtr2 REAL, msp1 REAL, msp2 REAL, nhist INTEGER)');
                     tx.executeSql('CREATE TABLE IF NOT EXISTS Theday (lamid INTEGER, latti REAL, longi REAL, offlat1 REAL, offlong1 REAL, offlat2 REAL, offlong2 REAL)');
                     tx.executeSql('DROP TABLE Theday')
@@ -118,7 +118,7 @@ function drawSpeed(daysbf) {
                     var hfillin = 0; //Fill-indata for history
                     var tfillin = 0; //Fill-indata for the day
                     //var tquality = 0; // The day data quality, the mount of the measured data divided by maximum
-                    if (!cumulativeView) {
+                    if (!cumulativeView || speedView) {
                         var rs = tx.executeSql('SELECT * FROM Valuetable WHERE valamid =? AND date(lamlocaltime,?) > date(?,?,?) AND date(lamlocaltime,?) < date(?,?,?)', [lammiSelected, 'localtime', 'now',dbfminus,'localtime','localtime', 'now',dbfplus, 'localtime'])
                     }
                     if (daysbf == 0) {
@@ -129,12 +129,11 @@ function drawSpeed(daysbf) {
                     }
                     //console.log('The day', rw.rows.item(0).wdaynow)
 
-                    if (cumulativeView) { // need to remove extra lines for cumulative view, not needed for density view, slows the software??
-                        //tx.executeSql('DELETE FROM Valuetable WHERE valamid=? AND rowid NOT IN (SELECT max(rowid) FROM Valuetable GROUP BY valamid, lamlocaltime)', lammiSelected)
-                        //console.log("doubles", doublesAway)
-                        tx.executeSql('DELETE FROM Valuetable WHERE valamid=? AND (strftime(?,lamlocaltime)) >= ? AND rowid NOT IN (SELECT max(rowid) FROM Valuetable GROUP BY valamid, lamlocaltime)', [lammiSelected, '%s', doublesAway])
-                        //tx.executeSql('DELETE FROM Valuetable WHERE valamid=? AND (strftime(?,?) - strftime(?,lamlocaltime))< ? AND rowid NOT IN (SELECT max(rowid) FROM Valuetable GROUP BY valamid, lamlocaltime)', [lammiSelected, '%s', 'now', '%s', 3600])
-                        // Toimii tänään tx.executeSql('CREATE TABLE Theday AS SELECT valamid, strftime(?,lamlocaltime,?) AS wday, ((strftime(?,lamlocaltime,?)+?)%?)-((strftime(?,lamlocaltime,?)+?)%?)%? AS htime, total(trafficvolume1) AS mtr1, total(trafficvolume2) AS mtr2, total(averagespeed1) AS msp1, total(averagespeed2) AS msp2, count(rowid) AS nhist FROM Valuetable WHERE valamid=? AND (strftime(?,?) - strftime(?,lamlocaltime))< ? AND wday = ? GROUP BY valamid, htime, wday', ['%w', 'localtime','%s', 'localtime', 120, 86400, '%s', 'localtime', 120, 86400, 600,lammiSelected,'%s', 'now', '%s', 86400, rw.rows.item(0).wdaynow])
+                    if (cumulativeView && !speedView) { // need to remove extra lines for cumulative view, not needed for density view, slows the software??
+                        console.log("dbVersion", dbVersion)
+                        if (dbVersion < 10){
+                            tx.executeSql('DELETE FROM Valuetable WHERE valamid=? AND (strftime(?,lamlocaltime)) >= ? AND rowid NOT IN (SELECT max(rowid) FROM Valuetable GROUP BY valamid, lamlocaltime)', [lammiSelected, '%s', doublesAway])
+                        }
                         tx.executeSql('CREATE TABLE Theday AS SELECT valamid, strftime(?,lamlocaltime,?) AS wday, ((strftime(?,lamlocaltime,?)+?)%?)-((strftime(?,lamlocaltime,?)+?)%?)%? AS htime, total(trafficvolume1) AS mtr1, total(trafficvolume2) AS mtr2, total(averagespeed1) AS msp1, total(averagespeed2) AS msp2, count(rowid) AS nhist FROM Valuetable WHERE valamid=? AND (strftime(?,?) - strftime(?,lamlocaltime))< ? AND (strftime(?,?) - strftime(?,lamlocaltime))> ? AND wday = ? GROUP BY valamid, htime, wday', ['%w', 'localtime','%s', 'localtime', 120, 86400, '%s', 'localtime', 120, 86400, 600,lammiSelected,'%s', 'now', '%s', 86400*(daysbf+1), '%s', 'now', '%s', 86400*(daysbf-1),rw.rows.item(0).wdaynow])
                         rs = tx.executeSql('SELECT * FROM Theday')
                         var rss = tx.executeSql('SELECT sum(nhist) AS thesum, max(htime) AS themax FROM Theday');
@@ -328,20 +327,14 @@ function maintainDb() {
     //db.vacuum()
     db.transaction(
                 function(tx) {
-                    // Record time when doubles removed, makes chart creation faster
-                    var rs = tx.executeSql('SELECT strftime(?,?) AS mod', ['%s', 'now'])
-                    //console.log("glob", rs.rows.item(0).mod)
-                    doublesAway = rs.rows.item(0).mod;
-                    // Create the table, if not existing
-                    tx.executeSql('CREATE TABLE IF NOT EXISTS Valuetable (valamid INTEGER, lamlocaltime TEXT, trafficvolume1 INTEGER, trafficvolume2 INTEGER, averagespeed1 INTEGER, averagespeed2 INTEGER)');
-
-                    tx.executeSql('DELETE FROM Valuetable WHERE rowid NOT IN (SELECT max(rowid) FROM Valuetable GROUP BY valamid, lamlocaltime)')
-
-                    //var rs = tx.executeSql('SELECT * FROM Valuetable')
-
-                    //console.log("Valuetable length ", rs.rows.length)
-                    //tx.executeSql('VACUUM')
-
+                    if (dbVersion < 10) {
+                        // Record time when doubles removed, makes chart creation faster
+                        var rs = tx.executeSql('SELECT strftime(?,?) AS mod', ['%s', 'now'])
+                        doublesAway = rs.rows.item(0).mod;
+                        // Create the table, if not existing
+                        tx.executeSql('CREATE TABLE IF NOT EXISTS Valuetable (valamid INTEGER, lamlocaltime TEXT, trafficvolume1 INTEGER, trafficvolume2 INTEGER, averagespeed1 INTEGER, averagespeed2 INTEGER, UNIQUE(valamid,lamlocaltime))');
+                        tx.executeSql('DELETE FROM Valuetable WHERE rowid NOT IN (SELECT max(rowid) FROM Valuetable GROUP BY valamid, lamlocaltime)')
+                    }
                 }
                 )
     makeHistory();
@@ -373,13 +366,25 @@ function makeHistory() {
     db.transaction(
                 function(tx) {
                     // Create the table, if not existing
-                    tx.executeSql('CREATE TABLE IF NOT EXISTS Valuetable (valamid INTEGER, lamlocaltime TEXT, trafficvolume1 INTEGER, trafficvolume2 INTEGER, averagespeed1 INTEGER, averagespeed2 INTEGER)');
+                    tx.executeSql('CREATE TABLE IF NOT EXISTS Valuetable (valamid INTEGER, lamlocaltime TEXT, trafficvolume1 INTEGER, trafficvolume2 INTEGER, averagespeed1 INTEGER, averagespeed2 INTEGER, UNIQUE(valamid,lamlocaltime))');
                     tx.executeSql('CREATE TABLE IF NOT EXISTS Location (lamid INTEGER, latti REAL, longi REAL, offlat1 REAL, offlong1 REAL, offlat2 REAL, offlong2 REAL)');
                     tx.executeSql('CREATE TABLE IF NOT EXISTS History (lamid INTEGER, latti REAL, longi REAL, offlat1 REAL, offlong1 REAL, offlat2 REAL, offlong2 REAL)');
                     tx.executeSql('CREATE TABLE IF NOT EXISTS Historystable (valamid INTEGER, wday TEXT, htime INTEGER, mtr1 REAL, mtr2 REAL, msp1 REAL, msp2 REAL, nhist INTEGER)');
                     tx.executeSql('CREATE TABLE IF NOT EXISTS Historytemp (valamid INTEGER, wday TEXT, htime INTEGER, mtr1 REAL, mtr2 REAL, msp1 REAL, msp2 REAL, nhist INTEGER)');
                     tx.executeSql('DROP TABLE History')
                     tx.executeSql('DROP TABLE Historytemp')
+                    if (dbVersion < 10) {
+                        tx.executeSql('CREATE TABLE IF NOT EXISTS Valuetabletemp (valamid INTEGER, lamlocaltime TEXT, trafficvolume1 INTEGER, trafficvolume2 INTEGER, averagespeed1 INTEGER, averagespeed2 INTEGER, UNIQUE(valamid,lamlocaltime))');
+                        tx.executeSql('DELETE FROM Valuetabletemp')
+                        tx.executeSql('INSERT OR IGNORE INTO Valuetabletemp SELECT * FROM Valuetable')
+                        tx.executeSql('DROP TABLE Valuetable')
+                        tx.executeSql('CREATE TABLE IF NOT EXISTS Valuetable (valamid INTEGER, lamlocaltime TEXT, trafficvolume1 INTEGER, trafficvolume2 INTEGER, averagespeed1 INTEGER, averagespeed2 INTEGER, UNIQUE(valamid,lamlocaltime))');
+                        tx.executeSql('INSERT OR IGNORE INTO Valuetable SELECT * FROM Valuetabletemp')
+                        dbVersion = 10;
+                        console.log("DB version upgraded to ", dbVersion)
+                        tx.executeSql('DROP TABLE Valuetabletemp')
+                    }
+
                     //tx.executeSql('CREATE TABLE History AS SELECT valamid, strftime(?,lamlocaltime) AS wday, ((strftime(?,lamlocaltime)%?)-(strftime(?,lamlocaltime)%?)%?) AS htime, total(trafficvolume1) AS mtr1, total(trafficvolume2) AS mtr2, total(averagespeed1) AS msp1, total(averagespeed2) AS msp2, count(rowid) AS nhist FROM Valuetable WHERE (strftime(?,?) - strftime(?,lamlocaltime))> ? GROUP BY valamid, htime, wday', ['%w', '%s', 86400, '%s', 86400, 600, '%s', 'now', '%s', 702000])
 /* Testing section
                     var rx = tx.executeSql('SELECT valamid, strftime(?,lamlocaltime,?) AS wday, ((strftime(?,lamlocaltime,?)+?)%?)-((strftime(?,lamlocaltime,?)+?)%?)%? AS htime, total(trafficvolume1) AS mtr1, total(trafficvolume2) AS mtr2, total(averagespeed1) AS msp1, total(averagespeed2) AS msp2, count(rowid) AS nhist FROM Valuetable WHERE (strftime(?,?) - strftime(?,lamlocaltime))> ? GROUP BY valamid, htime, wday', ['%w', 'localtime','%s', 'localtime', 120, 86400, '%s', 'localtime', 120, 86400, 600,'%s', 'now', '%s', 9000])
@@ -429,16 +434,17 @@ function removeZeros() {
     //db.vacuum()
     db.transaction(
                 function(tx) {
-                    // Record time when doubles removed, makes chart creation faster
-                    var rs = tx.executeSql('SELECT strftime(?,?) AS mod', ['%s', 'now'])
-                    //console.log("glob", rs.rows.item(0).mod)
-                    doublesAway = rs.rows.item(0).mod;
                     // Create the table, if not existing
-                    tx.executeSql('CREATE TABLE IF NOT EXISTS Valuetable (valamid INTEGER, lamlocaltime TEXT, trafficvolume1 INTEGER, trafficvolume2 INTEGER, averagespeed1 INTEGER, averagespeed2 INTEGER)');
-                    // Delete double values
-                    tx.executeSql('DELETE FROM Valuetable WHERE rowid NOT IN (SELECT max(rowid) FROM Valuetable GROUP BY valamid, lamlocaltime)')
-                    // Delete zeros between 7 and 17 localtime, (is the behaviour same in all zones??
-                    //var rs = tx.executeSql('SELECT * FROM Valuetable WHERE ((strftime(?,lamlocaltime,?))%?) > ? AND ((strftime(?,lamlocaltime,?))%?) < ? AND trafficvolume1 = ? AND trafficvolume2 = ?', ['%s', 'localtime', 86400, 25199, '%s', 'localtime', 86400,61201, 0, 0])
+                    tx.executeSql('CREATE TABLE IF NOT EXISTS Valuetable (valamid INTEGER, lamlocaltime TEXT, trafficvolume1 INTEGER, trafficvolume2 INTEGER, averagespeed1 INTEGER, averagespeed2 INTEGER, UNIQUE(valamid,lamlocaltime))');
+                    if (dbVersion < 10) {
+                        // Record time when doubles removed, makes chart creation faster
+                        var rs = tx.executeSql('SELECT strftime(?,?) AS mod', ['%s', 'now'])
+                        doublesAway = rs.rows.item(0).mod;
+                        // Delete double values
+                        tx.executeSql('DELETE FROM Valuetable WHERE rowid NOT IN (SELECT max(rowid) FROM Valuetable GROUP BY valamid, lamlocaltime)')
+                        // Delete zeros between 7 and 17 localtime, (is the behaviour same in all zones??
+                        //var rs = tx.executeSql('SELECT * FROM Valuetable WHERE ((strftime(?,lamlocaltime,?))%?) > ? AND ((strftime(?,lamlocaltime,?))%?) < ? AND trafficvolume1 = ? AND trafficvolume2 = ?', ['%s', 'localtime', 86400, 25199, '%s', 'localtime', 86400,61201, 0, 0])
+                    }
                     tx.executeSql('DELETE FROM Valuetable WHERE ((strftime(?,lamlocaltime,?))%?) > ? AND ((strftime(?,lamlocaltime,?))%?) < ? AND trafficvolume1 = ? AND trafficvolume2 = ?', ['%s', 'localtime', 86400, 25199, '%s', 'localtime', 86400,61201, 0, 0])
 
                 }

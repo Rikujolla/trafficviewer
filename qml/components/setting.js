@@ -1,6 +1,6 @@
     function saveSettings() {
 
-        var db = LocalStorage.openDatabaseSync("RushDB", "1.0", "Rush hour database", 1000000);
+        var db = LocalStorage.openDatabaseSync("TrafficviewerDB", "1.0", "Traffic viewer database", 1000000);
 
         db.transaction(
             function(tx) {
@@ -47,13 +47,21 @@
                 rs = tx.executeSql('SELECT * FROM Settings WHERE name = ?', 'doublesAway');
                 if (rs.rows.length > 0) {tx.executeSql('UPDATE Settings SET valint=? WHERE name=?', [doublesAway, 'doublesAway'])}
                 else {tx.executeSql('INSERT INTO Settings VALUES(?, ?, ?, ?, ?)', [ 'doublesAway', '', '', '', doublesAway ])}
+                // dbVersion
+                rs = tx.executeSql('SELECT * FROM Settings WHERE name = ?', 'dbVersion');
+                if (rs.rows.length > 0) {tx.executeSql('UPDATE Settings SET valint=? WHERE name=?', [dbVersion, 'dbVersion'])}
+                else {tx.executeSql('INSERT INTO Settings VALUES(?, ?, ?, ?, ?)', [ 'dbVersion', '', '', '', dbVersion ])}
+                // dataIdleUpdateRate
+                rs = tx.executeSql('SELECT * FROM Settings WHERE name = ?', 'dataIdleUpdateRate');
+                if (rs.rows.length > 0) {tx.executeSql('UPDATE Settings SET valint=? WHERE name=?', [dataIdleUpdateRate, 'dataIdleUpdateRate'])}
+                else {tx.executeSql('INSERT INTO Settings VALUES(?, ?, ?, ?, ?)', [ 'dataIdleUpdateRate', '', '', '', dataIdleUpdateRate ])}
             }
         )
     }
 
 function loadSettings() {
 
-    var db = LocalStorage.openDatabaseSync("RushDB", "1.0", "Rush hour database", 1000000);
+    var db = LocalStorage.openDatabaseSync("TrafficviewerDB", "1.0", "Traffic viewer database", 1000000);
 
     db.transaction(
         function(tx) {
@@ -99,6 +107,14 @@ function loadSettings() {
             // doublesAway
             rs = tx.executeSql('SELECT * FROM Settings WHERE name = ?', 'doublesAway');
             if (rs.rows.length > 0) {doublesAway = rs.rows.item(0).valint}
+            else {}
+            // dbVersion
+            rs = tx.executeSql('SELECT * FROM Settings WHERE name = ?', 'dbVersion');
+            if (rs.rows.length > 0) {dbVersion = rs.rows.item(0).valint}
+            else {}
+            // dataIdleUpdateRate
+            rs = tx.executeSql('SELECT * FROM Settings WHERE name = ?', 'dataIdleUpdateRate');
+            if (rs.rows.length > 0) {dataIdleUpdateRate = rs.rows.item(0).valint}
             else {}
         }
 

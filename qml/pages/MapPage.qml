@@ -274,7 +274,7 @@ Page {
                 id:loadXml
                 running: Qt.application.active && page.status == 2
                 repeat:true
-                interval: 1000
+                interval: 600
                 onTriggered: {
                     //console.log(map.center)
                     differenceExists = Math.abs(map.center.latitude-currentLat) + Math.abs(map.center.longitude-currentLong)

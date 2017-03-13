@@ -7,6 +7,12 @@
 
 # * date Author's Name <author's email> version-release
 # - Summary of changes
+* Mon Mar 13 2017 Riku Lahtinen <rikul.lajolla@kiu.as> 0.1.0-1
+- Fixing a bug in the speedview
+- The database is made more efficient
+- The database is updated with Settings->Make History
+- Due to a bug in settings, your settings are set to default with this update
+
 * Thu Mar 09 2017 Riku Lahtinen <rikul.lajolla@kiu.as> 0.0.9-1
 - Added cumulative chart views
 - Possibility to remove zero values during daytime

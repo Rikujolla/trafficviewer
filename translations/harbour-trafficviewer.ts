@@ -180,10 +180,6 @@
         <source>The day can be changed from the icons above the cart. Icons become visible by tapping the screen. As a default history mean data curve and the selected day data are shown. The day before data can also be shown by the switch on the settings page.</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Cumulative chart view makes the view unresponsible for a while. Also day changes require some seconds to update the results.</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>LocList</name>
@@ -267,10 +263,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Purge measured data to create or modify the history curve. Prepare for a wait up to two minutes.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Save settings</source>
         <translation type="unfinished"></translation>
     </message>
@@ -292,6 +284,10 @@
     </message>
     <message>
         <source>For some measurement points there seems to be situations the traffic amount is pure zero during a day. By this you can remove zero values from measured data between 7 and 17 o&apos;clock. The phase is recommeded before making the history data. Prepare for a wait.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Purge measured data to create or modify the history curve. The database is also updated to the latest version. Prepare for a wait up to two minutes.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

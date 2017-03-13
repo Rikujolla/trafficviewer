@@ -75,6 +75,8 @@ ApplicationWindow
     property bool cumulativeView: false
     property int thedayQuality // the quality of the day data
     property int doublesAway:0 // Saves localtime when double values have been removed
+    property int dbVersion:9 //
+    property int dataIdleUpdateRate : 120000
 
     XmlListModel {
         id: lamStations
@@ -233,7 +235,7 @@ ApplicationWindow
         //running: !Qt.application.active
         running: false
         repeat:true
-        interval: !Qt.application.active ? 120000 : 30000
+        interval: !Qt.application.active ? dataIdleUpdateRate : 10000
         triggeredOnStart: true
         onTriggered: {
                 lamSpecs.reload()

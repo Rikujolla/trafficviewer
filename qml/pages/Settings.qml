@@ -94,6 +94,36 @@ Page {
                 }
             }
 
+            /*SectionHeader { text: qsTr("Data settings") }
+
+            Text {
+                font.pixelSize: Theme.fontSizeSmall
+                color: Theme.primaryColor
+                wrapMode: Text.WordWrap
+                width: parent.width
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    margins: Theme.paddingLarge
+                }
+                text: {qsTr("Adjust data update rate in seconds with slider. Low values prevent deep sleep resulting possible battery drain, high values may not give full data coverage.")
+                }
+            }
+
+            Slider {
+                width: parent.width
+                minimumValue: 50
+                maximumValue: 120
+                stepSize: 10
+                value: dataIdleUpdateRate/1000
+                valueText: value + " " + "s"
+                onValueChanged: {
+                    dataIdleUpdateRate = value * 1000
+                    //value > 0 ? useLocation = true : useLocation = false
+                    Mysettings.saveSettings()
+                }
+            }*/
+
             SectionHeader { text: qsTr("View settings") }
 
             TextSwitch {
@@ -166,7 +196,7 @@ Page {
                     right: parent.right
                     margins: Theme.paddingLarge
                 }
-                text: {qsTr("Purge measured data to create or modify the history curve. Prepare for a wait up to two minutes.")
+                text: {qsTr("Purge measured data to create or modify the history curve. The database is also updated to the latest version. Prepare for a wait up to two minutes.")
                 }
             }
 
@@ -179,7 +209,7 @@ Page {
                 }
             }
             Component.onDestruction:{
-                console.log("delataan");
+                //console.log("delataan");
                 Mysettings.saveSettings();
             }
 
