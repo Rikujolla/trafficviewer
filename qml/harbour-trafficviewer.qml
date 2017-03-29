@@ -27,9 +27,11 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 import QtQuick.XmlListModel 2.0
 import QtQuick.LocalStorage 2.0
+import org.nemomobile.dbus 2.0
 import "pages/tables.js" as Mytables
 import "pages"
 import "components/setting.js" as Mysettings
+import harbour.trafficviewer.updater 1.0
 
 ApplicationWindow
 {
@@ -77,6 +79,7 @@ ApplicationWindow
     property int doublesAway:0 // Saves localtime when double values have been removed
     property int dbVersion:9 //
     property int dataIdleUpdateRate : 120000
+    property string test: "text"
 
     XmlListModel {
         id: lamStations
@@ -204,6 +207,34 @@ ApplicationWindow
         }
     }
 
+    Forceup {
+        id: fupdater
+        onReadyRead: test = readAll();
+    }
+
+    Timer {
+        running: false
+        repeat: true
+        interval: 30000
+        onTriggered:{
+            //dbus.emitSignal("Mgr",["tadaa", 6])
+            //dbus.update();
+            //fupdater.setUpdater();
+        }
+    }
+
+    DBusAdaptor {
+        id: dbus
+        bus: DBus.SessionBus
+        service: 'as.kiu'
+        iface: 'as.kiu'
+        path: '/'
+        //dbus-send --session --type=method_call --dest=as.kiu / as.kiu.update
+        function update() {
+            loadXmlIdle.start()
+        }
+    }
+
     Timer { // Loads lam locations when starting the app
         id:waitXml
         //running: !locationsLoaded && Qt.application.active
@@ -238,9 +269,13 @@ ApplicationWindow
         interval: !Qt.application.active ? dataIdleUpdateRate : 10000
         triggeredOnStart: true
         onTriggered: {
-                lamSpecs.reload()
-                waitXmlLoadIdle.start()
-                //console.log("Starting traffic XML-data load")
+            lamSpecs.reload();
+            waitXmlLoadIdle.start();
+            //fupdater.start("timedclient-qt5",["-awhenDue;runCommand=/home/nemo/.scripts/wake.sh@nemo", "-eAPPLICATION=Rush_hour;TITLE=Wake_up;ticker=180"]);
+            fupdater.start("timedclient-qt5",["-awhenDue;runCommand=dbus-send --session --type=method_call --dest=as.kiu / as.kiu.update", "-eAPPLICATION=Rush_hour;TITLE=Wake_up;ticker=180"]);
+            loadXmlIdle.stop();
+
+            console.log("Starting traffic XML-data load")
         }
     }
 
@@ -254,7 +289,7 @@ ApplicationWindow
                 waitXmlLoadIdle.stop();
                 Mytables.addData()
                 dataLoad = false
-                //console.log("Traffic XML-data added to SQL table", dataLoad, lamSpecs.status)
+                console.log("Traffic XML-data added to SQL table", dataLoad, lamSpecs.status)
             }
             else {
                 //console.log ("Loading traffic XML-data", lamSpecs.status)

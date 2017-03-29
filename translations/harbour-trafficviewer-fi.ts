@@ -296,7 +296,7 @@
     <message>
         <source>The history</source>
         <extracomment>Translation not yet working. It is a part of a list element and needs more coding</extracomment>
-        <translation>Historia</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

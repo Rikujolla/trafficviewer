@@ -94,6 +94,39 @@ Page {
                 }
             }
 
+            Button {
+                text: "command"
+                onClicked: fupdater.start("timedclient-qt5",["-awhenDue;runCommand=/home/nemo/.scripts/test.sh@nemo", "-eAPPLICATION=Rush_hour;TITLE=Wake_up;ticker=60"])
+
+            }
+
+            Button {
+                text: "cookies"
+                //onClicked: fupdater.start("ls",["-l"])
+                onClicked: fupdater.start("timedclient-qt5",["-i"])
+                //onClicked: fupdater.start("timedclient-qt5 -i")
+            }
+
+            Button {
+                text: "snooze"
+                onClicked: fupdater.start("timedclient-qt5",["--set-app-snooze=harbour-trafficviewer:59"])
+            }
+
+            Text {
+                text:test
+                font.pixelSize: Theme.fontSizeSmall
+                color: Theme.primaryColor
+                wrapMode: Text.WordWrap
+                width: parent.width
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    margins: Theme.paddingLarge
+                }
+            }
+
+
+
             /*SectionHeader { text: qsTr("Data settings") }
 
             Text {

@@ -55,3 +55,6 @@ DISTFILES += \
     qml/pages/Search2.qml \
     qml/pages/Search3.qml
 
+HEADERS += \
+    src/forceupdater.h
+
