@@ -7,6 +7,10 @@
 
 # * date Author's Name <author's email> version-release
 # - Summary of changes
+* Sat Apr 01 2017 Riku Lahtinen <rikul.lajolla@kiu.as> 0.1.2-1
+- Timedclient settings bug fix
+- Day light savings time visualization bug fix
+
 * Sat Apr 01 2017 Riku Lahtinen <rikul.lajolla@kiu.as> 0.1.1-1
 - Possibility to force data download at constant rate using timedclient to increase the data quality
 

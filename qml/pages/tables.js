@@ -97,7 +97,9 @@ function drawSpeed(daysbf) {
 
 
                     var time = new Date().getTime()
-                    var offset = new Date().getTimezoneOffset()
+                    //var offset = new Date().getTimezoneOffset()
+                    var offset = new Date(time-daysbf*24*60*60*1000).getTimezoneOffset()
+                    //console.log("ovset2", daysbf, offset)
                     var zeero = new Date(time + offset*60*1000 - time%(24*60*60*1000)) //RLAH
                     switch (daysbf){
                     case 0:

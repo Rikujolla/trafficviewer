@@ -541,7 +541,8 @@ Rectangle
             //xstart = new Date(dataListModel[0][0]["timestamp"])
             //now.set(Calendar.HOUR_OF_DAY, 0);
             var time = new Date().getTime()
-            var offset = new Date().getTimezoneOffset()
+            //var offset = new Date().getTimezoneOffset()
+            var offset = new Date(time-daysBefore*24*60*60*1000).getTimezoneOffset()
             //console.log("offset", offset)
             xstart = new Date(time + offset*60*1000 - time%(24*60*60*1000) - daysBefore*24*60*60*1000) //RLAH
             xend = new Date(time + 24*60*60*1000 + offset*60*1000- time%(24*60*60*1000) - daysBefore*24*60*60*1000) //RLAH

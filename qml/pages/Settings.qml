@@ -221,7 +221,7 @@ Page {
                 if (useTimedclientCh && useTimedclient) {
                     //console.log("Start timedclient timer");
                     fupdater.start("timedclient-qt5",["-awhenDue;runCommand=dbus-send --session --type=method_call --dest=as.kiu / as.kiu.update", "-eAPPLICATION=Rush_hour;TITLE=Wake_up;ticker=180"]);
-                    useTimedclient = false;
+                    useTimedclientCh = false;
                 }
                 Mysettings.saveSettings();
             }
