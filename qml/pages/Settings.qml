@@ -1,4 +1,4 @@
-/*Copyright (c) 2016, Riku Lahtinen, rikul.lajolla@kiu.as
+/*Copyright (c) 2016-2017, Riku Lahtinen, rikul.lajolla@kiu.as
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -56,7 +56,6 @@ Page {
         // of the page, followed by our content.
         Column {
             id: column
-
             width: page.width
             spacing: Theme.paddingLarge
             PageHeader {
@@ -94,40 +93,18 @@ Page {
                 }
             }
 
-            Button {
-                text: "command"
-                onClicked: fupdater.start("timedclient-qt5",["-awhenDue;runCommand=/home/nemo/.scripts/test.sh@nemo", "-eAPPLICATION=Rush_hour;TITLE=Wake_up;ticker=60"])
+            SectionHeader { text: qsTr("Data settings") }
 
-            }
-
-            Button {
-                text: "cookies"
-                //onClicked: fupdater.start("ls",["-l"])
-                onClicked: fupdater.start("timedclient-qt5",["-i"])
-                //onClicked: fupdater.start("timedclient-qt5 -i")
-            }
-
-            Button {
-                text: "snooze"
-                onClicked: fupdater.start("timedclient-qt5",["--set-app-snooze=harbour-trafficviewer:59"])
-            }
-
-            Text {
-                text:test
-                font.pixelSize: Theme.fontSizeSmall
-                color: Theme.primaryColor
-                wrapMode: Text.WordWrap
-                width: parent.width
-                anchors {
-                    left: parent.left
-                    right: parent.right
-                    margins: Theme.paddingLarge
+            TextSwitch {
+                text: qsTr("Force data download")
+                visible : true
+                checked: useTimedclient
+                onCheckedChanged: {
+                    checked ? useTimedclient = true : useTimedclient = false;
+                    useTimedclientCh = true;
+                    Mysettings.saveSettings()
                 }
             }
-
-
-
-            /*SectionHeader { text: qsTr("Data settings") }
 
             Text {
                 font.pixelSize: Theme.fontSizeSmall
@@ -139,11 +116,11 @@ Page {
                     right: parent.right
                     margins: Theme.paddingLarge
                 }
-                text: {qsTr("Adjust data update rate in seconds with slider. Low values prevent deep sleep resulting possible battery drain, high values may not give full data coverage.")
+                text: {qsTr("The selection wakes the app periodically and downloads the data. That makes the better data quality but may result a faster battery drain.")
                 }
             }
 
-            Slider {
+            /*Slider {
                 width: parent.width
                 minimumValue: 50
                 maximumValue: 120
@@ -160,7 +137,6 @@ Page {
             SectionHeader { text: qsTr("View settings") }
 
             TextSwitch {
-                //id: ??
                 text: qsTr("Show the day before")
                 visible : true
                 checked: drawYesterdayValues
@@ -242,7 +218,11 @@ Page {
                 }
             }
             Component.onDestruction:{
-                //console.log("delataan");
+                if (useTimedclientCh && useTimedclient) {
+                    //console.log("Start timedclient timer");
+                    fupdater.start("timedclient-qt5",["-awhenDue;runCommand=dbus-send --session --type=method_call --dest=as.kiu / as.kiu.update", "-eAPPLICATION=Rush_hour;TITLE=Wake_up;ticker=180"]);
+                    useTimedclient = false;
+                }
                 Mysettings.saveSettings();
             }
 

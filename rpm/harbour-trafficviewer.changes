@@ -7,6 +7,9 @@
 
 # * date Author's Name <author's email> version-release
 # - Summary of changes
+* Sat Apr 01 2017 Riku Lahtinen <rikul.lajolla@kiu.as> 0.1.1-1
+- Possibility to force data download at constant rate using timedclient to increase the data quality
+
 * Mon Mar 13 2017 Riku Lahtinen <rikul.lajolla@kiu.as> 0.1.0-1
 - Fixing a bug in the speedview
 - The database is made more efficient

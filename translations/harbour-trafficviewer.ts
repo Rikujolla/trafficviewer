@@ -290,6 +290,18 @@
         <source>Purge measured data to create or modify the history curve. The database is also updated to the latest version. Prepare for a wait up to two minutes.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Data settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Force data download</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The selection wakes the app periodically and downloads the data. That makes the better data quality but may result a faster battery drain.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>harbour-trafficviewer</name>

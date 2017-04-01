@@ -80,6 +80,8 @@ ApplicationWindow
     property int dbVersion:9 //
     property int dataIdleUpdateRate : 120000
     property string test: "text"
+    property bool useTimedclient: false
+    property bool useTimedclientCh : false //Logging if useTimedclient has been changed
 
     XmlListModel {
         id: lamStations
@@ -212,14 +214,20 @@ ApplicationWindow
         onReadyRead: test = readAll();
     }
 
-    Timer {
+    Timer { //Wakeup timer
+        id: wakeupTimer
         running: false
         repeat: true
-        interval: 30000
+        interval: !Qt.application.active ? dataIdleUpdateRate : 20000
         onTriggered:{
-            //dbus.emitSignal("Mgr",["tadaa", 6])
-            //dbus.update();
-            //fupdater.setUpdater();
+
+            if (loadXmlIdle.running || waitXmlLoadIdle.running){
+                //console.log("Waketimer did nothing")
+            }
+            else {
+                loadXmlIdle.start();
+                //console.log("Waketimer started download")
+            }
         }
     }
 
@@ -231,7 +239,18 @@ ApplicationWindow
         path: '/'
         //dbus-send --session --type=method_call --dest=as.kiu / as.kiu.update
         function update() {
-            loadXmlIdle.start()
+            if (!useTimedclient){
+                //console.log("Stop timedclient")
+            }
+            else if (loadXmlIdle.running || waitXmlLoadIdle.running){
+                fupdater.start("timedclient-qt5",["-awhenDue;runCommand=dbus-send --session --type=method_call --dest=as.kiu / as.kiu.update", "-eAPPLICATION=Rush_hour;TITLE=Wake_up;ticker=180"]);
+                //console.log("Timedclient did nothing")
+            }
+            else {
+                fupdater.start("timedclient-qt5",["-awhenDue;runCommand=dbus-send --session --type=method_call --dest=as.kiu / as.kiu.update", "-eAPPLICATION=Rush_hour;TITLE=Wake_up;ticker=180"]);
+                loadXmlIdle.start();
+                //console.log("Timedclient started download")
+            }
         }
     }
 
@@ -249,6 +268,13 @@ ApplicationWindow
                 //console.log("LAM-stations data updated")
             }
             else if (locationsLoaded) {
+                if (useTimedclient) {
+                    fupdater.start("timedclient-qt5",["-awhenDue;runCommand=dbus-send --session --type=method_call --dest=as.kiu / as.kiu.update", "-eAPPLICATION=Rush_hour;TITLE=Wake_up;ticker=180"]);
+                    wakeupTimer.start();
+                }
+                else {
+                    wakeupTimer.start();
+                }
                 loadXmlIdle.start()
                 waitXml.stop();
                 //console.log("Starting LAM measurement data capture")
@@ -266,16 +292,14 @@ ApplicationWindow
         //running: !Qt.application.active
         running: false
         repeat:true
-        interval: !Qt.application.active ? dataIdleUpdateRate : 10000
+        //interval: !Qt.application.active ? dataIdleUpdateRate : 10000
+        interval: 1000
         triggeredOnStart: true
         onTriggered: {
             lamSpecs.reload();
             waitXmlLoadIdle.start();
-            //fupdater.start("timedclient-qt5",["-awhenDue;runCommand=/home/nemo/.scripts/wake.sh@nemo", "-eAPPLICATION=Rush_hour;TITLE=Wake_up;ticker=180"]);
-            fupdater.start("timedclient-qt5",["-awhenDue;runCommand=dbus-send --session --type=method_call --dest=as.kiu / as.kiu.update", "-eAPPLICATION=Rush_hour;TITLE=Wake_up;ticker=180"]);
             loadXmlIdle.stop();
-
-            console.log("Starting traffic XML-data load")
+            //console.log("Starting traffic XML-data load")
         }
     }
 
@@ -289,7 +313,7 @@ ApplicationWindow
                 waitXmlLoadIdle.stop();
                 Mytables.addData()
                 dataLoad = false
-                console.log("Traffic XML-data added to SQL table", dataLoad, lamSpecs.status)
+                //console.log("Traffic XML-data added to SQL table", dataLoad, lamSpecs.status)
             }
             else {
                 //console.log ("Loading traffic XML-data", lamSpecs.status)

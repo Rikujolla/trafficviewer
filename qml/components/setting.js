@@ -55,6 +55,10 @@
                 rs = tx.executeSql('SELECT * FROM Settings WHERE name = ?', 'dataIdleUpdateRate');
                 if (rs.rows.length > 0) {tx.executeSql('UPDATE Settings SET valint=? WHERE name=?', [dataIdleUpdateRate, 'dataIdleUpdateRate'])}
                 else {tx.executeSql('INSERT INTO Settings VALUES(?, ?, ?, ?, ?)', [ 'dataIdleUpdateRate', '', '', '', dataIdleUpdateRate ])}
+                // useTimedclient
+                rs = tx.executeSql('SELECT * FROM Settings WHERE name = ?', 'useTimedclient');
+                if (rs.rows.length > 0) {tx.executeSql('UPDATE Settings SET valint=? WHERE name=?', [useTimedclient, 'useTimedclient'])}
+                else {tx.executeSql('INSERT INTO Settings VALUES(?, ?, ?, ?, ?)', [ 'useTimedclient', '', '', '', useTimedclient ])}
             }
         )
     }
@@ -115,6 +119,10 @@ function loadSettings() {
             // dataIdleUpdateRate
             rs = tx.executeSql('SELECT * FROM Settings WHERE name = ?', 'dataIdleUpdateRate');
             if (rs.rows.length > 0) {dataIdleUpdateRate = rs.rows.item(0).valint}
+            else {}
+            // useTimedclient
+            rs = tx.executeSql('SELECT * FROM Settings WHERE name = ?', 'useTimedclient');
+            if (rs.rows.length > 0) {useTimedclient = rs.rows.item(0).valint}
             else {}
         }
 

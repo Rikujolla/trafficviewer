@@ -290,13 +290,25 @@
         <source>Purge measured data to create or modify the history curve. The database is also updated to the latest version. Prepare for a wait up to two minutes.</source>
         <translation>Yhdistä vanha mitattu data historiakäyräksi. Samalla tietokanta päivitetään uusimpaan versioon. Valmistaudu odottamaan jopa kaksi minuuttia.</translation>
     </message>
+    <message>
+        <source>Data settings</source>
+        <translation>Data-asetukset</translation>
+    </message>
+    <message>
+        <source>Force data download</source>
+        <translation>Pakota datan lataus</translation>
+    </message>
+    <message>
+        <source>The selection wakes the app periodically and downloads the data. That makes the better data quality but may result a faster battery drain.</source>
+        <translation>Valinta herättää sovelluksen vakiovälein lataamaan dataa. Tämä parantaa datan laatua, mutta saattaa kuluttaa akkua normaalia enemmän.</translation>
+    </message>
 </context>
 <context>
     <name>harbour-trafficviewer</name>
     <message>
         <source>The history</source>
         <extracomment>Translation not yet working. It is a part of a list element and needs more coding</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Historia</translation>
     </message>
 </context>
 </TS>
