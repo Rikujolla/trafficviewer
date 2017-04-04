@@ -144,8 +144,9 @@ function drawSpeed(daysbf) {
                         /*for(var j = 0; j < rs.rows.length; j++) {
                             console.log("The day", rs.rows.item(j).valamid, rs.rows.item(j).wday, rs.rows.item(j).htime, rs.rows.item(j).mtr1, rs.rows.item(j).nhist)
                         }*/
+                        if (rs.rows.length > 0) {
                         tx.executeSql('INSERT INTO Theday SELECT * FROM Historystable WHERE valamid=? AND wday=? AND htime < ?', [lammiSelected, rw.rows.item(0).wdaynow, rs.rows.item(rs.rows.length-1).htime])
-
+                        }
                         //var rs = tx.executeSql('SELECT * from Theday, Historystable WHERE Historystable.valamid=? AND Historystable.wday=?', [lammiSelected, rw.rows.item(0).wdaynow])
                         //rs = tx.executeSql('SELECT * FROM Theday')
                         /*for(j = 0; j < rs.rows.length; j++) {
@@ -388,20 +389,27 @@ function makeHistory() {
                     }
 
                     //tx.executeSql('CREATE TABLE History AS SELECT valamid, strftime(?,lamlocaltime) AS wday, ((strftime(?,lamlocaltime)%?)-(strftime(?,lamlocaltime)%?)%?) AS htime, total(trafficvolume1) AS mtr1, total(trafficvolume2) AS mtr2, total(averagespeed1) AS msp1, total(averagespeed2) AS msp2, count(rowid) AS nhist FROM Valuetable WHERE (strftime(?,?) - strftime(?,lamlocaltime))> ? GROUP BY valamid, htime, wday', ['%w', '%s', 86400, '%s', 86400, 600, '%s', 'now', '%s', 702000])
-/* Testing section
+                    var testing = 0
+                    if (testing==1) {
+                        console.log("Testing")
+                        /* Testing section
                     var rx = tx.executeSql('SELECT valamid, strftime(?,lamlocaltime,?) AS wday, ((strftime(?,lamlocaltime,?)+?)%?)-((strftime(?,lamlocaltime,?)+?)%?)%? AS htime, total(trafficvolume1) AS mtr1, total(trafficvolume2) AS mtr2, total(averagespeed1) AS msp1, total(averagespeed2) AS msp2, count(rowid) AS nhist FROM Valuetable WHERE (strftime(?,?) - strftime(?,lamlocaltime))> ? GROUP BY valamid, htime, wday', ['%w', 'localtime','%s', 'localtime', 120, 86400, '%s', 'localtime', 120, 86400, 600,'%s', 'now', '%s', 9000])
 
                     for (var i = 0; i < rx.rows.length; i++) {
                         if (rx.rows.item(i).valamid == 901) {console.log(rx.rows.item(i).htime)}
+                    }*/
+                        tx.executeSql('CREATE TABLE History AS SELECT valamid, strftime(?,lamlocaltime,?) AS wday, ((strftime(?,lamlocaltime,?)+?)%?)-((strftime(?,lamlocaltime,?)+?)%?)%? AS htime, total(trafficvolume1) AS mtr1, total(trafficvolume2) AS mtr2, total(averagespeed1) AS msp1, total(averagespeed2) AS msp2, count(rowid) AS nhist FROM Valuetable WHERE (strftime(?,?) - strftime(?,lamlocaltime))> ? GROUP BY valamid, htime, wday', ['%w', 'localtime','%s', 'localtime', 120, 86400, '%s', 'localtime', 120, 86400, 600,'%s', 'now', '%s', 702000])
+
+
                     }
-                    tx.executeSql('CREATE TABLE History AS SELECT valamid, strftime(?,lamlocaltime,?) AS wday, ((strftime(?,lamlocaltime,?)+?)%?)-((strftime(?,lamlocaltime,?)+?)%?)%? AS htime, total(trafficvolume1) AS mtr1, total(trafficvolume2) AS mtr2, total(averagespeed1) AS msp1, total(averagespeed2) AS msp2, count(rowid) AS nhist FROM Valuetable WHERE (strftime(?,?) - strftime(?,lamlocaltime))> ? GROUP BY valamid, htime, wday', ['%w', 'localtime','%s', 'localtime', 120, 86400, '%s', 'localtime', 120, 86400, 600,'%s', 'now', '%s', 9000])
-*/
-                    tx.executeSql('CREATE TABLE History AS SELECT valamid, strftime(?,lamlocaltime,?) AS wday, ((strftime(?,lamlocaltime,?)+?)%?)-((strftime(?,lamlocaltime,?)+?)%?)%? AS htime, total(trafficvolume1) AS mtr1, total(trafficvolume2) AS mtr2, total(averagespeed1) AS msp1, total(averagespeed2) AS msp2, count(rowid) AS nhist FROM Valuetable WHERE (strftime(?,?) - strftime(?,lamlocaltime))> ? GROUP BY valamid, htime, wday', ['%w', 'localtime','%s', 'localtime', 120, 86400, '%s', 'localtime', 120, 86400, 600,'%s', 'now', '%s', 702000])
-                    tx.executeSql('INSERT INTO Historystable SELECT * FROM History')
-                    tx.executeSql('CREATE TABLE Historytemp AS SELECT valamid, wday, htime, total(mtr1) AS mtr1, total(mtr2) AS mtr2, total(msp1) AS msp1, total(msp2) AS msp2, sum(nhist) AS nhist FROM Historystable GROUP BY valamid, htime, wday')
-                    tx.executeSql('DELETE FROM Historystable')
-                    tx.executeSql('INSERT INTO Historystable SELECT * FROM Historytemp')
-                    tx.executeSql('DELETE FROM Valuetable WHERE (strftime(?,?) - strftime(?,lamlocaltime))> ?', ['%s', 'now', '%s', 702000])
+                    else {
+                        tx.executeSql('CREATE TABLE History AS SELECT valamid, strftime(?,lamlocaltime,?) AS wday, ((strftime(?,lamlocaltime,?)+?)%?)-((strftime(?,lamlocaltime,?)+?)%?)%? AS htime, total(trafficvolume1) AS mtr1, total(trafficvolume2) AS mtr2, total(averagespeed1) AS msp1, total(averagespeed2) AS msp2, count(rowid) AS nhist FROM Valuetable WHERE (strftime(?,?) - strftime(?,lamlocaltime))> ? GROUP BY valamid, htime, wday', ['%w', 'localtime','%s', 'localtime', 120, 86400, '%s', 'localtime', 120, 86400, 600,'%s', 'now', '%s', 702000])
+                        tx.executeSql('INSERT INTO Historystable SELECT * FROM History')
+                        tx.executeSql('CREATE TABLE Historytemp AS SELECT valamid, wday, htime, total(mtr1) AS mtr1, total(mtr2) AS mtr2, total(msp1) AS msp1, total(msp2) AS msp2, sum(nhist) AS nhist FROM Historystable GROUP BY valamid, htime, wday')
+                        tx.executeSql('DELETE FROM Historystable')
+                        tx.executeSql('INSERT INTO Historystable SELECT * FROM Historytemp')
+                        tx.executeSql('DELETE FROM Valuetable WHERE (strftime(?,?) - strftime(?,lamlocaltime))> ?', ['%s', 'now', '%s', 702000])
+                    }
 
                 }
                 )

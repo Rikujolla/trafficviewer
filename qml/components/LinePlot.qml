@@ -542,10 +542,11 @@ Rectangle
             //now.set(Calendar.HOUR_OF_DAY, 0);
             var time = new Date().getTime()
             //var offset = new Date().getTimezoneOffset()
-            var offset = new Date(time-daysBefore*24*60*60*1000).getTimezoneOffset()
-            //console.log("offset", offset)
+            var offset = new Date(time-time%(24*60*60*1000)-daysBefore*24*60*60*1000).getTimezoneOffset()
+            var offset2 = new Date(time-time%(24*60*60*1000)-(daysBefore-1)*24*60*60*1000).getTimezoneOffset()
+            //console.log("offset", offset, offset2)
             xstart = new Date(time + offset*60*1000 - time%(24*60*60*1000) - daysBefore*24*60*60*1000) //RLAH
-            xend = new Date(time + 24*60*60*1000 + offset*60*1000- time%(24*60*60*1000) - daysBefore*24*60*60*1000) //RLAH
+            xend = new Date(time + 24*60*60*1000 + offset2*60*1000- time%(24*60*60*1000) - daysBefore*24*60*60*1000) //RLAH
 
             speedView ? max = 140.0 : max = 350.0;
 

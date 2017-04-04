@@ -7,6 +7,10 @@
 
 # * date Author's Name <author's email> version-release
 # - Summary of changes
+* Tue Apr 04 2017 Riku Lahtinen <rikul.lajolla@kiu.as> 0.1.3-1
+- Small refinement
+- Make history checked to function properly
+
 * Sat Apr 01 2017 Riku Lahtinen <rikul.lajolla@kiu.as> 0.1.2-1
 - Timedclient settings bug fix
 - Day light savings time visualization bug fix
