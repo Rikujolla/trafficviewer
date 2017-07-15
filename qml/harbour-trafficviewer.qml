@@ -75,6 +75,7 @@ ApplicationWindow
     property real searchLongi
     property bool drawYesterdayValues: false
     property bool cumulativeView: false
+    property bool differenceView: false // View difference to mean
     property int thedayQuality // the quality of the day data
     property int doublesAway:0 // Saves localtime when double values have been removed
     property int dbVersion:9 //
@@ -82,6 +83,7 @@ ApplicationWindow
     property string test: "text"
     property bool useTimedclient: false
     property bool useTimedclientCh : false //Logging if useTimedclient has been changed
+    property int dataDifference :42 //
 
     XmlListModel {
         id: lamStations
@@ -239,17 +241,20 @@ ApplicationWindow
         path: '/'
         //dbus-send --session --type=method_call --dest=as.kiu / as.kiu.update
         function update() {
+            var string2 = "-eAPPLICATION=Rush_hour;TITLE=Wake_up;ticker=" + dataIdleUpdateRate/1000
             if (!useTimedclient){
                 //console.log("Stop timedclient")
             }
             else if (loadXmlIdle.running || waitXmlLoadIdle.running){
-                fupdater.start("timedclient-qt5",["-awhenDue;runCommand=dbus-send --session --type=method_call --dest=as.kiu / as.kiu.update", "-eAPPLICATION=Rush_hour;TITLE=Wake_up;ticker=180"]);
-                //console.log("Timedclient did nothing")
+                //fupdater.start("timedclient-qt5",["-awhenDue;runCommand=dbus-send --session --type=method_call --dest=as.kiu / as.kiu.update", "-eAPPLICATION=Rush_hour;TITLE=Wake_up;ticker=180"]);
+                fupdater.start("timedclient-qt5",["-awhenDue;runCommand=dbus-send --session --type=method_call --dest=as.kiu / as.kiu.update", string2]);
+                console.log("Timedclient did nothing ", string2)
             }
             else {
-                fupdater.start("timedclient-qt5",["-awhenDue;runCommand=dbus-send --session --type=method_call --dest=as.kiu / as.kiu.update", "-eAPPLICATION=Rush_hour;TITLE=Wake_up;ticker=180"]);
+                //fupdater.start("timedclient-qt5",["-awhenDue;runCommand=dbus-send --session --type=method_call --dest=as.kiu / as.kiu.update", "-eAPPLICATION=Rush_hour;TITLE=Wake_up;ticker=180"]);
+                fupdater.start("timedclient-qt5",["-awhenDue;runCommand=dbus-send --session --type=method_call --dest=as.kiu / as.kiu.update", string2]);
                 loadXmlIdle.start();
-                //console.log("Timedclient started download")
+                console.log("Timedclient started download ", string2)
             }
         }
     }
@@ -261,6 +266,7 @@ ApplicationWindow
         repeat:true
         interval: 200
         onTriggered: {
+            var string2 = "-eAPPLICATION=Rush_hour;TITLE=Wake_up;ticker=" + dataIdleUpdateRate/1000
             if (lamStations.status == 1 && !locationsLoaded) {
                 //waitXml.stop();
                 Mytables.loadLocation()
@@ -269,7 +275,9 @@ ApplicationWindow
             }
             else if (locationsLoaded) {
                 if (useTimedclient) {
-                    fupdater.start("timedclient-qt5",["-awhenDue;runCommand=dbus-send --session --type=method_call --dest=as.kiu / as.kiu.update", "-eAPPLICATION=Rush_hour;TITLE=Wake_up;ticker=180"]);
+                    console.log(string2)
+                    //fupdater.start("timedclient-qt5",["-awhenDue;runCommand=dbus-send --session --type=method_call --dest=as.kiu / as.kiu.update", "-eAPPLICATION=Rush_hour;TITLE=Wake_up;ticker=180"]);
+                    fupdater.start("timedclient-qt5",["-awhenDue;runCommand=dbus-send --session --type=method_call --dest=as.kiu / as.kiu.update", string2]);
                     wakeupTimer.start();
                 }
                 else {

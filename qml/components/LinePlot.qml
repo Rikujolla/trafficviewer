@@ -70,9 +70,20 @@ Rectangle
         {
             var l = dataHistory.get(i).speed * koo
 
-            if (l > max){
-                max = l-l%700+700;
+            if (differenceView) {
+                if (l > max){
+                    max = l-l%7+7;
+                }
+
+                if (l < min) {
+                    min = l-l%7-7;
+                }
             }
+            else if (l > max){
+                max = l-l%700+700;
+                min = 0;
+            }
+
         }
 
         first = 0;
@@ -82,8 +93,18 @@ Rectangle
         {
             l = dataList.get(i).speed * koo
 
-            if (l > max){
+            if (differenceView) {
+                if (l > max){
+                    max = l-l%7+7;
+                }
+
+                if (l < min) {
+                    min = l-l%7-7;
+                }
+            }
+            else if (l > max){
                 max = l-l%700+700;
+                min=0;
             }
         }
 
@@ -293,7 +314,7 @@ Rectangle
         x: 150
         y: 100
         z: 11
-        height: fontSize*1.2*10
+        height: fontSize*1.2*5  //hard coding, bad bad
         id: legend
         model: dataTitles
         //model:1
@@ -318,7 +339,8 @@ Rectangle
                 Text
                 {
                     //text: name
-                    text: qsTr(dataTitles.get(index).name) + (index == 0 && cumulativeView ? ", quality " + thedayQuality + "%" : "")
+                    //text: qsTr(dataTitles.get(index).name) + (index == 0 && cumulativeView ? ", quality " + thedayQuality + "%" + ", difference " + dataDifference : "")
+                    text: dataTitles.get(index).name
                     color: Theme.primaryColor
                     font.pointSize: fontSize
                     font.bold: fontBold
@@ -327,6 +349,19 @@ Rectangle
             }
         }
 
+    Text
+    {
+        id: qualityInfo
+        text: "The day quality " + thedayQuality + "%" + ", difference " + dataDifference
+        visible: cumulativeView
+        color: Theme.primaryColor
+        font.pointSize: fontSize
+        font.bold: fontBold
+        anchors.top: legend.bottom
+        anchors.left: legend.left
+    }
+
+
         Behavior on opacity
         {
             FadeAnimation {}
@@ -334,8 +369,11 @@ Rectangle
 
         onOpacityChanged:
         {
-            if (opacity == 1.0)
-                legendVisibility.start()
+            if (opacity == 1.0) {
+                //Mytables.drawSpeed(daysBefore)
+                //dataTitles.setProperty(0, "name",  "The day, quality " + thedayQuality + "%" + ", difference " + dataDifference)
+                legendVisibility.start();
+            }
         }
 
         Timer
@@ -353,6 +391,7 @@ Rectangle
             interval: 60
             running: Qt.application.active && chView
             onTriggered:  {
+
                 canvas.requestPaint()
                 //console.log("latest ", dataList.get(dataList.count-1).speed)
                 chView = false
@@ -423,7 +462,7 @@ Rectangle
                 //console.log(s)
                 var x = (s.getTime() - xstart)/(xend-xstart);
                 var y = (dataHistory.get(i).speed-min)/(max-min);
-                if (speedView) {} else if (!cumulativeView){y=y*12} else {y=y*2}; //hardcoding should be parametrized
+                if (speedView) {} else if (!cumulativeView){y=y*12} else if (!differenceView) {y=y*2}; //hardcoding should be parametrized
                 if (i == 0)
                 {
                     ctx.moveTo(x * canvas.width, (1-y) * canvas.height);
@@ -477,7 +516,7 @@ Rectangle
                 var s = new Date(dataList.get(i).timestamp)
                 var x = (s.getTime() - xstart)/(xend-xstart);
                 var y = (dataList.get(i).speed-min)/(max-min);
-                if (speedView) {} else if (!cumulativeView){y=y*12} else{y=y*2}; //hardcoding should be parametrized
+                if (speedView) {} else if (!cumulativeView){y=y*12} else if (!differenceView){y=y*2}; //hardcoding should be parametrized, the data is representing 5 minutes data and cumulative resolution is 10 minutes
                 if (i == 0)
                 {
                     ctx.moveTo(x * canvas.width, (1-y) * canvas.height);
@@ -548,7 +587,7 @@ Rectangle
             xstart = new Date(time + offset*60*1000 - time%(24*60*60*1000) - daysBefore*24*60*60*1000) //RLAH
             xend = new Date(time + 24*60*60*1000 + offset2*60*1000- time%(24*60*60*1000) - daysBefore*24*60*60*1000) //RLAH
 
-            speedView ? max = 140.0 : max = 350.0;
+            speedView ? max = 140.0 : (differenceView ? max = 0.0 : max = 350.0);
 
             getMinMax()
 
@@ -628,7 +667,10 @@ Rectangle
                 id: pinchMove
                 anchors.fill: parent
 
-                onClicked: legend.opacity = 1.0
+                onClicked: {
+                    //Mytables.drawSpeed(daysBefore)
+                    legend.opacity = 1.0
+                }
 
                 onPressed:
                 {

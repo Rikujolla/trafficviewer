@@ -79,6 +79,16 @@ Page
                 }
             }
             MenuItem {
+                visible: !speedView && cumulativeView
+                text: !differenceView ? qsTr("To difference to mean view") : qsTr("To value view")
+                onClicked: {
+                    console.log("Difference", differenceView)
+                    differenceView = !differenceView
+                    chView = true
+                    //plot.canvas.requestPaint()
+                }
+            }
+            MenuItem {
                 visible: !speedView
                 text: cumulativeView ? qsTr("To density view") : qsTr("To cumulative view")
                 onClicked: {

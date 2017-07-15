@@ -120,10 +120,11 @@ Page {
                 }
             }
 
-            /*Slider {
+            Slider {
                 width: parent.width
-                minimumValue: 50
-                maximumValue: 120
+                minimumValue: 30
+                maximumValue: 600
+                label: qsTr("Idle update interval")
                 stepSize: 10
                 value: dataIdleUpdateRate/1000
                 valueText: value + " " + "s"
@@ -132,7 +133,7 @@ Page {
                     //value > 0 ? useLocation = true : useLocation = false
                     Mysettings.saveSettings()
                 }
-            }*/
+            }
 
             SectionHeader { text: qsTr("View settings") }
 

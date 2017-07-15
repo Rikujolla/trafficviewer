@@ -105,6 +105,14 @@
         <source>To cumulative view</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>To difference to mean view</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>To value view</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Help</name>
@@ -300,6 +308,10 @@
     </message>
     <message>
         <source>The selection wakes the app periodically and downloads the data. That makes the better data quality but may result a faster battery drain.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Idle update interval</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
