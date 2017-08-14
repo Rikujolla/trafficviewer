@@ -171,6 +171,7 @@ Page {
                 }
             }*/
 
+
             SectionHeader { text: qsTr("Database maintenance") }
 
             Text {
