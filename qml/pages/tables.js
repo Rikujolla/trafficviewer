@@ -78,21 +78,6 @@ function readData() {
                 )
 }
 
-/* Did not help
-function dropTables() {
-
-    var db = LocalStorage.openDatabaseSync("TrafficviewerDB", "1.0", "Traffic viewer database", 1000000);
-
-    db.transaction(
-                function(tx) {
-                    tx.executeSql('DROP TABLE IF EXISTS Thedaybefore');
-                    tx.executeSql('DROP TABLE IF EXISTS Difference');
-
-                }
-                )
-}
-*/
-
 /// The function drawSpeed() reads data to lists to plot curves
 function drawSpeed(daysbf) {
 

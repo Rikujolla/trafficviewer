@@ -107,11 +107,11 @@
     </message>
     <message>
         <source>To difference to mean view</source>
-        <translation type="unfinished"></translation>
+        <translation>Eronäkymään</translation>
     </message>
     <message>
         <source>To value view</source>
-        <translation type="unfinished"></translation>
+        <translation>Määränäkymään</translation>
     </message>
 </context>
 <context>
@@ -312,7 +312,7 @@
     </message>
     <message>
         <source>Idle update interval</source>
-        <translation type="unfinished"></translation>
+        <translation>Päivitysväli lepotilassa</translation>
     </message>
 </context>
 <context>
