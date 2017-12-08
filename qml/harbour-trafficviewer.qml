@@ -32,6 +32,7 @@ import "pages/tables.js" as Mytables
 import "pages"
 import "components/setting.js" as Mysettings
 import harbour.trafficviewer.updater 1.0
+import "jsonpath.js" as JSONPath
 
 ApplicationWindow
 {
@@ -92,6 +93,7 @@ ApplicationWindow
         //query: "/lamdynamicdata/lamdata"
         //namespaceDeclarations: "declare namespace soap ='http://schemas.xmlsoap.org/soap/envelope/';
         //                        declare default element namespace 'http://tie.digitraffic.fi/sujuvuus/schemas';"
+        XmlRole {name:"NUMERO"; query:"NUMERO/number()"}
         XmlRole {name:"LAM_NUMERO"; query:"LAM_NUMERO/number()"}
         XmlRole {name:"TSA_NIMI"; query:"TSA_NIMI/string()"}
         XmlRole {name:"latitude"; query:"latitude/number()"}
@@ -102,7 +104,7 @@ ApplicationWindow
         XmlRole {name:"offlong2"; query:"offlong2/number()"}
     }
 
-    XmlListModel {
+    /*XmlListModel {
         id: lamSpecs
         source: testData ? "lamData.xml" : "http://tie.digitraffic.fi/sujuvuus/ws/lamData"
         query: "/soap:Envelope/soap:Body/LamDataResponse/lamdynamicdata/lamdata"
@@ -116,6 +118,13 @@ ApplicationWindow
         XmlRole {name:"trafficvolume2"; query:"trafficvolume2/number()"}
         XmlRole {name:"averagespeed1"; query:"averagespeed1/number()"}
         XmlRole {name:"averagespeed2"; query:"averagespeed2/number()"}
+    }*/
+
+    JSONListModel {
+        id: lamSpecs1
+        source: "https://tie.digitraffic.fi/api/v1/data/tms-data/"
+        //query: "$..sensorValues[?((@.roadStationId==23901 || @.roadStationId==23902)&& (@.id==5054 || @.id==5119))]"
+        query: "$..sensorValues[*]"
     }
 
     ListModel {
@@ -224,11 +233,20 @@ ApplicationWindow
         onTriggered:{
 
             if (loadXmlIdle.running || waitXmlLoadIdle.running){
-                //console.log("Waketimer did nothing")
+                console.log("test Waketimer did nothing")
             }
             else {
                 loadXmlIdle.start();
-                //console.log("Waketimer started download")
+                console.log("Waketimer started download timer")
+                /*if (lamSpecs1.source == "https://tie.digitraffic.fi/api/v1/data/tms-data/") {
+                    lamSpecs1.source = "https://tie.digitraffic.fi/api/v1/data/tms-data/23003"
+                    console.log("Waketimer started download small")
+                }
+
+                else {
+                    lamSpecs1.source = "https://tie.digitraffic.fi/api/v1/data/tms-data/"
+                    console.log("Waketimer started download all")
+                }*/
             }
         }
     }
@@ -259,7 +277,7 @@ ApplicationWindow
         }
     }
 
-    Timer { // Loads lam locations when starting the app
+    Timer { // Loads lam locations when starting the app and start relevant timers
         id:waitXml
         //running: !locationsLoaded && Qt.application.active
         running: true
@@ -295,41 +313,55 @@ ApplicationWindow
     }
 
 
-    Timer {
+    Timer { // Loads LAM-data
         id:loadXmlIdle
         //running: !Qt.application.active
         running: false
         repeat:true
         //interval: !Qt.application.active ? dataIdleUpdateRate : 10000
-        interval: 1000
+        interval: 4000
         triggeredOnStart: true
         onTriggered: {
-            lamSpecs.reload();
+            //lamSpecs.reload();
+            if (lamSpecs1.source == "https://tie.digitraffic.fi/api/v1/data/tms-data/") {
+                lamSpecs1.source = "https://tie.digitraffic.fi/api/v1/data/tms-data/23003"
+                console.log("Loader started download small")
+            }
+
+            else {
+                lamSpecs1.source = "https://tie.digitraffic.fi/api/v1/data/tms-data/"
+                console.log("Loader started download all")
+            }
+
             waitXmlLoadIdle.start();
             loadXmlIdle.stop();
             //console.log("Starting traffic XML-data load")
         }
     }
 
-    Timer {
+    Timer { // Waits LAM-data loaded
         id:waitXmlLoadIdle
         running: false
         repeat:true
-        interval: 1000
+        interval: 4000
         onTriggered: {
-            if (lamSpecs.status == 1) {
+            //if (lamSpecs.status == 1) {
                 waitXmlLoadIdle.stop();
                 Mytables.addData()
                 dataLoad = false
                 //console.log("Traffic XML-data added to SQL table", dataLoad, lamSpecs.status)
-            }
-            else {
+            //}
+            //else {
                 //console.log ("Loading traffic XML-data", lamSpecs.status)
-            }
+                //console.log(lamSpecs1.model.get(0).roadStationId,lamSpecs1.model.get(0).id,lamSpecs1.model.get(0).sensorValue,lamSpecs1.model.get(0).name,lamSpecs1.model.get(0).sensorUnit)
+            //}
         }
     }
 
-    Component.onCompleted: Mysettings.loadSettings()
+    Component.onCompleted: {
+        //console.log(lamSpecs1.model.get(0).sensorValue)
+        Mysettings.loadSettings()
+    }
 }
 
 

@@ -130,6 +130,22 @@ Page
         anchors.top: ph.bottom
         anchors.bottom: parent.bottom
     }
+
+
+    /*IconButton {
+        id:gpsIcon
+        anchors.bottom: plot.bottom
+        //anchors.left: leftHanded  ? page.left : undefined
+        //anchors.right: leftHanded ? undefined : page.right
+        anchors.right: plot.right
+        icon.source: "image://theme/icon-m-file-formatted?" + (pressed
+                                                    ? Theme.highlightColor
+                                                    : Theme.secondaryHighlightColor)
+        onClicked: {
+            pageStack.push(Qt.resolvedUrl("DataText.qml"))
+        }
+    }*/
+
 }
 }
 

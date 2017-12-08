@@ -11,7 +11,8 @@ function loadLocation() {
 
                     for(var i = 0; i < lamStations.count; i++) {
 
-                        tx.executeSql('INSERT OR REPLACE INTO Location VALUES (?,?,?,?,?,?,?)', [lamStations.get(i).LAM_NUMERO, lamStations.get(i).latitude, lamStations.get(i).longitude, lamStations.get(i).offlat1, lamStations.get(i).offlong1, lamStations.get(i).offlat2, lamStations.get(i).offlong2])
+                        //tx.executeSql('INSERT OR REPLACE INTO Location VALUES (?,?,?,?,?,?,?)', [lamStations.get(i).LAM_NUMERO, lamStations.get(i).latitude, lamStations.get(i).longitude, lamStations.get(i).offlat1, lamStations.get(i).offlong1, lamStations.get(i).offlat2, lamStations.get(i).offlong2])
+                        tx.executeSql('INSERT OR REPLACE INTO Location VALUES (?,?,?,?,?,?,?)', [lamStations.get(i).NUMERO, lamStations.get(i).latitude, lamStations.get(i).longitude, lamStations.get(i).offlat1, lamStations.get(i).offlong1, lamStations.get(i).offlat2, lamStations.get(i).offlong2])
                     }
 
                     var rs = tx.executeSql('SELECT * FROM Location')
@@ -33,9 +34,36 @@ function addData() {
                 function(tx) {
                     // Create the table, if not existing
                     tx.executeSql('CREATE TABLE IF NOT EXISTS Valuetable (valamid INTEGER, lamlocaltime TEXT, trafficvolume1 INTEGER, trafficvolume2 INTEGER, averagespeed1 INTEGER, averagespeed2 INTEGER, UNIQUE(valamid,lamlocaltime))');
-
-                    for(var i = 0; i < lamSpecs.count; i++) {
-                        tx.executeSql('INSERT OR IGNORE INTO Valuetable VALUES (?,?,?,?,?,?)', [lamSpecs.get(i).lamid, lamSpecs.get(i).lamLocaltime, lamSpecs.get(i).trafficvolume1, lamSpecs.get(i).trafficvolume2, lamSpecs.get(i).averagespeed1, lamSpecs.get(i).averagespeed2])
+                    var lamtemp = 23000;
+                    var id5058=0; //averagespeed1
+                    var id5061=0; //averagespeed2
+                    var id5064=0; //trafficvolume1
+                    var id5068=0; //trafficvolume2
+                    for(var i = 0; i < lamSpecs1.count; i++) {
+                        //console.log(lamSpecs1.model.get(i).roadStationId,lamSpecs1.model.get(i).id)
+                        if (lamSpecs1.model.get(i).roadStationId < lamtemp ||lamSpecs1.model.get(i).roadStationId > lamtemp){
+                            lamtemp = lamSpecs1.model.get(i).roadStationId
+                            id5058=0;
+                            id5061=0;
+                            id5064=0;
+                            id5068=0;
+                            if (lamSpecs1.model.get(i).id == 5058) {id5058 = lamSpecs1.model.get(i).sensorValue}
+                            if (lamSpecs1.model.get(i).id == 5061) {id5061 = lamSpecs1.model.get(i).sensorValue}
+                            if (lamSpecs1.model.get(i).id == 5064) {id5064 = lamSpecs1.model.get(i).sensorValue}
+                            if (lamSpecs1.model.get(i).id == 5068) {id5068 = lamSpecs1.model.get(i).sensorValue}
+                        }
+                        else if (lamSpecs1.model.get(i).id == 5058) {id5058 = lamSpecs1.model.get(i).sensorValue}
+                        else if (lamSpecs1.model.get(i).id == 5061) {id5061 = lamSpecs1.model.get(i).sensorValue}
+                        else if (lamSpecs1.model.get(i).id == 5064) {id5064 = lamSpecs1.model.get(i).sensorValue}
+                        else if (lamSpecs1.model.get(i).id == 5068) {id5068 = lamSpecs1.model.get(i).sensorValue}
+                        if (id5058>0 && id5061>0 && id5064>0 && id5068>0) {
+                            tx.executeSql('INSERT OR IGNORE INTO Valuetable VALUES (?,?,?,?,?,?)', [lamSpecs1.model.get(i).roadStationId, lamSpecs1.model.get(i).timeWindowEnd, id5064, id5068, id5058, id5061])
+                            id5058=0;
+                            id5061=0;
+                            id5064=0;
+                            id5068=0;
+                            //tx.executeSql('INSERT OR IGNORE INTO Valuetable VALUES (?,?,?,?,?,?)', [lamSpecs.get(i).lamid, lamSpecs.get(i).lamLocaltime, lamSpecs.get(i).trafficvolume1, lamSpecs.get(i).trafficvolume2, lamSpecs.get(i).averagespeed1, lamSpecs.get(i).averagespeed2])
+                        }
                     }
                 }
                 )
@@ -497,6 +525,14 @@ function makeHistory() {
                         dbVersion = 10;
                         console.log("DB version upgraded to ", dbVersion)
                         tx.executeSql('DROP TABLE Valuetabletemp')
+                    }
+                    // Update lam numbers 1-2000 to 23001-25000 due to change in data
+
+                    if (dbVersion < 15) {
+                        tx.executeSql('UPDATE Valuetable SET valamid=valamid+? WHERE valamid<?', [23000,23001])
+                        tx.executeSql('UPDATE Historystable SET valamid=valamid+? WHERE valamid<?', [23000,23001])
+                        dbVersion = 15;
+
                     }
 
                     //tx.executeSql('CREATE TABLE History AS SELECT valamid, strftime(?,lamlocaltime) AS wday, ((strftime(?,lamlocaltime)%?)-(strftime(?,lamlocaltime)%?)%?) AS htime, total(trafficvolume1) AS mtr1, total(trafficvolume2) AS mtr2, total(averagespeed1) AS msp1, total(averagespeed2) AS msp2, count(rowid) AS nhist FROM Valuetable WHERE (strftime(?,?) - strftime(?,lamlocaltime))> ? GROUP BY valamid, htime, wday', ['%w', '%s', 86400, '%s', 86400, 600, '%s', 'now', '%s', 702000])

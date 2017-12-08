@@ -54,8 +54,8 @@ Dialog {
         SearchField {
             id:lamSearch
             width: parent.width
-            validator: IntValidator{bottom: 100; top: 2000;}
-            placeholderText: "448"
+            validator: IntValidator{bottom: 100; top: 30000;}
+            placeholderText: "23448"
             inputMethodHints: Qt.ImhDigitsOnly
             onTextChanged: {
                 if(!errorHighlight) {searchValid = true; console.log("valid")}

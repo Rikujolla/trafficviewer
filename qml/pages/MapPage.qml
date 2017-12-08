@@ -297,7 +297,7 @@ Page {
                 }
             }
 
-            Timer {
+            /*Timer {
                 id:waitXmlLoad
                 running: false
                 repeat:true
@@ -313,7 +313,7 @@ Page {
                         //console.log ("lamSpecs.not Ready", lamSpecs.status)
                     }
                 }
-            }
+            }*/
 
         }
 

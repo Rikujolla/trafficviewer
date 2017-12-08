@@ -55,6 +55,14 @@
         <source>copyright OpenStreetMap contributors</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>To Romain Pokrzywka of the JSONListModel code.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>To John Temples of the simple header file to be able to call Linux commands from the QML code.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>CoverPage</name>

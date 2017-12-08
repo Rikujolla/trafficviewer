@@ -7,6 +7,10 @@
 
 # * date Author's Name <author's email> version-release
 # - Summary of changes
+* Wed Dec 06 2017 Riku Lahtinen <rikul.lajolla@kiu.as> 0.1.5-1
+- LAM-number format change e.g. 448<>23448
+- LAM data source changed
+
 * Wed Aug 16 2017 Riku Lahtinen <rikul.lajolla@kiu.as> 0.1.4-1
 - Difference view
 

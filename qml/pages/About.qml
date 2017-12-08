@@ -95,7 +95,9 @@ Page {
                     right: parent.right
                     margins: Theme.paddingLarge
                 }
-                text: {qsTr("To Jussi Sainio and Kimmo Lindholm of the code to help to create my chart view.")
+                text: {qsTr("To Jussi Sainio and Kimmo Lindholm of the code to help to create my chart view.") + "\n"
+                       + qsTr("To Romain Pokrzywka of the JSONListModel code.")  + "\n"
+                       + qsTr("To John Temples of the simple header file to be able to call Linux commands from the QML code.")
                 }
             }
 
