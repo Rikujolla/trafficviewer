@@ -246,7 +246,7 @@ Page {
                 MapQuickItem {
                     id:velTex
                     sourceItem: Text{
-                        text: cars*12
+                        text: cars
                         color:"white"
                         font.bold: true
                     }

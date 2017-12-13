@@ -34,34 +34,29 @@ function addData() {
                 function(tx) {
                     // Create the table, if not existing
                     tx.executeSql('CREATE TABLE IF NOT EXISTS Valuetable (valamid INTEGER, lamlocaltime TEXT, trafficvolume1 INTEGER, trafficvolume2 INTEGER, averagespeed1 INTEGER, averagespeed2 INTEGER, UNIQUE(valamid,lamlocaltime))');
-                    var lamtemp = 23000;
-                    var id5058=0; //averagespeed1
-                    var id5061=0; //averagespeed2
-                    var id5064=0; //trafficvolume1
-                    var id5068=0; //trafficvolume2
-                    for(var i = 0; i < lamSpecs1.count; i++) {
-                        //console.log(lamSpecs1.model.get(i).roadStationId,lamSpecs1.model.get(i).id)
-                        if (lamSpecs1.model.get(i).roadStationId < lamtemp ||lamSpecs1.model.get(i).roadStationId > lamtemp){
-                            lamtemp = lamSpecs1.model.get(i).roadStationId
-                            id5058=0;
-                            id5061=0;
-                            id5064=0;
-                            id5068=0;
-                            if (lamSpecs1.model.get(i).id == 5058) {id5058 = lamSpecs1.model.get(i).sensorValue}
-                            if (lamSpecs1.model.get(i).id == 5061) {id5061 = lamSpecs1.model.get(i).sensorValue}
-                            if (lamSpecs1.model.get(i).id == 5064) {id5064 = lamSpecs1.model.get(i).sensorValue}
-                            if (lamSpecs1.model.get(i).id == 5068) {id5068 = lamSpecs1.model.get(i).sensorValue}
+                    var objectarray = JSON.parse(lamSpecs1.json)
+                    //console.log("time updated", objectarray.dataUpdatedTime, objectarray.tmsStations[0].id, objectarray.tmsStations[0].sensorValues[0].id, objectarray.tmsStations[0].sensorValues.length)
+                    //var lamtemp = 23000;
+                    var id5116=0; //trafficvolume1
+                    var id5119=0; //trafficvolume2
+                    var id5122=0; //averagespeed1
+                    var id5125=0; //averagespeed2
+                    console.log(objectarray.tmsStations.length)
+                    for(var i = 0; i < objectarray.tmsStations.length; i++) {
+                             for(var j = 0; j < objectarray.tmsStations[i].sensorValues.length; j++) {
+                            if (objectarray.tmsStations[i].sensorValues[j].id == 5116) {id5116 = objectarray.tmsStations[i].sensorValues[j].sensorValue}
+                            if (objectarray.tmsStations[i].sensorValues[j].id == 5119) {id5119 = objectarray.tmsStations[i].sensorValues[j].sensorValue}
+                            if (objectarray.tmsStations[i].sensorValues[j].id == 5122) {id5122 = objectarray.tmsStations[i].sensorValues[j].sensorValue}
+                            if (objectarray.tmsStations[i].sensorValues[j].id == 5125) {id5125 = objectarray.tmsStations[i].sensorValues[j].sensorValue}
                         }
-                        else if (lamSpecs1.model.get(i).id == 5058) {id5058 = lamSpecs1.model.get(i).sensorValue}
-                        else if (lamSpecs1.model.get(i).id == 5061) {id5061 = lamSpecs1.model.get(i).sensorValue}
-                        else if (lamSpecs1.model.get(i).id == 5064) {id5064 = lamSpecs1.model.get(i).sensorValue}
-                        else if (lamSpecs1.model.get(i).id == 5068) {id5068 = lamSpecs1.model.get(i).sensorValue}
-                        if (id5058>0 && id5061>0 && id5064>0 && id5068>0) {
-                            tx.executeSql('INSERT OR IGNORE INTO Valuetable VALUES (?,?,?,?,?,?)', [lamSpecs1.model.get(i).roadStationId, lamSpecs1.model.get(i).timeWindowEnd, id5064, id5068, id5058, id5061])
-                            id5058=0;
-                            id5061=0;
-                            id5064=0;
-                            id5068=0;
+                        if (id5116>0 && id5119>0 && id5122>0 && id5125>0) {
+                            tx.executeSql('INSERT OR IGNORE INTO Valuetable VALUES (?,?,?,?,?,?)', [objectarray.tmsStations[i].id, objectarray.tmsStations[i].measuredTime, id5116, id5119, id5122, id5125])
+                            if (objectarray.tmsStations[i].id==23451) {console.log(objectarray.tmsStations[i].id, objectarray.tmsStations[i].measuredTime, id5116, id5119, id5122, id5125)}
+                            id5116=0;
+                            id5119=0;
+                            id5122=0;
+                            id5125=0;
+
                             //tx.executeSql('INSERT OR IGNORE INTO Valuetable VALUES (?,?,?,?,?,?)', [lamSpecs.get(i).lamid, lamSpecs.get(i).lamLocaltime, lamSpecs.get(i).trafficvolume1, lamSpecs.get(i).trafficvolume2, lamSpecs.get(i).averagespeed1, lamSpecs.get(i).averagespeed2])
                         }
                     }

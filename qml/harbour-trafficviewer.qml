@@ -234,6 +234,18 @@ ApplicationWindow
 
             if (loadXmlIdle.running || waitXmlLoadIdle.running){
                 console.log("test Waketimer did nothing")
+                /*var xhr1 = new XMLHttpRequest;
+                var json1 = ""
+                var source1 = "https://tie.digitraffic.fi/api/v1/data/tms-data/"
+                xhr1.open("GET", source1);
+                xhr1.onreadystatechange = function() {
+                    if (xhr1.readyState == XMLHttpRequest.DONE)
+                        json1 = xhr1.responseText;
+                }
+                xhr1.send();
+                var objectarray = JSON.parse(json1)
+                console.log("time updated", objectarray.dataUpdatedTime)*/
+
             }
             else {
                 loadXmlIdle.start();
@@ -247,6 +259,17 @@ ApplicationWindow
                     lamSpecs1.source = "https://tie.digitraffic.fi/api/v1/data/tms-data/"
                     console.log("Waketimer started download all")
                 }*/
+                /*var xhr1 = new XMLHttpRequest;
+                var json1 = ""
+                var source1 = "https://tie.digitraffic.fi/api/v1/data/tms-data/"
+                xhr1.open("GET", source1);
+                xhr1.onreadystatechange = function() {
+                    if (xhr1.readyState == XMLHttpRequest.DONE)
+                        json1 = xhr1.responseText;
+                }
+                xhr1.send();*/
+                var objectarray = JSON.parse(lamSpecs1.json)
+                console.log("time updated", objectarray.dataUpdatedTime, objectarray.tmsStations[0].id, objectarray.tmsStations[0].sensorValues[0].id, objectarray.tmsStations[0].sensorValues.length)
             }
         }
     }
