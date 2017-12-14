@@ -57,11 +57,11 @@
     </message>
     <message>
         <source>To Romain Pokrzywka of the JSONListModel code.</source>
-        <translation type="unfinished"></translation>
+        <translation>Romain Pokrzywkalle JSONListModel-koodista.</translation>
     </message>
     <message>
         <source>To John Temples of the simple header file to be able to call Linux commands from the QML code.</source>
-        <translation type="unfinished"></translation>
+        <translation>John Templelle selkeästä header-tiedostosta, jonka avulla voidaan kutsua linux-komentoja QML-koodista.</translation>
     </message>
 </context>
 <context>
@@ -321,6 +321,13 @@
     <message>
         <source>Idle update interval</source>
         <translation>Päivitysväli lepotilassa</translation>
+    </message>
+</context>
+<context>
+    <name>UpdateMessage</name>
+    <message>
+        <source>Due to the change in data source the database has to be edited before the use of the app. Press Make history button from settings to be able to continue the app usage.</source>
+        <translation>Tietolähteen muutoksien vuoksi tietokantaa tulee korjata ennen sovelluksen käyttöä. Paina Tee historiadata -painiketta asetuksista, jotta voit jatkaa sovelluksen käyttöä.</translation>
     </message>
 </context>
 <context>

@@ -55,7 +55,8 @@ DISTFILES += \
     qml/pages/Search2.qml \
     qml/pages/Search3.qml \
     qml/jsonpath.js \
-    qml/JSONListModel.qml
+    qml/JSONListModel.qml \
+    qml/pages/UpdateMessage.qml
 
 HEADERS += \
     src/forceupdater.h

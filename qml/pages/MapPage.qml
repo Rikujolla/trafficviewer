@@ -171,8 +171,6 @@ Page {
                             lammiLongi = lamPoints.get(index).longi
                             speedView = false
                             pageStack.push(Qt.resolvedUrl("DrawData.qml"))
-                            //dataLoad = true
-                            //console.log("Lamindex", lammiSelected, lammiPair, lammiLatti, lammiLongi)
                         }
                     }
                 }
@@ -246,7 +244,7 @@ Page {
                 MapQuickItem {
                     id:velTex
                     sourceItem: Text{
-                        text: cars
+                        text: cars*12
                         color:"white"
                         font.bold: true
                     }
@@ -262,7 +260,6 @@ Page {
                 active:useLocation && Qt.application.active
                 updateInterval:gpsUpdateRate
                 onPositionChanged: {
-                    //console.log(possut.position.coordinate.latitude, possut.position.coordinate.longitude)
                     gpsLat = possut.position.coordinate.latitude
                     gpsLong = possut.position.coordinate.longitude
                     currentLat = map.center.latitude
@@ -276,7 +273,6 @@ Page {
                 repeat:true
                 interval: 600
                 onTriggered: {
-                    //console.log(map.center)
                     differenceExists = Math.abs(map.center.latitude-currentLat) + Math.abs(map.center.longitude-currentLong)
                     currentLat = map.center.latitude
                     currentLong = map.center.longitude
@@ -297,23 +293,6 @@ Page {
                 }
             }
 
-            /*Timer {
-                id:waitXmlLoad
-                running: false
-                repeat:true
-                interval: 600
-                onTriggered: {
-                    if (lamSpecs.status == 1) {
-                        waitXmlLoad.stop();
-                        Mytables.addData()
-                        dataLoad = false
-                        //console.log("Data loaded", dataLoad, lamSpecs.status)
-                    }
-                    else {
-                        //console.log ("lamSpecs.not Ready", lamSpecs.status)
-                    }
-                }
-            }*/
 
         }
 
@@ -388,9 +367,7 @@ Page {
 
     IconButton {
         id: searchIcon
-        //visible:false
         anchors.bottom: favoriteIcon.top
-        //anchors.bottomMargin: 20
         //anchors.left: leftHanded  ? page.left : undefined
         //anchors.right: leftHanded ? undefined : page.right
         anchors.right: page.right
@@ -398,12 +375,11 @@ Page {
                                                     ? Theme.highlightColor
                                                     : Theme.secondaryHighlightColor)
         onClicked: {
-            //pageStack.push(Qt.resolvedUrl("Search2.qml"))
             var dialog = pageStack.push(Qt.resolvedUrl("Search3.qml"),
                                         {"lamID": 901})
             dialog.accepted.connect(function() {
                 //header.title = "My name: " + dialog.name
-                console.log(dialog.lamID)
+                //console.log(dialog.lamID)
                 Mytables.searchLAM(dialog.lamID)
 
             })
@@ -413,9 +389,7 @@ Page {
 
     IconButton {
         id: helpIcon
-        //visible:false
         anchors.bottom: searchIcon.top
-        //anchors.bottomMargin: 20
         //anchors.right: leftHanded ? undefined : page.right
         //anchors.left: leftHanded  ? page.left : undefined
         anchors.right: page.right
@@ -431,7 +405,6 @@ Page {
     IconButton {
         id: aboutIcon
         anchors.bottom: helpIcon.top
-        //anchors.bottomMargin: 20
         //anchors.left: leftHanded  ? page.left : undefined
         //anchors.right: leftHanded ? undefined : page.right
         anchors.right: page.right
@@ -440,6 +413,20 @@ Page {
                                                     : Theme.secondaryHighlightColor)
         onClicked: {
             pageStack.push(Qt.resolvedUrl("About.qml"))
+        }
+    }
+
+    Timer { // Waits LAM-data loaded
+        id:dbCheck
+        running: true
+        repeat:true
+        interval: 4000
+        onTriggered: {
+            console.log("Dbversion check", dbVersion)
+            if(dbVersion < 15) {
+                Qt.createComponent("UpdateMessage.qml").createObject(page, {});
+            }
+            dbCheck.stop();
         }
     }
 

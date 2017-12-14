@@ -324,6 +324,13 @@
     </message>
 </context>
 <context>
+    <name>UpdateMessage</name>
+    <message>
+        <source>Due to the change in data source the database has to be edited before the use of the app. Press Make history button from settings to be able to continue the app usage.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>harbour-trafficviewer</name>
     <message>
         <source>The history</source>

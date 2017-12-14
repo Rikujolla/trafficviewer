@@ -25,6 +25,25 @@ function loadLocation() {
                 )
 }
 
+function checkifEmptydb() {
+
+    var db = LocalStorage.openDatabaseSync("TrafficviewerDB", "1.0", "Traffic viewer database", 1000000);
+
+    db.transaction(
+                function(tx) {
+                    // Create the table, if not existing
+                    tx.executeSql('CREATE TABLE IF NOT EXISTS Location (lamid INTEGER, latti REAL, longi REAL, offlat1 REAL, offlong1 REAL, offlat2 REAL, offlong2 REAL)');
+
+                    var rs = tx.executeSql('SELECT * FROM Location')
+
+                    if (rs.rows.length == 0) {
+                        //console.log("DbVersion ", dbVersion)
+                        dbVersion = 15;
+                    }
+                }
+                )
+}
+
 /// The function adds traffic data to valuetable from xml data loaded
 function addData() {
 
@@ -41,7 +60,7 @@ function addData() {
                     var id5119=0; //trafficvolume2
                     var id5122=0; //averagespeed1
                     var id5125=0; //averagespeed2
-                    console.log(objectarray.tmsStations.length)
+                    //console.log(objectarray.tmsStations.length)
                     for(var i = 0; i < objectarray.tmsStations.length; i++) {
                              for(var j = 0; j < objectarray.tmsStations[i].sensorValues.length; j++) {
                             if (objectarray.tmsStations[i].sensorValues[j].id == 5116) {id5116 = objectarray.tmsStations[i].sensorValues[j].sensorValue}
@@ -50,8 +69,11 @@ function addData() {
                             if (objectarray.tmsStations[i].sensorValues[j].id == 5125) {id5125 = objectarray.tmsStations[i].sensorValues[j].sensorValue}
                         }
                         if (id5116>0 && id5119>0 && id5122>0 && id5125>0) {
-                            tx.executeSql('INSERT OR IGNORE INTO Valuetable VALUES (?,?,?,?,?,?)', [objectarray.tmsStations[i].id, objectarray.tmsStations[i].measuredTime, id5116, id5119, id5122, id5125])
-                            if (objectarray.tmsStations[i].id==23451) {console.log(objectarray.tmsStations[i].id, objectarray.tmsStations[i].measuredTime, id5116, id5119, id5122, id5125)}
+                            // Need to divide 5 minutes values from items/hour to items/5 minutes to maintain history compapility.
+                            tx.executeSql('INSERT OR IGNORE INTO Valuetable VALUES (?,?,?,?,?,?)', [objectarray.tmsStations[i].id, objectarray.tmsStations[i].measuredTime, id5116/12, id5119/12, id5122, id5125])
+                            if (objectarray.tmsStations[i].id==23451) {
+                                //console.log(objectarray.tmsStations[i].id, objectarray.tmsStations[i].measuredTime, id5116, id5119, id5122, id5125);
+                            }
                             id5116=0;
                             id5119=0;
                             id5122=0;

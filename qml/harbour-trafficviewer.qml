@@ -122,7 +122,7 @@ ApplicationWindow
 
     JSONListModel {
         id: lamSpecs1
-        source: "https://tie.digitraffic.fi/api/v1/data/tms-data/"
+        source: "https://tie.digitraffic.fi/api/v1/data/tms-data/23001"
         //query: "$..sensorValues[?((@.roadStationId==23901 || @.roadStationId==23902)&& (@.id==5054 || @.id==5119))]"
         query: "$..sensorValues[*]"
     }
@@ -233,7 +233,7 @@ ApplicationWindow
         onTriggered:{
 
             if (loadXmlIdle.running || waitXmlLoadIdle.running){
-                console.log("test Waketimer did nothing")
+                //console.log("test Waketimer did nothing")
                 /*var xhr1 = new XMLHttpRequest;
                 var json1 = ""
                 var source1 = "https://tie.digitraffic.fi/api/v1/data/tms-data/"
@@ -249,9 +249,9 @@ ApplicationWindow
             }
             else {
                 loadXmlIdle.start();
-                console.log("Waketimer started download timer")
+                //console.log("Waketimer started download timer")
                 /*if (lamSpecs1.source == "https://tie.digitraffic.fi/api/v1/data/tms-data/") {
-                    lamSpecs1.source = "https://tie.digitraffic.fi/api/v1/data/tms-data/23003"
+                    lamSpecs1.source = "https://tie.digitraffic.fi/api/v1/data/tms-data/23001"
                     console.log("Waketimer started download small")
                 }
 
@@ -269,7 +269,7 @@ ApplicationWindow
                 }
                 xhr1.send();*/
                 var objectarray = JSON.parse(lamSpecs1.json)
-                console.log("time updated", objectarray.dataUpdatedTime, objectarray.tmsStations[0].id, objectarray.tmsStations[0].sensorValues[0].id, objectarray.tmsStations[0].sensorValues.length)
+                //console.log("time updated", objectarray.dataUpdatedTime, objectarray.tmsStations[0].id, objectarray.tmsStations[0].sensorValues[0].id, objectarray.tmsStations[0].sensorValues.length)
             }
         }
     }
@@ -289,13 +289,13 @@ ApplicationWindow
             else if (loadXmlIdle.running || waitXmlLoadIdle.running){
                 //fupdater.start("timedclient-qt5",["-awhenDue;runCommand=dbus-send --session --type=method_call --dest=as.kiu / as.kiu.update", "-eAPPLICATION=Rush_hour;TITLE=Wake_up;ticker=180"]);
                 fupdater.start("timedclient-qt5",["-awhenDue;runCommand=dbus-send --session --type=method_call --dest=as.kiu / as.kiu.update", string2]);
-                console.log("Timedclient did nothing ", string2)
+                //console.log("Timedclient did nothing ", string2)
             }
             else {
                 //fupdater.start("timedclient-qt5",["-awhenDue;runCommand=dbus-send --session --type=method_call --dest=as.kiu / as.kiu.update", "-eAPPLICATION=Rush_hour;TITLE=Wake_up;ticker=180"]);
                 fupdater.start("timedclient-qt5",["-awhenDue;runCommand=dbus-send --session --type=method_call --dest=as.kiu / as.kiu.update", string2]);
                 loadXmlIdle.start();
-                console.log("Timedclient started download ", string2)
+                //console.log("Timedclient started download ", string2)
             }
         }
     }
@@ -308,7 +308,11 @@ ApplicationWindow
         interval: 200
         onTriggered: {
             var string2 = "-eAPPLICATION=Rush_hour;TITLE=Wake_up;ticker=" + dataIdleUpdateRate/1000
-            if (lamStations.status == 1 && !locationsLoaded) {
+            if (dbVersion < 15) {
+                /*do nothing before db update*/
+                Mytables.checkifEmptydb();
+            }
+            else if (lamStations.status == 1 && !locationsLoaded) {
                 //waitXml.stop();
                 Mytables.loadLocation()
                 locationsLoaded = true
@@ -316,7 +320,7 @@ ApplicationWindow
             }
             else if (locationsLoaded) {
                 if (useTimedclient) {
-                    console.log(string2)
+                    //console.log(string2)
                     //fupdater.start("timedclient-qt5",["-awhenDue;runCommand=dbus-send --session --type=method_call --dest=as.kiu / as.kiu.update", "-eAPPLICATION=Rush_hour;TITLE=Wake_up;ticker=180"]);
                     fupdater.start("timedclient-qt5",["-awhenDue;runCommand=dbus-send --session --type=method_call --dest=as.kiu / as.kiu.update", string2]);
                     wakeupTimer.start();
@@ -348,12 +352,12 @@ ApplicationWindow
             //lamSpecs.reload();
             if (lamSpecs1.source == "https://tie.digitraffic.fi/api/v1/data/tms-data/") {
                 lamSpecs1.source = "https://tie.digitraffic.fi/api/v1/data/tms-data/23003"
-                console.log("Loader started download small")
+                //console.log("Loader started download small")
             }
 
             else {
                 lamSpecs1.source = "https://tie.digitraffic.fi/api/v1/data/tms-data/"
-                console.log("Loader started download all")
+                //console.log("Loader started download all")
             }
 
             waitXmlLoadIdle.start();
@@ -383,6 +387,7 @@ ApplicationWindow
 
     Component.onCompleted: {
         //console.log(lamSpecs1.model.get(0).sensorValue)
+
         Mysettings.loadSettings()
     }
 }
