@@ -12,3 +12,8 @@ Name=Rush hour
 Name[de]=harbour-trafficviewer
 Name[fi]=Ruuhkahuippu
 
+[X-Sailjail]
+Permissions=Documents;Internet;Location
+#Permissions=Documents;Internet;PublicDir;UserDirs
+OrganizationName=fi.rikujolla
+ApplicationName=harbour-trafficviewer

@@ -28,9 +28,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-import QtPositioning 5.2
+import QtPositioning 5.4
 import QtQuick.XmlListModel 2.0
-import QtLocation 5.0
+import QtLocation 5.4
 import QtQuick.LocalStorage 2.0
 import "tables.js" as Mytables
 
@@ -111,7 +111,11 @@ Page {
                 ]
             }*/
             plugin : Plugin {
+                //name: "mapboxgl"
                 name: "osm"
+                //PluginParameter { name: "osm.mapping.host"; value: "https://tile.openstreetmap.org/" }
+                PluginParameter { name: "osm.mapping.host"; value: "http://osm.tile.server.address/" }
+                //http://osm.tile.server.address/
                 PluginParameter { name: "osm.mapping.copyright"; value: "© <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors" }
             }
             center: QtPositioning.coordinate(61.4042,23.7746)

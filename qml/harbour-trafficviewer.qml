@@ -85,6 +85,7 @@ ApplicationWindow
     property bool useTimedclient: false
     property bool useTimedclientCh : false //Logging if useTimedclient has been changed
     property int dataDifference :42 //
+    property bool developing: false // To print console logs when developing
 
     XmlListModel {
         id: lamStations
@@ -122,7 +123,7 @@ ApplicationWindow
 
     JSONListModel {
         id: lamSpecs1
-        source: "https://tie.digitraffic.fi/api/v1/data/tms-data/23001"
+        source: "https://tie.digitraffic.fi/api/tms/v1/stations/23003/data"
         //query: "$..sensorValues[?((@.roadStationId==23901 || @.roadStationId==23902)&& (@.id==5054 || @.id==5119))]"
         query: "$..sensorValues[*]"
     }
@@ -137,6 +138,7 @@ ApplicationWindow
             longi:25.70485293
             veloc:999
             cars:111
+            age:10
         }
     }
 
@@ -229,7 +231,7 @@ ApplicationWindow
         id: wakeupTimer
         running: false
         repeat: true
-        interval: !Qt.application.active ? dataIdleUpdateRate : 20000
+        interval: !Qt.application.active ? dataIdleUpdateRate : 30000
         onTriggered:{
 
             if (loadXmlIdle.running || waitXmlLoadIdle.running){
@@ -269,7 +271,7 @@ ApplicationWindow
                 }
                 xhr1.send();*/
                 var objectarray = JSON.parse(lamSpecs1.json)
-                //console.log("time updated", objectarray.dataUpdatedTime, objectarray.tmsStations[0].id, objectarray.tmsStations[0].sensorValues[0].id, objectarray.tmsStations[0].sensorValues.length)
+                //console.log("time updated", objectarray.dataUpdatedTime, objectarray.stations[0].id, objectarray.stations[0].sensorValues[0].id, objectarray.stations[0].sensorValues.length)
             }
         }
     }
@@ -339,24 +341,24 @@ ApplicationWindow
         }
     }
 
-
+    // Updated values according https://www.digitraffic.fi/en/road-traffic/#traffic-measurement-system-tms
     Timer { // Loads LAM-data
         id:loadXmlIdle
         //running: !Qt.application.active
         running: false
         repeat:true
-        //interval: !Qt.application.active ? dataIdleUpdateRate : 10000
-        interval: 4000
+        interval: !Qt.application.active ? dataIdleUpdateRate : 30000
+        //interval: 60000
         triggeredOnStart: true
         onTriggered: {
             //lamSpecs.reload();
-            if (lamSpecs1.source == "https://tie.digitraffic.fi/api/v1/data/tms-data/") {
-                lamSpecs1.source = "https://tie.digitraffic.fi/api/v1/data/tms-data/23003"
+            if (lamSpecs1.source == "https://tie.digitraffic.fi/api/tms/v1/stations/data") {
+                lamSpecs1.source = "https://tie.digitraffic.fi/api/tms/v1/stations/23003/data"
                 //console.log("Loader started download small")
             }
 
             else {
-                lamSpecs1.source = "https://tie.digitraffic.fi/api/v1/data/tms-data/"
+                lamSpecs1.source = "https://tie.digitraffic.fi/api/tms/v1/stations/data"
                 //console.log("Loader started download all")
             }
 

@@ -18,6 +18,8 @@ Item {
     onSourceChanged: {
         var xhr = new XMLHttpRequest;
         xhr.open("GET", source);
+        // Add user data as requested https://www.digitraffic.fi/tuki/ohjeita/#nodejs-ja-javascript
+        xhr.setRequestHeader("Digitraffic-User", "Traffic viewer 0.1.6");
         xhr.onreadystatechange = function() {
             if (xhr.readyState == XMLHttpRequest.DONE)
                 json = xhr.responseText;

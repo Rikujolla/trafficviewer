@@ -54,25 +54,27 @@ function addData() {
                     // Create the table, if not existing
                     tx.executeSql('CREATE TABLE IF NOT EXISTS Valuetable (valamid INTEGER, lamlocaltime TEXT, trafficvolume1 INTEGER, trafficvolume2 INTEGER, averagespeed1 INTEGER, averagespeed2 INTEGER, UNIQUE(valamid,lamlocaltime))');
                     var objectarray = JSON.parse(lamSpecs1.json)
-                    //console.log("time updated", objectarray.dataUpdatedTime, objectarray.tmsStations[0].id, objectarray.tmsStations[0].sensorValues[0].id, objectarray.tmsStations[0].sensorValues.length)
+                    //console.log("time updated", objectarray.dataUpdatedTime, objectarray.stations[0].id, objectarray.stations[0].sensorValues[0].id, objectarray.stations[0].sensorValues.length)
                     //var lamtemp = 23000;
                     var id5116=0; //trafficvolume1
                     var id5119=0; //trafficvolume2
                     var id5122=0; //averagespeed1
                     var id5125=0; //averagespeed2
-                    //console.log(objectarray.tmsStations.length)
-                    for(var i = 0; i < objectarray.tmsStations.length; i++) {
-                             for(var j = 0; j < objectarray.tmsStations[i].sensorValues.length; j++) {
-                            if (objectarray.tmsStations[i].sensorValues[j].id == 5116) {id5116 = objectarray.tmsStations[i].sensorValues[j].sensorValue}
-                            if (objectarray.tmsStations[i].sensorValues[j].id == 5119) {id5119 = objectarray.tmsStations[i].sensorValues[j].sensorValue}
-                            if (objectarray.tmsStations[i].sensorValues[j].id == 5122) {id5122 = objectarray.tmsStations[i].sensorValues[j].sensorValue}
-                            if (objectarray.tmsStations[i].sensorValues[j].id == 5125) {id5125 = objectarray.tmsStations[i].sensorValues[j].sensorValue}
+                    //console.log(objectarray.stations.length)
+                    //console.log(objectarray.stations[0].id)
+                    //console.log(objectarray.stations[0].sensorValues.length)
+                    for(var i = 0; i < objectarray.stations.length; i++) {
+                             for(var j = 0; j < objectarray.stations[i].sensorValues.length; j++) {
+                            if (objectarray.stations[i].sensorValues[j].id == 5116) {id5116 = objectarray.stations[i].sensorValues[j].value}
+                            if (objectarray.stations[i].sensorValues[j].id == 5119) {id5119 = objectarray.stations[i].sensorValues[j].value}
+                            if (objectarray.stations[i].sensorValues[j].id == 5122) {id5122 = objectarray.stations[i].sensorValues[j].value}
+                            if (objectarray.stations[i].sensorValues[j].id == 5125) {id5125 = objectarray.stations[i].sensorValues[j].value}
                         }
                         if (id5116>0 && id5119>0 && id5122>0 && id5125>0) {
                             // Need to divide 5 minutes values from items/hour to items/5 minutes to maintain history compapility.
-                            tx.executeSql('INSERT OR IGNORE INTO Valuetable VALUES (?,?,?,?,?,?)', [objectarray.tmsStations[i].id, objectarray.tmsStations[i].measuredTime, id5116/12, id5119/12, id5122, id5125])
-                            if (objectarray.tmsStations[i].id==23451) {
-                                //console.log(objectarray.tmsStations[i].id, objectarray.tmsStations[i].measuredTime, id5116, id5119, id5122, id5125);
+                            tx.executeSql('INSERT OR IGNORE INTO Valuetable VALUES (?,?,?,?,?,?)', [objectarray.stations[i].id, objectarray.stations[i].dataUpdatedTime, id5116/12, id5119/12, id5122, id5125])
+                            if (objectarray.stations[i].id==23451) {
+                                if (developing == true) {console.log(objectarray.stations[i].id, objectarray.stations[i].dataUpdatedTime, id5116, id5119, id5122, id5125)};
                             }
                             id5116=0;
                             id5119=0;
